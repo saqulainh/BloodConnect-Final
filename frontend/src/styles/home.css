@@ -1,0 +1,163 @@
+/* home.css */
+.home-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #8b0000, #b30000, #1a0000);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+    padding: 40px 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Floating drops reuse from auth */
+.blood-drop {
+    position: absolute;
+    width: 60px;
+    height: 80px;
+    background: radial-gradient(circle at 30% 30%, #ff4d4d, #cc0000);
+    border-radius: 50%;
+    transform: rotate(45deg);
+    animation: float 6s infinite ease-in-out;
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+.drop1 {
+    top: 10%;
+    left: 8%;
+}
+
+.drop2 {
+    top: 65%;
+    left: 88%;
+    animation-delay: 2s;
+}
+
+.drop3 {
+    top: 80%;
+    left: 20%;
+    animation-delay: 4s;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0) rotate(45deg);
+    }
+
+    50% {
+        transform: translateY(-20px) rotate(45deg);
+    }
+
+    100% {
+        transform: translateY(0) rotate(45deg);
+    }
+}
+
+.home-logo {
+    width: 100px;
+    margin-bottom: 24px;
+    filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.4));
+}
+
+.home-title {
+    font-size: 48px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 12px;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+}
+
+.home-title span {
+    color: #ff6b6b;
+}
+
+.home-subtitle {
+    font-size: 18px;
+    opacity: 0.85;
+    max-width: 500px;
+    line-height: 1.6;
+    margin-bottom: 40px;
+}
+
+.home-buttons {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.btn-primary {
+    padding: 14px 36px;
+    border-radius: 10px;
+    border: none;
+    background: white;
+    color: #b30000;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.btn-outline {
+    padding: 14px 36px;
+    border-radius: 10px;
+    border: 2px solid white;
+    background: transparent;
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.btn-outline:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-3px);
+}
+
+.home-stats {
+    display: flex;
+    gap: 48px;
+    margin-top: 60px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.stat-number {
+    font-size: 32px;
+    font-weight: 800;
+}
+
+.stat-label {
+    font-size: 13px;
+    opacity: 0.75;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+@media (max-width: 600px) {
+    .home-title {
+        font-size: 32px;
+    }
+
+    .home-stats {
+        gap: 28px;
+    }
+}

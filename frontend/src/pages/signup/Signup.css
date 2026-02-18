@@ -1,0 +1,368 @@
+/* Signup.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.signup-page {
+    min-height: 100vh;
+    background: #f4f4f4;
+    font-family: 'Inter', Arial, sans-serif;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 0 0 48px 0;
+}
+
+.signup-container {
+    background: #ffffff;
+    width: 100%;
+    max-width: 440px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.10);
+}
+
+/* ── Red Header Banner ── */
+.signup-header {
+    background: #cc0000;
+    padding: 22px 24px 18px 24px;
+}
+
+.signup-title {
+    color: #ffffff;
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+}
+
+/* ── Body ── */
+.signup-body {
+    padding: 20px 24px 28px 24px;
+}
+
+/* ── Benefits Toggle ── */
+.toggle-link {
+    background: none;
+    border: none;
+    color: #0066cc;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0;
+    margin-bottom: 16px;
+    display: block;
+    text-align: left;
+}
+
+.toggle-link:hover {
+    text-decoration: underline;
+}
+
+/* ── Info Panels ── */
+.info-panel {
+    background: #fff8f8;
+    border-left: 3px solid #cc0000;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #555;
+    line-height: 1.55;
+    margin-bottom: 12px;
+    border-radius: 0 4px 4px 0;
+}
+
+.info-panel.small {
+    margin-top: 6px;
+    margin-bottom: 8px;
+}
+
+.info-panel ul {
+    list-style: none;
+    margin-top: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* ── Form ── */
+.signup-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.field-block {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.field-label-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.field-block label,
+.field-label-row label {
+    font-size: 14px;
+    font-weight: 700;
+    color: #111;
+}
+
+.req {
+    color: #cc0000;
+    font-weight: 700;
+}
+
+.optional {
+    color: #888;
+    font-weight: 400;
+    font-size: 12px;
+}
+
+.inline-link {
+    background: none;
+    border: none;
+    color: #0066cc;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0;
+    white-space: nowrap;
+}
+
+.inline-link:hover {
+    text-decoration: underline;
+}
+
+/* ── Inputs ── */
+.field-block input[type="text"],
+.field-block input[type="email"],
+.field-block input[type="password"] {
+    padding: 9px 10px;
+    border: 1px solid #bbb;
+    border-radius: 3px;
+    font-size: 15px;
+    background: #fff;
+    width: 100%;
+    font-family: inherit;
+    color: #111;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.field-block input:focus {
+    outline: none;
+    border-color: #cc0000;
+    box-shadow: 0 0 0 2px rgba(204, 0, 0, 0.12);
+}
+
+/* ZIP narrower */
+.zip-field input {
+    max-width: 160px;
+}
+
+/* ── DOB Dropdowns ── */
+.dob-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.select-wrapper {
+    position: relative;
+    flex: 1;
+}
+
+.day-select {
+    flex: 0 0 80px;
+}
+
+.select-wrapper select {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 100%;
+    padding: 9px 28px 9px 10px;
+    border: 1px solid #bbb;
+    border-radius: 3px;
+    font-size: 14px;
+    background: #fff;
+    color: #111;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.select-wrapper select:focus {
+    outline: none;
+    border-color: #cc0000;
+    box-shadow: 0 0 0 2px rgba(204, 0, 0, 0.12);
+}
+
+.select-arrow {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-size: 12px;
+    color: #555;
+}
+
+/* ── Divider ── */
+.divider {
+    border: none;
+    border-top: 1px solid #e0e0e0;
+    margin: 4px 0;
+}
+
+/* ── Password Strength ── */
+.strength-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 5px;
+}
+
+.strength-label-text {
+    font-size: 12px;
+    color: #555;
+    white-space: nowrap;
+}
+
+.strength-bar {
+    display: flex;
+    gap: 3px;
+    flex: 1;
+}
+
+.strength-seg {
+    height: 6px;
+    flex: 1;
+    border-radius: 3px;
+    background: #ddd;
+    transition: background 0.3s;
+}
+
+.strength-seg.s-weak {
+    background: #cc0000;
+}
+
+.strength-seg.s-fair {
+    background: #e67e00;
+}
+
+.strength-seg.s-good {
+    background: #2e7d32;
+}
+
+.strength-seg.s-strong {
+    background: #1b5e20;
+}
+
+.strength-word {
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.strength-word.s-weak {
+    color: #cc0000;
+}
+
+.strength-word.s-fair {
+    color: #e67e00;
+}
+
+.strength-word.s-good {
+    color: #2e7d32;
+}
+
+.strength-word.s-strong {
+    color: #1b5e20;
+}
+
+/* ── Errors ── */
+.error-message {
+    color: #cc0000;
+    font-size: 13px;
+    background: #fff5f5;
+    border: 1px solid #f5c6c6;
+    border-radius: 4px;
+    padding: 8px 12px;
+}
+
+.field-error {
+    color: #cc0000;
+    font-size: 12px;
+    margin-top: 2px;
+}
+
+/* ── Required note ── */
+.req-note {
+    font-size: 12px;
+    color: #888;
+}
+
+/* ── Submit Button ── */
+.signup-btn {
+    background: #cc0000;
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 3px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+    width: 100%;
+    margin-top: 4px;
+}
+
+.signup-btn:hover:not(:disabled) {
+    background: #aa0000;
+}
+
+.signup-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+/* ── Sign In Link ── */
+.signin-link {
+    text-align: center;
+    margin-top: 18px;
+    font-size: 14px;
+    color: #333;
+}
+
+.signin-link a {
+    color: #cc0000;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.signin-link a:hover {
+    text-decoration: underline;
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+    .signup-container {
+        max-width: 100%;
+    }
+
+    .signup-header {
+        padding: 18px 16px 14px;
+    }
+
+    .signup-body {
+        padding: 16px 16px 24px;
+    }
+
+    .dob-row {
+        flex-wrap: wrap;
+    }
+}
