@@ -1,15 +1,19 @@
-import React from 'react';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Login from "./pages/login/Login";
 
 function App() {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-background text-foreground">
-      <h1 className="text-4xl font-bold tracking-tight text-primary">
-        Welcome to Blood Connect!
-      </h1>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
+        {/* Add more routes here as you build them: */}
+        {/* <Route path="/signup" element={<Signup />} /> */}
+        {/* <Route path="/forgot-password" element={<ForgotPassword />} /> */}
+        {/* <Route path="/dashboard" element={<Dashboard />} /> */}
+      </Routes>
+    </BrowserRouter>
   );
 }
 
 export default App;
-
-
