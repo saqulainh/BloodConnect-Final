@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, User, Mail, Phone, Droplets, MapPin, Shield, Edit2, Save, X, LogOut, CheckCircle, Clock, Camera, Loader2 } from "lucide-react";
-import { getMe, updateMe, logoutUser, isLoggedIn } from "../lib/api";
+import { getMe, updateMe, logoutUser, isLoggedIn } from "../services/api";
 
 export default function Profile() {
     const navigate = useNavigate();

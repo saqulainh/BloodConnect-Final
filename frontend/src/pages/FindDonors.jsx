@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search, MapPin, Phone, Droplets, ChevronDown, ArrowLeft, CheckCircle, Clock } from "lucide-react";
-import { getNearbyDonors, getCurrentLocation } from "../lib/api";
+import { getNearbyDonors, getCurrentLocation } from "../services/api";
 
 const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"];
 
