@@ -1,13 +1,13 @@
 import mongoose from "mongoose";
 
 const requestSchema = new mongoose.Schema({
-    requester: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    requester: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, index: true },
     patientName: { type: String, required: true },
-    bloodGroup: { type: String, required: true },
+    bloodGroup: { type: String, required: true, index: true }, // Index for filtering
     hospital: { type: String, required: true },
-    urgency: { type: String, enum: ["Normal", "Urgent", "Critical"], default: "Normal" },
+    urgency: { type: String, enum: ["Normal", "Urgent", "Critical"], default: "Normal", index: true },
     units: { type: Number, required: true },
-    status: { type: String, enum: ["Active", "Completed", "Cancelled"], default: "Active" },
+    status: { type: String, enum: ["Active", "Completed", "Cancelled"], default: "Active", index: true }, // Index for active requests
     location: {
         type: { type: String, default: "Point" },
         coordinates: { type: [Number], index: "2dsphere" } // [lng, lat]

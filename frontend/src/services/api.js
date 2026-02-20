@@ -106,7 +106,7 @@ export const loginUser = async ({ email, password, aadhaarLast4 }) => {
         body: JSON.stringify({ email, password, aadhaarLast4 }),
     });
     saveTokens(data.data);
-    if (data.data?.user) saveUser(data.data.user);
+    saveUser(data.data); // User data is directly in data.data
     return data;
 };
 
@@ -128,7 +128,7 @@ export const verifyOtp = async ({ email, otp }) => {
         body: JSON.stringify({ email, otp }),
     });
     if (data.data?.accessToken) saveTokens(data.data);
-    if (data.data?.user) saveUser(data.data.user);
+    saveUser(data.data); // User data is directly in data.data
     return data;
 };
 
@@ -170,6 +170,16 @@ export const logoutUser = async () => {
         clearTokens();
     }
 };
+
+/** POST /auth/verify-aadhaar — { email, aadhaarNumber } */
+export const verifyAadhaar = async ({ email, aadhaarNumber }) => {
+    return apiFetch("/auth/verify-aadhaar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, aadhaarNumber }),
+    });
+};
+
 
 // ─────────────────────────────────────────────────────────────────────
 // USER ENDPOINTS

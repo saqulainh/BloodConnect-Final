@@ -1,5 +1,13 @@
 import express from "express";
-import { registerUser, loginUser, logoutUser, verifyOtp, getMe } from "../controllers/authController.js";
+import {
+    registerUser,
+    loginUser,
+    logoutUser,
+    verifyOtp,
+    resendOtp,
+    verifyAadhaar,
+    getMe
+} from "../controllers/authController.js";
 import { protect } from "../middleware/authMiddleware.js";
 import { upload } from "../utils/cloudinary.js";
 
@@ -14,6 +22,8 @@ router.post("/register", upload.fields([
 router.post("/login", loginUser);
 router.post("/logout", logoutUser);
 router.post("/verify-otp", verifyOtp);
+router.post("/resend-otp", resendOtp);
+router.post("/verify-aadhaar", verifyAadhaar);
 router.get("/me", protect, getMe);
 
 export default router;

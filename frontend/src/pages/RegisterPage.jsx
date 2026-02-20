@@ -1,210 +1,264 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Eye, EyeOff, Upload, Loader2, MapPin, ArrowRight, ArrowLeft, Check, User, Phone, Mail, Lock, Droplets } from "lucide-react";
+import {
+    User, Mail, Phone, Droplets, ChevronRight, ChevronLeft,
+    ShieldCheck, Camera, FileText, MapPin, Lock, Eye, EyeOff,
+    Check, AlertCircle, Upload, X
+} from "lucide-react";
 import { registerUser, getCurrentLocation } from "../services/api";
 
-const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"];
-
-const TYPEWRITER_LINES = [
-    "Save a life today.",
-    "Be someone's hero.",
-    "Your blood. Their hope.",
-    "Donate. Connect. Live.",
+// ─── Constants ────────────────────────────────────────────────────────────────
+const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
+const STEPS = [
+    { id: 0, label: "Personal Info", icon: User },
+    { id: 1, label: "Aadhaar", icon: ShieldCheck },
+    { id: 2, label: "Documents", icon: FileText },
+    { id: 3, label: "Password", icon: Lock },
 ];
 
-// ── File upload button — OUTSIDE Register to prevent remount on re-render ──────
-const FileBtn = ({ field, label, maxKB, req, fileName, onFilePicked }) => {
-    const inputRef = useRef(null);
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+const formatAadhaar = (raw) => {
+    const digits = raw.replace(/\D/g, "").slice(0, 12);
+    return digits.replace(/(\d{4})(?=\d)/g, "$1 ").trim();
+};
+
+const isValidAadhaar = (num) => {
+    const clean = num.replace(/\s/g, "");
+    return /^[2-9]\d{11}$/.test(clean);
+};
+
+const maskAadhaar = (num) => {
+    const clean = num.replace(/\s/g, "");
+    if (clean.length < 4) return clean;
+    return "XXXX XXXX " + clean.slice(-4);
+};
+
+const passwordStrength = (pwd) => {
+    let score = 0;
+    if (pwd.length >= 8) score++;
+    if (/[A-Z]/.test(pwd)) score++;
+    if (/[0-9]/.test(pwd)) score++;
+    if (/[^A-Za-z0-9]/.test(pwd)) score++;
+    if (pwd.length >= 12) score++;
+    return score; // 0–5
+};
+
+const STRENGTH_LABELS = ["", "Very Weak", "Weak", "Fair", "Strong", "Very Strong"];
+const STRENGTH_COLORS = ["", "#ef4444", "#f97316", "#eab308", "#22c55e", "#16a34a"];
+
+// ─── Sub-components ───────────────────────────────────────────────────────────
+
+const Label = ({ children }) => (
+    <label style={{ display: "block", fontSize: 11, fontWeight: 800, color: "#888", marginBottom: 7, letterSpacing: "0.07em", textTransform: "uppercase" }}>
+        {children}
+    </label>
+);
+
+const InputWrap = ({ icon: Icon, children }) => (
+    <div style={{ position: "relative" }}>
+        {Icon && <Icon size={15} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "#ccc", pointerEvents: "none", zIndex: 1 }} />}
+        {children}
+    </div>
+);
+
+const inputStyle = (hasIcon = true) => ({
+    width: "100%", padding: `12px 14px 12px ${hasIcon ? "42px" : "14px"}`,
+    border: "1.5px solid #eee", borderRadius: 10, fontSize: 14,
+    background: "#f9f9f9", outline: "none", boxSizing: "border-box",
+    color: "#111", fontFamily: "inherit", transition: "border 0.2s, background 0.2s"
+});
+
+function InputField({ icon: Icon, label, ...props }) {
     return (
         <div>
-            <p style={{ fontSize: 11, fontWeight: 800, color: "#888", marginBottom: 6, letterSpacing: "0.07em", textTransform: "uppercase", margin: "0 0 6px" }}>
-                {label}{req && <span style={{ color: "#e53935" }}> *</span>}
-            </p>
-            <div
-                onClick={() => inputRef.current?.click()}
-                style={{
-                    display: "flex", alignItems: "center", gap: 10, padding: "11px 14px",
-                    border: `1.5px dashed ${fileName ? "#4caf50" : "#e0e0e0"}`,
-                    borderRadius: 10, cursor: "pointer", background: fileName ? "#f1fff5" : "#fafafa",
-                    fontSize: 13, color: fileName ? "#2e7d32" : "#bbb", transition: "all 0.2s", userSelect: "none",
-                }}
-                onMouseEnter={(e) => { if (!fileName) e.currentTarget.style.borderColor = "#e53935"; }}
-                onMouseLeave={(e) => { if (!fileName) e.currentTarget.style.borderColor = "#e0e0e0"; }}
-            >
-                <Upload size={14} color={fileName ? "#4caf50" : "#e53935"} />
-                <span style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontWeight: fileName ? 600 : 400 }}>
-                    {fileName || `Click to upload ${label}`}
-                </span>
-                {fileName && <span style={{ fontSize: 16 }}>✓</span>}
-                <input
-                    ref={inputRef}
-                    type="file"
-                    accept="image/*,.pdf"
-                    style={{ display: "none" }}
-                    onChange={(e) => {
-                        const f = e.target.files[0];
-                        if (!f) return;
-                        if (f.size > maxKB * 1024) {
-                            alert(`File must be under ${maxKB}KB. Your file: ${(f.size / 1024).toFixed(0)}KB`);
-                            e.target.value = "";
-                            return;
-                        }
-                        onFilePicked(field, f);
-                    }}
+            {label && <Label>{label}</Label>}
+            <InputWrap icon={Icon}>
+                <input {...props} style={inputStyle(!!Icon)}
+                    onFocus={e => { e.target.style.borderColor = "#e53935"; e.target.style.background = "#fff"; }}
+                    onBlur={e => { e.target.style.borderColor = "#eee"; e.target.style.background = "#f9f9f9"; }}
                 />
-            </div>
+            </InputWrap>
         </div>
     );
-};
-
-// ── Typewriter hook ───────────────────────────────────────────────────────────
-function useTypewriter(lines, speed = 70, pause = 1800) {
-    const [display, setDisplay] = useState("");
-    const [lineIdx, setLineIdx] = useState(0);
-    const [charIdx, setCharIdx] = useState(0);
-    const [deleting, setDeleting] = useState(false);
-    const [fading, setFading] = useState(false);
-
-    useEffect(() => {
-        const current = lines[lineIdx];
-        let timeout;
-        if (!deleting && charIdx <= current.length) {
-            // Fade in when starting a new line
-            if (charIdx === 0) setFading(false);
-            timeout = setTimeout(() => { setDisplay(current.slice(0, charIdx)); setCharIdx((c) => c + 1); }, speed);
-        } else if (!deleting && charIdx > current.length) {
-            timeout = setTimeout(() => { setFading(true); setTimeout(() => setDeleting(true), 300); }, pause);
-        } else if (deleting && charIdx >= 0) {
-            timeout = setTimeout(() => { setDisplay(current.slice(0, charIdx)); setCharIdx((c) => c - 1); }, speed / 2);
-        } else {
-            setDeleting(false);
-            setLineIdx((i) => (i + 1) % lines.length);
-        }
-        return () => clearTimeout(timeout);
-    }, [charIdx, deleting, lineIdx, lines, speed, pause]);
-
-    return { display, fading };
 }
 
-// ── Step bar ──────────────────────────────────────────────────────────────────
-const StepBar = ({ step }) => {
-    const steps = ["Personal Info", "Identity", "Password"];
+// ─── StepBar ─────────────────────────────────────────────────────────────────
+function StepBar({ step }) {
     return (
-        <div style={{ display: "flex", alignItems: "center", marginBottom: 36 }}>
-            {steps.map((label, i) => (
-                <React.Fragment key={i}>
-                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
-                        <div style={{
-                            width: 32, height: 32, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center",
-                            fontWeight: 800, fontSize: 13, transition: "all 0.3s",
-                            background: i <= step ? "#e53935" : "#f0f0f0",
-                            color: i <= step ? "#fff" : "#aaa",
-                            boxShadow: i === step ? "0 0 0 4px rgba(229,57,53,0.15)" : "none",
-                        }}>
-                            {i < step ? <Check size={14} /> : i + 1}
+        <div style={{ display: "flex", alignItems: "center", marginBottom: 32 }}>
+            {STEPS.map((s, i) => {
+                const done = i < step;
+                const active = i === step;
+                return (
+                    <React.Fragment key={s.id}>
+                        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
+                            <div style={{
+                                width: 36, height: 36, borderRadius: "50%",
+                                background: done ? "#e53935" : active ? "#fff" : "#f5f5f5",
+                                border: active ? "2.5px solid #e53935" : done ? "none" : "1.5px solid #e8e8e8",
+                                display: "flex", alignItems: "center", justifyContent: "center",
+                                transition: "all 0.3s"
+                            }}>
+                                {done
+                                    ? <Check size={16} color="#fff" strokeWidth={3} />
+                                    : <s.icon size={15} color={active ? "#e53935" : "#ccc"} />
+                                }
+                            </div>
+                            <span style={{ fontSize: 9.5, fontWeight: 800, color: active ? "#e53935" : done ? "#555" : "#bbb", whiteSpace: "nowrap", textTransform: "uppercase", letterSpacing: "0.05em" }}>{s.label}</span>
                         </div>
-                        <span style={{ fontSize: 10, fontWeight: 700, color: i <= step ? "#e53935" : "#bbb", letterSpacing: "0.05em", textTransform: "uppercase", whiteSpace: "nowrap" }}>
-                            {label}
-                        </span>
-                    </div>
-                    {i < steps.length - 1 && (
-                        <div style={{ flex: 1, height: 2, margin: "0 8px", marginBottom: 20, background: i < step ? "#e53935" : "#f0f0f0", transition: "background 0.4s" }} />
-                    )}
-                </React.Fragment>
-            ))}
+                        {i < STEPS.length - 1 && (
+                            <div style={{ flex: 1, height: 2, background: done ? "#e53935" : "#f0f0f0", margin: "0 6px", marginBottom: 22, transition: "background 0.4s" }} />
+                        )}
+                    </React.Fragment>
+                );
+            })}
         </div>
     );
-};
+}
 
-// ── Main Register component ───────────────────────────────────────────────────
-export default function Register() {
+// ─── FileUpload ───────────────────────────────────────────────────────────────
+function FileUpload({ label, accept, onChange, preview, hint }) {
+    const ref = useRef(null);
+    return (
+        <div>
+            <Label>{label}</Label>
+            <div
+                onClick={() => ref.current.click()}
+                style={{
+                    border: preview ? "1.5px solid #e53935" : "1.5px dashed #ddd",
+                    borderRadius: 12, padding: 16, cursor: "pointer",
+                    background: preview ? "#fff5f5" : "#fafafa",
+                    display: "flex", alignItems: "center", gap: 14,
+                    transition: "all 0.2s"
+                }}
+                onMouseEnter={e => { if (!preview) e.currentTarget.style.borderColor = "#e53935"; e.currentTarget.style.background = "#fff8f8"; }}
+                onMouseLeave={e => { if (!preview) e.currentTarget.style.borderColor = "#ddd"; e.currentTarget.style.background = preview ? "#fff5f5" : "#fafafa"; }}
+            >
+                {preview ? (
+                    <>
+                        <img src={preview} alt="preview" style={{ width: 56, height: 42, objectFit: "cover", borderRadius: 8, flexShrink: 0, border: "1.5px solid #fdd" }} />
+                        <div>
+                            <p style={{ margin: 0, fontSize: 12, fontWeight: 800, color: "#e53935" }}>✓ File selected</p>
+                            <p style={{ margin: 0, fontSize: 11, color: "#aaa" }}>Click to change</p>
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        <div style={{ width: 40, height: 40, background: "#fff0f0", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                            <Upload size={18} color="#e53935" />
+                        </div>
+                        <div>
+                            <p style={{ margin: 0, fontSize: 12.5, fontWeight: 700, color: "#555" }}>Click to upload</p>
+                            <p style={{ margin: 0, fontSize: 11, color: "#aaa" }}>{hint || "JPG, PNG or PDF"}</p>
+                        </div>
+                    </>
+                )}
+            </div>
+            <input ref={ref} type="file" accept={accept} style={{ display: "none" }} onChange={onChange} />
+        </div>
+    );
+}
+
+// ─── Main Component ───────────────────────────────────────────────────────────
+export default function RegisterPage() {
     const navigate = useNavigate();
-    const formRef = useRef(null);
     const [step, setStep] = useState(0);
-    const [form, setForm] = useState({
-        name: "", email: "", phone: "", bloodGroup: "", address: "",
-        role: "donor", aadhaarNumber: "", password: "", confirmPassword: "",
-    });
-    const [files, setFiles] = useState({ aadhaarImage: null, medicalCertificate: null, profilePicture: null });
-    const [fileNames, setFileNames] = useState({ aadhaarImage: "", medicalCertificate: "", profilePicture: "" });
-    const [showPwd, setShowPwd] = useState(false);
-    const [showConfirm, setShowConfirm] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [gpsStatus, setGpsStatus] = useState("");
     const [coords, setCoords] = useState(null);
-    const { display: typed, fading } = useTypewriter(TYPEWRITER_LINES);
+    const [showPwd, setShowPwd] = useState(false);
+    const [showConfirm, setShowConfirm] = useState(false);
+    const [aadhaarFocused, setAadhaarFocused] = useState(false);
 
-    useEffect(() => { fetchGps(); }, []);
+    const [form, setForm] = useState({
+        name: "", email: "", phone: "", bloodGroup: "", role: "donor", address: "",
+        aadhaarNumber: "", password: "", confirmPassword: "",
+    });
+
+    const [files, setFiles] = useState({ aadhaarImage: null, medicalCertificate: null, profilePicture: null });
+    const [previews, setPreviews] = useState({ aadhaarImage: "", medicalCertificate: "", profilePicture: "" });
+
+    const set = (field) => (e) => setForm({ ...form, [field]: e.target.value });
+
+    const onFile = (field) => (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        setFiles({ ...files, [field]: file });
+        if (file.type.startsWith("image/")) {
+            const url = URL.createObjectURL(file);
+            setPreviews({ ...previews, [field]: url });
+        } else {
+            setPreviews({ ...previews, [field]: "" });
+        }
+    };
+
+    const onAadhaar = (e) => {
+        const formatted = formatAadhaar(e.target.value);
+        setForm({ ...form, aadhaarNumber: formatted });
+    };
 
     const fetchGps = async () => {
-        setGpsStatus("fetching");
-        try { const loc = await getCurrentLocation(); setCoords(loc); setGpsStatus("ok"); }
-        catch { setGpsStatus("denied"); }
+        setGpsStatus("Fetching location...");
+        try {
+            const pos = await getCurrentLocation();
+            setCoords(pos);
+            setGpsStatus("✓ Location captured");
+        } catch {
+            setGpsStatus("⚠ Location access denied");
+        }
     };
 
-    // Called by FileBtn when a valid file is picked
-    const handleFilePicked = (field, file) => {
-        setFiles((p) => ({ ...p, [field]: file }));
-        setFileNames((p) => ({ ...p, [field]: file.name }));
-        setError("");
-    };
-
-    const slideIn = (dir) => {
-        if (!formRef.current) return;
-        formRef.current.style.opacity = "0";
-        formRef.current.style.transform = `translateX(${dir > 0 ? 30 : -30}px)`;
-        setTimeout(() => {
-            if (formRef.current) {
-                formRef.current.style.transition = "all 0.3s ease";
-                formRef.current.style.opacity = "1";
-                formRef.current.style.transform = "translateX(0)";
-            }
-        }, 20);
-    };
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        if (name === "aadhaarNumber") setForm({ ...form, aadhaarNumber: value.replace(/\D/g, "").slice(0, 12) });
-        else if (name === "phone") setForm({ ...form, phone: value.replace(/\D/g, "").slice(0, 10) });
-        else setForm({ ...form, [name]: value });
-    };
-
+    // ── Validation per step ───────────────────────────────────────────────────
     const validate = () => {
         setError("");
         if (step === 0) {
-            if (!form.name.trim()) { setError("Full name is required"); return false; }
-            if (!form.email.includes("@")) { setError("Valid email is required"); return false; }
-            if (form.phone.length < 10) { setError("Enter valid 10-digit phone number"); return false; }
-            if (!form.bloodGroup) { setError("Please select your blood group"); return false; }
+            if (!form.name.trim()) return setError("Full name is required."), false;
+            if (!/^\S+@\S+\.\S+$/.test(form.email)) return setError("Valid email is required."), false;
+            if (!/^\d{10}$/.test(form.phone.replace(/\s/g, ""))) return setError("Phone must be 10 digits."), false;
+            if (!form.bloodGroup) return setError("Please select your blood group."), false;
+            return true;
         }
         if (step === 1) {
-            if (form.aadhaarNumber.length !== 12) { setError("Enter valid 12-digit Aadhaar number"); return false; }
-            if (!files.aadhaarImage) { setError("Aadhaar card image is required"); return false; }
+            if (!isValidAadhaar(form.aadhaarNumber)) return setError("Enter a valid 12-digit Aadhaar number. First digit must be 2–9."), false;
+            if (!files.aadhaarImage) return setError("Please upload your Aadhaar card image for verification."), false;
+            return true;
         }
-        if (step === 2) {
-            if (form.password.length < 6) { setError("Password must be at least 6 characters"); return false; }
-            if (form.password !== form.confirmPassword) { setError("Passwords do not match"); return false; }
+        if (step === 2) return true; // Documents optional
+        if (step === 3) {
+            if (!form.password || form.password.length < 8) return setError("Password must be at least 8 characters."), false;
+            if (form.password !== form.confirmPassword) return setError("Passwords do not match."), false;
+            return true;
         }
         return true;
     };
 
-    const goNext = () => { if (!validate()) return; slideIn(1); setStep((s) => s + 1); };
-    const goPrev = () => { setError(""); slideIn(-1); setStep((s) => s - 1); };
+    const goNext = () => { if (validate()) setStep((s) => s + 1); };
+    const goPrev = () => { setError(""); setStep((s) => s - 1); };
 
+    // ── Submit ────────────────────────────────────────────────────────────────
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!validate()) return;
         setLoading(true);
+        setError("");
         try {
             const fd = new FormData();
-            Object.entries(form).forEach(([k, v]) => v && fd.append(k, v));
+            fd.append("name", form.name.trim());
+            fd.append("email", form.email.trim().toLowerCase());
+            fd.append("phone", form.phone.replace(/\s/g, ""));
+            fd.append("bloodGroup", form.bloodGroup);
+            fd.append("role", form.role);
+            fd.append("address", form.address);
+            fd.append("aadhaarNumber", form.aadhaarNumber.replace(/\s/g, ""));
+            fd.append("password", form.password);
             if (coords) { fd.append("lat", coords.lat); fd.append("lng", coords.lng); }
-            fd.append("aadhaarImage", files.aadhaarImage);
+            if (files.aadhaarImage) fd.append("aadhaarImage", files.aadhaarImage);
             if (files.medicalCertificate) fd.append("medicalCertificate", files.medicalCertificate);
             if (files.profilePicture) fd.append("profilePicture", files.profilePicture);
-            await registerUser(fd);
-            navigate("/verify-otp", { state: { email: form.email } });
+
+            const res = await registerUser(fd);
+            navigate(`/verify-otp?email=${encodeURIComponent(form.email.trim().toLowerCase())}`);
         } catch (err) {
             setError(err.message || "Registration failed. Please try again.");
         } finally {
@@ -212,261 +266,362 @@ export default function Register() {
         }
     };
 
-    const fieldStyle = {
-        width: "100%", padding: "11px 14px 11px 38px", border: "1.5px solid #ebebeb",
-        borderRadius: 10, fontSize: 13.5, background: "#fafafa", outline: "none",
-        boxSizing: "border-box", color: "#111", fontFamily: "inherit", transition: "border 0.2s",
-    };
-    const lbl = { fontSize: 11, fontWeight: 800, color: "#888", marginBottom: 6, letterSpacing: "0.07em", textTransform: "uppercase", display: "block" };
-    const onF = (e) => (e.target.style.borderColor = "#e53935");
-    const onB = (e) => (e.target.style.borderColor = "#ebebeb");
-    const iconStyle = { position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", color: "#ccc", pointerEvents: "none" };
-
-    const STEP_TITLES = ["Personal Info", "Identity & Documents", "Set Password"];
-    const STEP_SUBS = ["Tell us about yourself", "Secure identity verification", "Create your account password"];
+    const pwdScore = passwordStrength(form.password);
+    const aadhaarValid = isValidAadhaar(form.aadhaarNumber);
 
     return (
-        <div style={{ minHeight: "100vh", display: "flex", fontFamily: "'Inter','Segoe UI',sans-serif", background: "#f7f7f9" }}>
+        <div style={{ minHeight: "100vh", display: "flex", background: "#fafafa", fontFamily: "'Inter','Segoe UI',sans-serif" }}>
+            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
-            {/* ── LEFT PANEL ── */}
-            <div style={{ width: 360, background: "#fff", display: "flex", flexDirection: "column", justifyContent: "center", padding: "60px 44px", borderRight: "1px solid #f0f0f0", flexShrink: 0 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 48 }}>
-                    <div style={{ width: 38, height: 38, background: "#e53935", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                        <Droplets size={20} color="#fff" />
+            {/* ── Left Panel ── */}
+            <div style={{ width: 340, background: "linear-gradient(160deg,#b71c1c 0%,#e53935 55%,#ff7043 100%)", padding: "48px 36px", display: "flex", flexDirection: "column", justifyContent: "space-between", position: "relative", overflow: "hidden", flexShrink: 0 }}>
+                <div style={{ position: "absolute", top: -80, right: -80, width: 280, height: 280, background: "rgba(255,255,255,0.07)", borderRadius: "50%" }} />
+                <div style={{ position: "absolute", bottom: -60, left: -60, width: 220, height: 220, background: "rgba(0,0,0,0.1)", borderRadius: "50%" }} />
+
+                {/* Brand */}
+                <div style={{ position: "relative" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 40 }}>
+                        <div style={{ width: 38, height: 38, background: "rgba(255,255,255,0.2)", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                            <Droplets size={20} color="#fff" />
+                        </div>
+                        <span style={{ color: "#fff", fontWeight: 900, fontSize: 16, letterSpacing: "-0.03em" }}>BloodConnect</span>
                     </div>
-                    <span style={{ fontWeight: 900, fontSize: 17, color: "#111", letterSpacing: "-0.02em" }}>
-                        Blood<span style={{ color: "#e53935" }}>Connect</span>
-                    </span>
+
+                    <h2 style={{ color: "#fff", fontSize: 28, fontWeight: 900, lineHeight: 1.15, margin: "0 0 14px", letterSpacing: "-0.03em" }}>
+                        Join the<br />Lifesaving<br />Network
+                    </h2>
+                    <p style={{ color: "rgba(255,255,255,0.75)", fontSize: 14, lineHeight: 1.65, margin: "0 0 32px" }}>
+                        Complete your profile in 4 simple steps and start making a real difference today.
+                    </p>
+
+                    {/* Step checklist */}
+                    <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+                        {STEPS.map((s) => (
+                            <div key={s.id} style={{ display: "flex", alignItems: "center", gap: 12, opacity: s.id <= step ? 1 : 0.45, transition: "opacity 0.3s" }}>
+                                <div style={{ width: 30, height: 30, borderRadius: "50%", background: s.id < step ? "rgba(255,255,255,0.9)" : s.id === step ? "rgba(255,255,255,0.25)" : "rgba(255,255,255,0.12)", border: "1.5px solid rgba(255,255,255,0.3)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                                    {s.id < step
+                                        ? <Check size={14} color="#e53935" strokeWidth={3} />
+                                        : <s.icon size={13} color="rgba(255,255,255,0.9)" />
+                                    }
+                                </div>
+                                <span style={{ color: s.id === step ? "#fff" : "rgba(255,255,255,0.7)", fontSize: 13, fontWeight: s.id === step ? 800 : 500 }}>
+                                    {s.id === step && "→ "}{s.label}
+                                </span>
+                            </div>
+                        ))}
+                    </div>
                 </div>
 
-                <div style={{ marginBottom: 36 }}>
-                    <h1 style={{ fontSize: 32, fontWeight: 900, color: "#111", lineHeight: 1.2, margin: "0 0 8px", letterSpacing: "-0.03em", minHeight: 80, opacity: fading ? 0 : 1, transition: "opacity 0.3s ease" }}>
-                        {typed}
-                        <span style={{ display: "inline-block", width: 3, height: "0.85em", background: "#e53935", marginLeft: 3, verticalAlign: "middle", animation: fading ? "none" : "blink 1s step-end infinite" }} />
-                    </h1>
-                    <p style={{ fontSize: 13, color: "#aaa", lineHeight: 1.7, margin: 0 }}>
-                        Join thousands of verified donors.<br />Every registration saves a life.
+                {/* Login link */}
+                <div style={{ position: "relative" }}>
+                    <p style={{ color: "rgba(255,255,255,0.65)", fontSize: 13, margin: 0 }}>
+                        Already have an account?{" "}
+                        <Link to="/login" style={{ color: "#fff", fontWeight: 800 }}>Sign in</Link>
                     </p>
                 </div>
-
-                {[
-                    { icon: "🔒", title: "AES-256 Encrypted", desc: "Aadhaar never stored in plaintext." },
-                    { icon: "📍", title: "Geo Matching", desc: "Matched with donors within 5km." },
-                    { icon: "⚡", title: "Instant Alerts", desc: "Real-time Pusher notifications." },
-                ].map(({ icon, title, desc }) => (
-                    <div key={title} style={{ display: "flex", gap: 14, alignItems: "flex-start", marginBottom: 18 }}>
-                        <div style={{ width: 36, height: 36, background: "#fff5f5", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 17, flexShrink: 0 }}>
-                            {icon}
-                        </div>
-                        <div>
-                            <p style={{ margin: 0, fontWeight: 800, fontSize: 13, color: "#222" }}>{title}</p>
-                            <p style={{ margin: 0, fontSize: 12, color: "#aaa", lineHeight: 1.5 }}>{desc}</p>
-                        </div>
-                    </div>
-                ))}
             </div>
 
-            {/* ── RIGHT PANEL ── */}
-            <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "48px 32px", overflowY: "auto" }}>
-                <div style={{ width: "100%", maxWidth: 520 }}>
+            {/* ── Right Panel ── */}
+            <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 24px", overflowY: "auto" }}>
+                <div style={{ width: "100%", maxWidth: 480, background: "#fff", borderRadius: 24, boxShadow: "0 8px 40px rgba(0,0,0,0.07)", padding: "36px 32px" }}>
+
                     <StepBar step={step} />
 
-                    <div style={{ background: "#fff", borderRadius: 20, boxShadow: "0 4px 32px rgba(0,0,0,0.07)", padding: "36px 36px 28px" }}>
-                        <div style={{ marginBottom: 24 }}>
-                            <h2 style={{ fontSize: 22, fontWeight: 900, color: "#111", margin: "0 0 4px", letterSpacing: "-0.02em" }}>{STEP_TITLES[step]}</h2>
-                            <p style={{ fontSize: 12, color: "#bbb", margin: 0, fontWeight: 500, textTransform: "uppercase", letterSpacing: "0.06em" }}>{STEP_SUBS[step]}</p>
-                        </div>
+                    {/* Step title */}
+                    <div style={{ marginBottom: 24 }}>
+                        <h2 style={{ fontSize: 20, fontWeight: 900, color: "#111", margin: "0 0 4px", letterSpacing: "-0.02em" }}>
+                            {step === 0 && "Personal Information"}
+                            {step === 1 && "Aadhaar Verification"}
+                            {step === 2 && "Documents & Location"}
+                            {step === 3 && "Secure Password"}
+                        </h2>
+                        <p style={{ fontSize: 13, color: "#aaa", margin: 0, fontWeight: 500 }}>
+                            {step === 0 && "Tell us about yourself"}
+                            {step === 1 && "Verify your identity with your Aadhaar card"}
+                            {step === 2 && "Upload supporting documents (optional but recommended)"}
+                            {step === 3 && "Create a strong password to secure your account"}
+                        </p>
+                    </div>
 
-                        {error && (
-                            <div style={{ background: "#fff5f5", border: "1px solid #fdd", borderRadius: 9, padding: "9px 14px", marginBottom: 18, color: "#e53935", fontSize: 13, fontWeight: 600 }}>
-                                ⚠️ {error}
-                            </div>
+                    {/* Error */}
+                    {error && (
+                        <div style={{ background: "#fff5f5", border: "1.5px solid #fdd", borderRadius: 10, padding: "11px 14px", marginBottom: 20, color: "#e53935", fontSize: 13, fontWeight: 600, display: "flex", alignItems: "flex-start", gap: 8 }}>
+                            <AlertCircle size={16} style={{ flexShrink: 0, marginTop: 1 }} />
+                            <span>{error}</span>
+                        </div>
+                    )}
+
+                    <form onSubmit={step === 3 ? handleSubmit : (e) => { e.preventDefault(); goNext(); }}
+                        style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+
+                        {/* ── STEP 0: Personal Info ─────────────────────────────── */}
+                        {step === 0 && (
+                            <>
+                                <InputField icon={User} label="Full Name" type="text" value={form.name} onChange={set("name")} placeholder="Your full legal name" required />
+                                <InputField icon={Mail} label="Email Address" type="email" value={form.email} onChange={set("email")} placeholder="you@example.com" required />
+                                <InputField icon={Phone} label="Phone Number" type="tel" value={form.phone} onChange={set("phone")} placeholder="10-digit mobile number" required />
+
+                                <div>
+                                    <Label>Blood Group</Label>
+                                    <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8 }}>
+                                        {BLOOD_GROUPS.map((bg) => (
+                                            <button key={bg} type="button" onClick={() => setForm({ ...form, bloodGroup: bg })}
+                                                style={{
+                                                    padding: "10px 4px", borderRadius: 10, border: form.bloodGroup === bg ? "2px solid #e53935" : "1.5px solid #eee",
+                                                    background: form.bloodGroup === bg ? "#fff0f0" : "#fafafa",
+                                                    color: form.bloodGroup === bg ? "#e53935" : "#888",
+                                                    fontWeight: 800, fontSize: 13, cursor: "pointer", transition: "all 0.15s"
+                                                }}>
+                                                {bg}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <Label>I am registering as</Label>
+                                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                                        {["donor", "receiver"].map((r) => (
+                                            <button key={r} type="button" onClick={() => setForm({ ...form, role: r })}
+                                                style={{
+                                                    padding: "13px 10px", borderRadius: 12, border: form.role === r ? "2px solid #e53935" : "1.5px solid #eee",
+                                                    background: form.role === r ? "#fff0f0" : "#fafafa",
+                                                    color: form.role === r ? "#e53935" : "#999",
+                                                    fontWeight: 800, fontSize: 13, cursor: "pointer", transition: "all 0.15s",
+                                                    textTransform: "capitalize"
+                                                }}>
+                                                {r === "donor" ? "🩸 Donor" : "🏥 Receiver"}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <InputField icon={MapPin} label="Address (optional)" type="text" value={form.address} onChange={set("address")} placeholder="City, State" />
+                            </>
                         )}
 
-                        <div ref={formRef}>
-                            <form onSubmit={step === 2 ? handleSubmit : (e) => { e.preventDefault(); goNext(); }}>
+                        {/* ── STEP 1: Aadhaar Verification ─────────────────────── */}
+                        {step === 1 && (
+                            <>
+                                {/* Info box */}
+                                <div style={{ background: "#f0f7ff", border: "1.5px solid #c7e0ff", borderRadius: 12, padding: "12px 16px", display: "flex", gap: 10 }}>
+                                    <ShieldCheck size={18} color="#2b68d6" style={{ flexShrink: 0, marginTop: 1 }} />
+                                    <div>
+                                        <p style={{ margin: "0 0 2px", fontSize: 12.5, fontWeight: 800, color: "#1a4fa0" }}>Why Aadhaar?</p>
+                                        <p style={{ margin: 0, fontSize: 12, color: "#3a6fc7", lineHeight: 1.55 }}>
+                                            Aadhaar verification ensures that all donors are genuine Indian citizens. Your data is stored securely and never shared.
+                                        </p>
+                                    </div>
+                                </div>
 
-                                {/* ── STEP 0: Personal Info ── */}
-                                {step === 0 && (
-                                    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                                {/* Aadhaar number input */}
+                                <div>
+                                    <Label>Aadhaar Number (12 digits)</Label>
+                                    <div style={{ position: "relative" }}>
+                                        <ShieldCheck size={15} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: aadhaarValid ? "#22c55e" : "#ccc", pointerEvents: "none" }} />
+                                        <input
+                                            type="text" inputMode="numeric"
+                                            value={aadhaarFocused ? form.aadhaarNumber : (form.aadhaarNumber.length >= 12 ? maskAadhaar(form.aadhaarNumber) : form.aadhaarNumber)}
+                                            onChange={onAadhaar}
+                                            onFocus={(e) => { setAadhaarFocused(true); e.target.style.borderColor = "#e53935"; e.target.style.background = "#fff"; }}
+                                            onBlur={(e) => { setAadhaarFocused(false); e.target.style.borderColor = aadhaarValid ? "#22c55e" : "#eee"; e.target.style.background = aadhaarValid ? "#f0fff4" : "#f9f9f9"; }}
+                                            placeholder="XXXX XXXX XXXX"
+                                            maxLength={14}
+                                            style={{ ...inputStyle(true), borderColor: aadhaarValid ? "#22c55e" : "#eee", background: aadhaarValid && !aadhaarFocused ? "#f0fff4" : "#f9f9f9", fontFamily: "monospace", letterSpacing: "0.1em", fontSize: 16 }}
+                                        />
+                                        {aadhaarValid && (
+                                            <div style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", width: 22, height: 22, background: "#22c55e", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                                <Check size={13} color="#fff" strokeWidth={3} />
+                                            </div>
+                                        )}
+                                    </div>
+                                    {form.aadhaarNumber.replace(/\s/g, "").length > 0 && (
+                                        <p style={{ fontSize: 11, marginTop: 5, fontWeight: 700, color: aadhaarValid ? "#22c55e" : "#e53935" }}>
+                                            {aadhaarValid ? "✓ Valid Aadhaar format" : `${form.aadhaarNumber.replace(/\s/g, "").length}/12 digits`}
+                                        </p>
+                                    )}
+                                </div>
+
+                                {/* Aadhaar Image Upload */}
+                                <FileUpload
+                                    label="Aadhaar Card Image *"
+                                    accept="image/*,.pdf"
+                                    preview={previews.aadhaarImage}
+                                    onChange={onFile("aadhaarImage")}
+                                    hint="Front side of your Aadhaar card — JPG or PNG"
+                                />
+
+                                {/* Verified badge when both are done */}
+                                {aadhaarValid && files.aadhaarImage && (
+                                    <div style={{ background: "#f0fff4", border: "1.5px solid #bbf7d0", borderRadius: 12, padding: "12px 16px", display: "flex", alignItems: "center", gap: 10 }}>
+                                        <div style={{ width: 32, height: 32, background: "#22c55e", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                                            <Check size={16} color="#fff" strokeWidth={3} />
+                                        </div>
                                         <div>
-                                            <label style={lbl}>I am a</label>
-                                            <div style={{ display: "flex", background: "#f4f4f6", borderRadius: 10, padding: 4, gap: 4 }}>
-                                                {[{ val: "donor", label: "🩸 Donor" }, { val: "receiver", label: "🏥 Receiver" }].map(({ val, label }) => (
-                                                    <button key={val} type="button" onClick={() => setForm({ ...form, role: val })}
-                                                        style={{
-                                                            flex: 1, padding: "9px", borderRadius: 8, border: "none", cursor: "pointer", fontWeight: 700, fontSize: 13, transition: "all 0.2s",
-                                                            background: form.role === val ? "#e53935" : "transparent",
-                                                            color: form.role === val ? "#fff" : "#999",
-                                                            boxShadow: form.role === val ? "0 2px 8px rgba(229,57,53,0.25)" : "none",
-                                                        }}>
-                                                        {label}
-                                                    </button>
+                                            <p style={{ margin: 0, fontSize: 13, fontWeight: 800, color: "#15803d" }}>Aadhaar Ready for Verification</p>
+                                            <p style={{ margin: 0, fontSize: 11.5, color: "#4ade80" }}>Last 4 digits: {form.aadhaarNumber.slice(-4)} • Image submitted</p>
+                                        </div>
+                                    </div>
+                                )}
+                            </>
+                        )}
+
+                        {/* ── STEP 2: Documents & Location ─────────────────────── */}
+                        {step === 2 && (
+                            <>
+                                <FileUpload
+                                    label="Profile Picture (optional)"
+                                    accept="image/*"
+                                    preview={previews.profilePicture}
+                                    onChange={onFile("profilePicture")}
+                                    hint="Clear face photo for donor recognition"
+                                />
+
+                                <FileUpload
+                                    label="Medical Certificate (optional)"
+                                    accept="image/*,.pdf"
+                                    preview={previews.medicalCertificate}
+                                    onChange={onFile("medicalCertificate")}
+                                    hint="Improves donor credibility — PDF or image"
+                                />
+
+                                {/* GPS Location */}
+                                <div>
+                                    <Label>Your Location (for nearby donor matching)</Label>
+                                    <button type="button" onClick={fetchGps}
+                                        style={{
+                                            width: "100%", padding: "12px 16px",
+                                            border: coords ? "1.5px solid #22c55e" : "1.5px dashed #ddd",
+                                            borderRadius: 12, background: coords ? "#f0fff4" : "#fafafa",
+                                            cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
+                                            color: coords ? "#15803d" : "#999", fontWeight: 700, fontSize: 13, transition: "all 0.2s"
+                                        }}>
+                                        <MapPin size={17} color={coords ? "#22c55e" : "#e53935"} />
+                                        {coords ? "✓ Location captured" : "Tap to get GPS location"}
+                                    </button>
+                                    {gpsStatus && !gpsStatus.includes("✓") && (
+                                        <p style={{ fontSize: 11.5, color: "#f97316", marginTop: 5, fontWeight: 600 }}>{gpsStatus}</p>
+                                    )}
+                                    <p style={{ fontSize: 11, color: "#bbb", marginTop: 6, fontWeight: 500 }}>
+                                        Location helps connect nearby donors to urgent requests.
+                                    </p>
+                                </div>
+                            </>
+                        )}
+
+                        {/* ── STEP 3: Password ──────────────────────────────────── */}
+                        {step === 3 && (
+                            <>
+                                <div>
+                                    <Label>Password</Label>
+                                    <div style={{ position: "relative" }}>
+                                        <Lock size={15} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "#ccc" }} />
+                                        <input
+                                            type={showPwd ? "text" : "password"}
+                                            value={form.password} onChange={set("password")}
+                                            placeholder="Minimum 8 characters"
+                                            style={{ ...inputStyle(true), paddingRight: 44 }}
+                                            onFocus={e => { e.target.style.borderColor = "#e53935"; e.target.style.background = "#fff"; }}
+                                            onBlur={e => { e.target.style.borderColor = "#eee"; e.target.style.background = "#f9f9f9"; }}
+                                        />
+                                        <button type="button" onClick={() => setShowPwd(!showPwd)}
+                                            style={{ position: "absolute", right: 13, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#bbb", padding: 4 }}>
+                                            {showPwd ? <EyeOff size={16} /> : <Eye size={16} />}
+                                        </button>
+                                    </div>
+
+                                    {/* Strength meter */}
+                                    {form.password.length > 0 && (
+                                        <div style={{ marginTop: 10 }}>
+                                            <div style={{ display: "flex", gap: 4, marginBottom: 5 }}>
+                                                {[1, 2, 3, 4, 5].map((i) => (
+                                                    <div key={i} style={{ flex: 1, height: 4, borderRadius: 4, background: i <= pwdScore ? STRENGTH_COLORS[pwdScore] : "#f0f0f0", transition: "background 0.3s" }} />
+                                                ))}
+                                            </div>
+                                            <p style={{ fontSize: 11, fontWeight: 700, color: STRENGTH_COLORS[pwdScore], margin: 0 }}>
+                                                {STRENGTH_LABELS[pwdScore]}
+                                            </p>
+                                            <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 8 }}>
+                                                {[
+                                                    { ok: form.password.length >= 8, label: "8+ chars" },
+                                                    { ok: /[A-Z]/.test(form.password), label: "Uppercase" },
+                                                    { ok: /[0-9]/.test(form.password), label: "Number" },
+                                                    { ok: /[^A-Za-z0-9]/.test(form.password), label: "Symbol" },
+                                                ].map(({ ok, label }) => (
+                                                    <span key={label} style={{ fontSize: 10.5, fontWeight: 700, padding: "3px 8px", borderRadius: 20, background: ok ? "#f0fff4" : "#f5f5f5", color: ok ? "#15803d" : "#aaa", border: `1px solid ${ok ? "#bbf7d0" : "#eee"}` }}>
+                                                        {ok ? "✓" : "○"} {label}
+                                                    </span>
                                                 ))}
                                             </div>
                                         </div>
-
-                                        <div>
-                                            <label style={lbl}>Full Name <span style={{ color: "#e53935" }}>*</span></label>
-                                            <div style={{ position: "relative" }}>
-                                                <User size={14} style={iconStyle} />
-                                                <input name="name" type="text" value={form.name} onChange={handleChange} placeholder="John Doe" style={fieldStyle} onFocus={onF} onBlur={onB} />
-                                            </div>
-                                        </div>
-
-                                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-                                            <div>
-                                                <label style={lbl}>Email <span style={{ color: "#e53935" }}>*</span></label>
-                                                <div style={{ position: "relative" }}>
-                                                    <Mail size={14} style={iconStyle} />
-                                                    <input name="email" type="email" value={form.email} onChange={handleChange} placeholder="you@email.com" style={fieldStyle} onFocus={onF} onBlur={onB} />
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <label style={lbl}>Phone <span style={{ color: "#e53935" }}>*</span></label>
-                                                <div style={{ position: "relative" }}>
-                                                    <Phone size={14} style={iconStyle} />
-                                                    <input name="phone" type="tel" value={form.phone} onChange={handleChange} placeholder="10-digit" maxLength={10} style={fieldStyle} onFocus={onF} onBlur={onB} />
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div style={{ display: "grid", gridTemplateColumns: "130px 1fr", gap: 12 }}>
-                                            <div>
-                                                <label style={lbl}>Blood Group <span style={{ color: "#e53935" }}>*</span></label>
-                                                <select name="bloodGroup" value={form.bloodGroup} onChange={handleChange}
-                                                    style={{ ...fieldStyle, paddingLeft: 14, appearance: "none", cursor: "pointer" }} onFocus={onF} onBlur={onB}>
-                                                    <option value="">Select</option>
-                                                    {BLOOD_GROUPS.map((g) => <option key={g} value={g}>{g}</option>)}
-                                                </select>
-                                            </div>
-                                            <div>
-                                                <label style={lbl}>City / Address</label>
-                                                <input name="address" type="text" value={form.address} onChange={handleChange} placeholder="Mumbai, Maharashtra"
-                                                    style={{ ...fieldStyle, paddingLeft: 14 }} onFocus={onF} onBlur={onB} />
-                                            </div>
-                                        </div>
-
-                                        <div style={{
-                                            display: "flex", alignItems: "center", gap: 6, padding: "7px 11px", borderRadius: 8, fontSize: 12, fontWeight: 600,
-                                            background: gpsStatus === "ok" ? "#f0fff4" : gpsStatus === "denied" ? "#fff5f5" : "#fffbf0",
-                                            color: gpsStatus === "ok" ? "#2e7d32" : gpsStatus === "denied" ? "#e53935" : "#92400e",
-                                            border: `1px solid ${gpsStatus === "ok" ? "#b2f5c8" : gpsStatus === "denied" ? "#fcc" : "#fef3c7"}`,
-                                        }}>
-                                            <MapPin size={11} />
-                                            {gpsStatus === "fetching" && "Getting location for geo-matching..."}
-                                            {gpsStatus === "ok" && "Location captured ✓ — you'll appear in nearby searches"}
-                                            {gpsStatus === "denied" && <span>Location denied — <button onClick={fetchGps} type="button" style={{ background: "none", border: "none", color: "#e53935", fontWeight: 700, cursor: "pointer", padding: 0, fontSize: 12 }}>Retry</button></span>}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* ── STEP 1: Identity & Documents ── */}
-                                {step === 1 && (
-                                    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-                                        <div>
-                                            <label style={lbl}>Aadhaar Number <span style={{ color: "#e53935" }}>*</span></label>
-                                            <input name="aadhaarNumber" type="text" value={form.aadhaarNumber} onChange={handleChange}
-                                                placeholder="12-digit Aadhaar (AES-256 encrypted)" maxLength={12}
-                                                style={{ ...fieldStyle, paddingLeft: 14 }} onFocus={onF} onBlur={onB} />
-                                            <p style={{ fontSize: 11, color: "#ccc", margin: "4px 0 0" }}>🔒 Encrypted before storage — never stored in plaintext</p>
-                                        </div>
-
-                                        <FileBtn
-                                            field="aadhaarImage" label="Aadhaar Card Photo" maxKB={150} req
-                                            fileName={fileNames.aadhaarImage} onFilePicked={handleFilePicked}
-                                        />
-
-                                        {form.role === "donor" && (
-                                            <FileBtn
-                                                field="medicalCertificate" label="Medical Certificate (optional)" maxKB={500}
-                                                fileName={fileNames.medicalCertificate} onFilePicked={handleFilePicked}
-                                            />
-                                        )}
-
-                                        <FileBtn
-                                            field="profilePicture" label="Profile Picture (optional)" maxKB={200}
-                                            fileName={fileNames.profilePicture} onFilePicked={handleFilePicked}
-                                        />
-                                    </div>
-                                )}
-
-                                {/* ── STEP 2: Password ── */}
-                                {step === 2 && (
-                                    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-                                        <div style={{ background: "#fafafa", border: "1.5px solid #f0f0f0", borderRadius: 12, padding: "14px 16px", display: "flex", alignItems: "center", gap: 12 }}>
-                                            <div style={{ width: 42, height: 42, background: "#e53935", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                                                <span style={{ fontWeight: 900, fontSize: 14, color: "#fff" }}>{form.bloodGroup || "?"}</span>
-                                            </div>
-                                            <div style={{ flex: 1 }}>
-                                                <p style={{ margin: 0, fontWeight: 800, fontSize: 14, color: "#111" }}>{form.name}</p>
-                                                <p style={{ margin: 0, fontSize: 12, color: "#aaa" }}>{form.email} · {form.role === "donor" ? "Donor 🩸" : "Receiver 🏥"}</p>
-                                            </div>
-                                        </div>
-
-                                        <div>
-                                            <label style={lbl}>Secure Password <span style={{ color: "#e53935" }}>*</span></label>
-                                            <div style={{ position: "relative" }}>
-                                                <Lock size={14} style={iconStyle} />
-                                                <input name="password" type={showPwd ? "text" : "password"} value={form.password} onChange={handleChange}
-                                                    placeholder="Min 6 characters" style={{ ...fieldStyle, paddingRight: 44 }} onFocus={onF} onBlur={onB} />
-                                                <button type="button" onClick={() => setShowPwd(!showPwd)}
-                                                    style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#ccc" }}>
-                                                    {showPwd ? <EyeOff size={15} /> : <Eye size={15} />}
-                                                </button>
-                                            </div>
-                                        </div>
-
-                                        <div>
-                                            <label style={lbl}>Confirm Password <span style={{ color: "#e53935" }}>*</span></label>
-                                            <div style={{ position: "relative" }}>
-                                                <Lock size={14} style={iconStyle} />
-                                                <input name="confirmPassword" type={showConfirm ? "text" : "password"} value={form.confirmPassword} onChange={handleChange}
-                                                    placeholder="Repeat password"
-                                                    style={{ ...fieldStyle, paddingRight: 44, borderColor: form.confirmPassword && form.password !== form.confirmPassword ? "#e53935" : "#ebebeb" }}
-                                                    onFocus={onF} onBlur={onB} />
-                                                <button type="button" onClick={() => setShowConfirm(!showConfirm)}
-                                                    style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#ccc" }}>
-                                                    {showConfirm ? <EyeOff size={15} /> : <Eye size={15} />}
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Navigation */}
-                                <div style={{ display: "flex", gap: 10, marginTop: 28 }}>
-                                    {step > 0 && (
-                                        <button type="button" onClick={goPrev}
-                                            style={{ padding: "12px 20px", background: "#f4f4f6", color: "#555", fontWeight: 700, fontSize: 14, border: "none", borderRadius: 10, cursor: "pointer", display: "flex", alignItems: "center", gap: 6, transition: "background 0.2s" }}
-                                            onMouseEnter={(e) => (e.currentTarget.style.background = "#e8e8e8")}
-                                            onMouseLeave={(e) => (e.currentTarget.style.background = "#f4f4f6")}>
-                                            <ArrowLeft size={15} /> Back
-                                        </button>
                                     )}
-                                    <button type="submit" disabled={loading}
-                                        style={{ flex: 1, padding: "12px", background: loading ? "#f08080" : "#111", color: "#fff", fontWeight: 800, fontSize: 14, border: "none", borderRadius: 10, cursor: loading ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, transition: "background 0.2s" }}
-                                        onMouseEnter={(e) => { if (!loading) e.currentTarget.style.background = "#e53935"; }}
-                                        onMouseLeave={(e) => { if (!loading) e.currentTarget.style.background = "#111"; }}>
-                                        {loading
-                                            ? <><Loader2 size={15} style={{ animation: "spin 1s linear infinite" }} /> Creating account...</>
-                                            : step < 2 ? <>Next Step <ArrowRight size={15} /></> : <><Check size={15} /> Create Account</>}
-                                    </button>
                                 </div>
-                            </form>
-                        </div>
-                    </div>
 
-                    <p style={{ textAlign: "center", fontSize: 13, color: "#bbb", marginTop: 20 }}>
-                        Already have an account?{" "}
-                        <Link to="/login" style={{ color: "#e53935", fontWeight: 800, textDecoration: "none" }}>Sign in instead</Link>
-                    </p>
+                                <div>
+                                    <Label>Confirm Password</Label>
+                                    <div style={{ position: "relative" }}>
+                                        <Lock size={15} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "#ccc" }} />
+                                        <input
+                                            type={showConfirm ? "text" : "password"}
+                                            value={form.confirmPassword} onChange={set("confirmPassword")}
+                                            placeholder="Re-enter your password"
+                                            style={{ ...inputStyle(true), paddingRight: 44, borderColor: form.confirmPassword && form.password !== form.confirmPassword ? "#fca5a5" : "#eee" }}
+                                            onFocus={e => { e.target.style.borderColor = "#e53935"; e.target.style.background = "#fff"; }}
+                                            onBlur={e => { e.target.style.borderColor = form.confirmPassword && form.password !== form.confirmPassword ? "#fca5a5" : "#eee"; e.target.style.background = "#f9f9f9"; }}
+                                        />
+                                        <button type="button" onClick={() => setShowConfirm(!showConfirm)}
+                                            style={{ position: "absolute", right: 13, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#bbb", padding: 4 }}>
+                                            {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
+                                        </button>
+                                    </div>
+                                    {form.confirmPassword && form.password !== form.confirmPassword && (
+                                        <p style={{ fontSize: 11.5, color: "#ef4444", marginTop: 5, fontWeight: 600 }}>⚠ Passwords do not match</p>
+                                    )}
+                                </div>
+
+                                <p style={{ fontSize: 11.5, color: "#aaa", lineHeight: 1.6 }}>
+                                    By creating an account you agree to our{" "}
+                                    <span style={{ color: "#e53935", fontWeight: 700, cursor: "pointer" }}>Terms of Service</span> and{" "}
+                                    <span style={{ color: "#e53935", fontWeight: 700, cursor: "pointer" }}>Privacy Policy</span>.
+                                </p>
+                            </>
+                        )}
+
+                        {/* Nav buttons */}
+                        <div style={{ display: "flex", gap: 10, marginTop: 8 }}>
+                            {step > 0 && (
+                                <button type="button" onClick={goPrev}
+                                    style={{ flex: 1, padding: "13px", background: "#f5f5f5", color: "#666", fontWeight: 700, border: "none", borderRadius: 12, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6, fontSize: 14, transition: "background 0.2s" }}
+                                    onMouseEnter={e => e.currentTarget.style.background = "#eee"}
+                                    onMouseLeave={e => e.currentTarget.style.background = "#f5f5f5"}>
+                                    <ChevronLeft size={16} /> Back
+                                </button>
+                            )}
+                            <button type="submit" disabled={loading}
+                                style={{
+                                    flex: 2, padding: "13px",
+                                    background: loading ? "#f08080" : "linear-gradient(135deg,#e53935,#b71c1c)",
+                                    color: "#fff", fontWeight: 800, border: "none", borderRadius: 12,
+                                    cursor: loading ? "not-allowed" : "pointer",
+                                    display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                                    fontSize: 14, boxShadow: loading ? "none" : "0 5px 18px rgba(229,57,53,0.32)",
+                                    transition: "all 0.2s"
+                                }}
+                                onMouseEnter={e => { if (!loading) { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 7px 22px rgba(229,57,53,0.4)"; } }}
+                                onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = loading ? "none" : "0 5px 18px rgba(229,57,53,0.32)"; }}>
+                                {loading
+                                    ? <><span style={{ width: 15, height: 15, border: "2px solid rgba(255,255,255,0.4)", borderTopColor: "#fff", borderRadius: "50%", display: "inline-block", animation: "spin 0.7s linear infinite" }} /> Submitting...</>
+                                    : step === 3 ? <>Create Account <Check size={16} /></> : <>Continue <ChevronRight size={16} /></>
+                                }
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
 
             <style>{`
                 @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-                @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+                @media (max-width: 700px) { [data-left] { display: none !important; } }
             `}</style>
         </div>
     );
