@@ -6,6 +6,8 @@ import userRoutes from "./routes/user.routes.js";
 import requestRoutes from "./routes/request.routes.js";
 import chatRoutes from "./routes/chat.routes.js";
 import analyticsRoutes from "./routes/analytics.routes.js";
+import campRoutes from "./routes/camp.routes.js";
+import donationRoutes from "./routes/donation.routes.js";
 
 const app = express();
 
@@ -24,6 +26,8 @@ app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/requests", requestRoutes);
 app.use("/api/v1/chat", chatRoutes);
 app.use("/api/v1/analytics", analyticsRoutes);
+app.use("/api/v1/camps", campRoutes);
+app.use("/api/v1/donations", donationRoutes);
 
 // Health Check
 app.get("/", (req, res) => {

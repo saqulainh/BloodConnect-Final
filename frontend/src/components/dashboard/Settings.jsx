@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { User, Phone, MapPin, Droplet, UserCheck, ShieldCheck, Mail, ShieldAlert, Settings as SettingsIcon } from "lucide-react";
+import { User, Phone, MapPin, Droplet, UserCheck, ShieldCheck, Mail, ShieldAlert, Settings as SettingsIcon, Award, History, Heart } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
-import { updateMe } from "../../services/api";
+import { updateMe, getMyDonations } from "../../services/api";
 
 export default function Settings() {
     const { user, login } = useAuth(); // getting logic to update global context if necessary
     const [loading, setLoading] = useState(false);
     const [successMsg, setSuccessMsg] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
+
+    const [donationsData, setDonationsData] = useState({ records: [], totalDonations: 0, totalUnits: 0 });
 
     const [formData, setFormData] = useState({
         name: "",
@@ -26,8 +28,32 @@ export default function Settings() {
                 address: user.address || "",
                 availability: user.availability ?? true,
             });
+
+            // Fetch donation history
+            const fetchDonations = async () => {
+                try {
+                    const res = await getMyDonations();
+                    if (res && res.success) {
+                        setDonationsData(res.data);
+                    }
+                } catch (err) {
+                    console.error("Failed to load donations", err);
+                }
+            };
+            fetchDonations();
         }
     }, [user]);
+
+    const getBadgeStyle = (count) => {
+        if (count >= 50) return { title: "Platinum Lifesaver", color: "bg-slate-800 text-slate-100", ring: "ring-slate-500", icon: "💍" };
+        if (count >= 25) return { title: "Gold Lifesaver", color: "bg-yellow-100 text-yellow-800", ring: "ring-yellow-400", icon: "🏆" };
+        if (count >= 10) return { title: "Silver Lifesaver", color: "bg-slate-200 text-slate-700", ring: "ring-slate-400", icon: "🥈" };
+        if (count >= 5) return { title: "Bronze Lifesaver", color: "bg-orange-100 text-orange-800", ring: "ring-orange-400", icon: "🥉" };
+        if (count >= 1) return { title: "Hero Donor", color: "bg-red-100 text-red-800", ring: "ring-red-300", icon: "🦸" };
+        return { title: "Pending First Donation", color: "bg-slate-50 text-slate-500", ring: "ring-slate-200", icon: "🌱" };
+    };
+
+    const currentBadge = getBadgeStyle(donationsData.totalDonations);
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -207,6 +233,68 @@ export default function Settings() {
                     </button>
                 </div>
             </form>
+
+            {/* ── Donation History & Badges ── */}
+            <div className="bg-white rounded-3xl p-6 lg:p-8 shadow-sm border border-slate-100 mt-6 overflow-hidden">
+                <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-4">
+                    <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+                        <History className="w-6 h-6 text-red-500" />
+                        My Donation Journey
+                    </h3>
+                    <div className={`flex items-center gap-3 px-5 py-2.5 rounded-2xl ring-1 ${currentBadge.ring} ${currentBadge.color} shadow-sm transition-transform hover:scale-105 duration-300 cursor-default`}>
+                        <span className="text-2xl">{currentBadge.icon}</span>
+                        <div>
+                            <p className="text-[10px] uppercase tracking-wider font-extrabold opacity-75">Current Tier</p>
+                            <p className="font-black leading-tight text-sm">{currentBadge.title}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                    <div className="bg-red-50/50 p-4 rounded-2xl border border-red-50 text-center">
+                        <p className="text-3xl font-black text-red-600 leading-none">{donationsData.totalDonations}</p>
+                        <p className="text-xs font-bold text-slate-500 uppercase tracking-wide mt-1">Total Donations</p>
+                    </div>
+                    <div className="bg-blue-50/50 p-4 rounded-2xl border border-blue-50 text-center">
+                        <p className="text-3xl font-black text-blue-600 leading-none">{donationsData.totalUnits}</p>
+                        <p className="text-xs font-bold text-slate-500 uppercase tracking-wide mt-1">Units Donated</p>
+                    </div>
+                    <div className="bg-emerald-50/50 p-4 rounded-2xl border border-emerald-50 text-center col-span-2 flex items-center justify-center gap-3">
+                        <Heart className="w-8 h-8 text-emerald-500 animate-pulse" fill="currentColor" />
+                        <div className="text-left">
+                            <p className="text-xl font-black text-emerald-700 leading-none">{donationsData.totalDonations * 3}</p>
+                            <p className="text-xs font-bold text-emerald-600 uppercase tracking-wide mt-1">Potential Lives Saved</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="space-y-4">
+                    <h4 className="text-sm font-black text-slate-800 uppercase tracking-wider mb-4 border-b border-slate-100 pb-2">Donation Timeline</h4>
+                    {donationsData.records.length === 0 ? (
+                        <div className="text-center py-8 bg-slate-50 rounded-2xl border border-slate-100 border-dashed">
+                            <p className="text-slate-500 font-medium text-sm">You haven't logged any donations yet.</p>
+                            <p className="text-xs text-slate-400 mt-1">Your journey as a lifesaver starts now!</p>
+                        </div>
+                    ) : (
+                        <div className="relative border-l-2 border-red-100 ml-4 space-y-6 pb-4">
+                            {donationsData.records.map((record, index) => (
+                                <div key={record._id || index} className="relative pl-6">
+                                    <div className="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-white border-4 border-red-500 shadow-sm" />
+                                    <div className="bg-slate-50 border border-slate-100 rounded-2xl p-4 hover:border-red-200 transition-colors">
+                                        <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 mb-2">
+                                            <h5 className="font-bold text-slate-800">{record.hospital}</h5>
+                                            <span className="text-xs font-bold px-2.5 py-1 bg-white border border-slate-200 rounded-lg text-slate-500 whitespace-nowrap">
+                                                {new Date(record.date).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}
+                                            </span>
+                                        </div>
+                                        <p className="text-sm text-slate-600 font-medium">Donated <span className="font-bold text-slate-800">{record.units} unit(s)</span> for patient <strong>{record.patientName}</strong></p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </div>
         </div>
     );
 }

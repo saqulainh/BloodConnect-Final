@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Users,
     AlertCircle,
@@ -20,13 +20,38 @@ import {
     Cell,
     Legend
 } from 'recharts';
+import { getAnalytics } from '../../services/api';
 import QuickActionButton from './QuickActionButton';
-import { lineChartData, pieChartData, recentActivity, COLORS } from '../../data/dashboardData';
+import { recentActivity as fallbackRecentActivity, COLORS } from '../../data/dashboardData';
+import LiveMap from './LiveMap';
 
 const DashboardHome = ({ setActiveTab, user }) => {
     const hour = new Date().getHours();
     const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
     const firstName = user?.name ? user.name.split(' ')[0] : 'there';
+
+    const [analytics, setAnalytics] = useState({
+        totalDonors: "...",
+        totalRequests: "...",
+        fulfilledRequests: "...",
+        urgentRequests: "...",
+        recentActivity: [],
+        bloodGroupDistribution: []
+    });
+
+    useEffect(() => {
+        const fetchAnalytics = async () => {
+            try {
+                const res = await getAnalytics();
+                if (res && res.success) {
+                    setAnalytics(res.data);
+                }
+            } catch (err) {
+                console.error("Failed to fetch dashboard stats", err);
+            }
+        };
+        fetchAnalytics();
+    }, []);
 
     return (
         <div className="space-y-6 animate-in fade-in duration-500">
@@ -45,7 +70,7 @@ const DashboardHome = ({ setActiveTab, user }) => {
                             {firstName}! {user?.bloodGroup && <span className="text-red-200">({user.bloodGroup})</span>}
                         </h2>
                         <p className="text-red-200 text-sm font-medium">
-                            You have <span className="text-white font-black">12 active requests</span> waiting for donors near you.
+                            You have <span className="text-white font-black">{analytics.totalRequests} active requests</span> waiting for donors near you.
                         </p>
                     </div>
                     <div className="flex flex-col gap-2 shrink-0">
@@ -61,12 +86,11 @@ const DashboardHome = ({ setActiveTab, user }) => {
                 </div>
             </div>
 
-            {/* Top Stats Cards */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 {[
-                    { label: 'Total Donors', value: '1,240', icon: Users, color: 'text-blue-600', bg: 'bg-blue-50' },
-                    { label: 'Active Requests', value: '12', icon: AlertCircle, color: 'text-red-600', bg: 'bg-red-50' },
-                    { label: 'Pending Reviews', value: '45', icon: Clock, color: 'text-amber-600', bg: 'bg-amber-50' },
+                    { label: 'Total Donors', value: analytics.totalDonors, icon: Users, color: 'text-blue-600', bg: 'bg-blue-50' },
+                    { label: 'Active Requests', value: analytics.totalRequests, icon: AlertCircle, color: 'text-red-600', bg: 'bg-red-50' },
+                    { label: 'Urgent Pendings', value: analytics.urgentRequests, icon: Clock, color: 'text-amber-600', bg: 'bg-amber-50' },
                     { label: 'Upcoming Camps', value: '03', icon: Tent, color: 'text-green-600', bg: 'bg-green-50' },
                 ].map((stat, idx) => (
                     <div key={idx} className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between hover:shadow-md transition-shadow">
@@ -82,8 +106,19 @@ const DashboardHome = ({ setActiveTab, user }) => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Main Content Column (Charts) */}
+                {/* Main Content Column (Charts & Map) */}
                 <div className="lg:col-span-2 space-y-6">
+                    {/* ── Interactive Live Map ── */}
+                    <div className="bg-white p-5 lg:p-6 rounded-3xl border border-slate-100 shadow-sm relative overflow-hidden">
+                        <div className="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 className="text-xl font-black text-slate-800">Live Heatmap</h3>
+                                <p className="text-sm font-medium text-slate-500">Real-time geographic view of requests and available donors.</p>
+                            </div>
+                        </div>
+                        <LiveMap />
+                    </div>
+
                     {/* Analytics Section */}
                     <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
                         <div className="flex items-center justify-between mb-8">
@@ -100,7 +135,7 @@ const DashboardHome = ({ setActiveTab, user }) => {
                         </div>
                         <div className="h-[300px] w-full">
                             <ResponsiveContainer width="100%" height="100%">
-                                <AreaChart data={lineChartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                                <AreaChart data={analytics.recentActivity.length > 0 ? analytics.recentActivity : fallbackRecentActivity} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                                     <defs>
                                         <linearGradient id="colorReq" x1="0" y1="0" x2="0" y2="1">
                                             <stop offset="5%" stopColor="#ef4444" stopOpacity={0.1} />
@@ -141,17 +176,16 @@ const DashboardHome = ({ setActiveTab, user }) => {
                     <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col items-center">
                         <h3 className="font-bold text-slate-800 text-lg mb-6 w-full text-left">Blood Groups</h3>
                         <div className="h-[220px] w-full relative">
-                            {/* Center Text Overlay */}
                             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                                 <div className="text-center">
-                                    <span className="block text-2xl font-black text-slate-800">1,240</span>
+                                    <span className="block text-2xl font-black text-slate-800">{analytics.totalDonors}</span>
                                     <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wide">Total Donors</span>
                                 </div>
                             </div>
                             <ResponsiveContainer width="100%" height="100%">
                                 <PieChart>
                                     <Pie
-                                        data={pieChartData}
+                                        data={analytics.bloodGroupDistribution}
                                         cx="50%"
                                         cy="50%"
                                         innerRadius={65}
@@ -160,7 +194,7 @@ const DashboardHome = ({ setActiveTab, user }) => {
                                         dataKey="value"
                                         cornerRadius={4}
                                     >
-                                        {pieChartData.map((entry, index) => (
+                                        {analytics.bloodGroupDistribution.map((entry, index) => (
                                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                         ))}
                                     </Pie>
@@ -178,7 +212,7 @@ const DashboardHome = ({ setActiveTab, user }) => {
                             <button className="text-xs font-bold text-blue-600 hover:text-blue-700 hover:underline transition-colors">View All</button>
                         </div>
                         <div className="space-y-5">
-                            {recentActivity.map((item) => (
+                            {fallbackRecentActivity.map((item) => (
                                 <div key={item.id} className="flex items-start gap-3 group cursor-pointer">
                                     <div className={`mt-0.5 min-w-[32px] h-8 rounded-full flex items-center justify-center ${item.color} group-hover:scale-110 transition-transform`}>
                                         <item.icon size={14} />

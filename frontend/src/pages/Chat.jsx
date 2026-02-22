@@ -10,7 +10,7 @@ const formatTime = (isoString) => {
     return new Date(isoString).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 };
 
-export default function Chat() {
+export default function Chat({ preselectedUser }) {
     const navigate = useNavigate();
     const [conversations, setConversations] = useState([]);
     const [currentChatUser, setCurrentChatUser] = useState(null);
@@ -21,12 +21,32 @@ export default function Chat() {
     const bottomRef = useRef(null);
     const currentUser = getUser(); // Ensure we have the current user
 
+    // ── Pre-Select User if passed ──
+    useEffect(() => {
+        if (preselectedUser) {
+            setCurrentChatUser(preselectedUser);
+            setConversations(prev => {
+                const exists = prev.find(c => c.user._id === preselectedUser._id);
+                if (!exists) {
+                    return [{ user: preselectedUser, lastMessage: null }, ...prev];
+                }
+                return prev;
+            });
+        }
+    }, [preselectedUser]);
+
     // ── Fetch Conversations on Mount ──
     useEffect(() => {
         const fetchConvos = async () => {
             try {
                 const res = await getConversations();
-                setConversations(res.conversations || []);
+                let fetchedConvos = res.conversations || [];
+
+                // Merge preselected if missing
+                if (preselectedUser && !fetchedConvos.find(c => c.user._id === preselectedUser._id)) {
+                    fetchedConvos = [{ user: preselectedUser, lastMessage: null }, ...fetchedConvos];
+                }
+                setConversations(fetchedConvos);
             } catch (err) {
                 console.error("Failed to load conversations", err);
             } finally {
@@ -34,7 +54,7 @@ export default function Chat() {
             }
         };
         fetchConvos();
-    }, []);
+    }, [preselectedUser]);
 
     // ── Subscription to Pusher ──
     useEffect(() => {

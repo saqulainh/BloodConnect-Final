@@ -6,6 +6,7 @@ import Sidebar from "../components/dashboard/Sidebar";
 import DashboardHome from "../components/dashboard/DashboardHome";
 import DonorManagement from "../components/dashboard/DonorManagement";
 import RequestManagement from "../components/dashboard/RequestManagement";
+import BloodCamps from "../components/dashboard/BloodCamps";
 import ComingSoon from "../components/dashboard/ComingSoon";
 import SettingsPanel from "../components/dashboard/Settings";
 import Analytics from "../components/dashboard/Analytics";
@@ -38,6 +39,12 @@ export default function Dashboard() {
     const { user, logout, loading, isAuthenticated } = useAuth();
     const [activeTab, setActiveTab] = useState("dashboard");
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [chatTargetUser, setChatTargetUser] = useState(null);
+
+    const handleStartChat = (targetUser) => {
+        setChatTargetUser(targetUser);
+        setActiveTab("chat");
+    };
 
     useEffect(() => {
         if (!loading && !isAuthenticated) {
@@ -53,10 +60,10 @@ export default function Dashboard() {
     const renderContent = () => {
         switch (activeTab) {
             case "dashboard": return <DashboardHome setActiveTab={setActiveTab} user={user} />;
-            case "donors": return <DonorManagement />;
-            case "requests": return <RequestManagement />;
-            case "camps": return <ComingSoon title="Blood Camps" icon={BarChart3} />;
-            case "chat": return <Chat />;
+            case "donors": return <DonorManagement onStartChat={handleStartChat} />;
+            case "requests": return <RequestManagement onStartChat={handleStartChat} currentUser={user} />;
+            case "camps": return <BloodCamps />;
+            case "chat": return <Chat preselectedUser={chatTargetUser} />;
             case "analytics": return <Analytics />;
             case "settings": return <SettingsPanel />;
             default: return <DashboardHome setActiveTab={setActiveTab} user={user} />;

@@ -60,7 +60,7 @@ const refreshAccessToken = async () => {
 const apiFetch = async (endpoint, options = {}, retry = true) => {
     const res = await fetch(`${BASE_URL}${endpoint}`, options);
 
-    if (res.status === 401 && retry) {
+    if (res.status === 401 && retry && !endpoint.includes("/auth/login") && !endpoint.includes("/auth/register")) {
         try {
             const newToken = await refreshAccessToken();
             const retryOptions = {
@@ -92,6 +92,30 @@ const apiFetch = async (endpoint, options = {}, retry = true) => {
 
     if (!data.success) throw new Error(data.message || "Something went wrong");
     return data;
+};
+
+// ─────────────────────────────────────────────────────────────────────
+// BLOOD CAMPS ENDPOINTS
+// ─────────────────────────────────────────────────────────────────────
+
+export const getCamps = async () => {
+    return apiFetch("/camps", { method: "GET", headers: authHeaders() });
+};
+
+export const registerForCamp = async (campId) => {
+    return apiFetch(`/camps/${campId}/register`, { method: "POST", headers: authHeaders() });
+};
+
+// ─────────────────────────────────────────────────────────────────────
+// DONATIONS ENDPOINTS
+// ─────────────────────────────────────────────────────────────────────
+
+export const addDonation = async (donationData) => {
+    return apiFetch("/donations", { method: "POST", headers: authHeaders(), body: JSON.stringify(donationData) });
+};
+
+export const getMyDonations = async () => {
+    return apiFetch("/donations/my-donations", { method: "GET", headers: authHeaders() });
 };
 
 // ─────────────────────────────────────────────────────────────────────
@@ -203,6 +227,11 @@ export const updateMe = async (updates) => {
 // DONOR ENDPOINTS
 // ─────────────────────────────────────────────────────────────────────
 
+/** GET /users/donors — get all donors */
+export const getDonors = async () => {
+    return apiFetch("/users/donors", { method: "GET", headers: authHeaders() });
+};
+
 /**
  * GET /donor/nearby — geo-based donor search
  * Params: lat, lng, bloodGroup (optional), radius (km, default 5)
@@ -232,6 +261,11 @@ export const getAnalytics = async () => {
 // ─────────────────────────────────────────────────────────────────────
 // RECEIVER / BLOOD REQUEST ENDPOINTS
 // ─────────────────────────────────────────────────────────────────────
+
+/** GET /requests — get all blood requests */
+export const getAllRequests = async () => {
+    return apiFetch("/requests", { method: "GET", headers: authHeaders() });
+};
 
 /**
  * POST /requests — create urgent blood request
@@ -269,6 +303,20 @@ export const logDonation = async ({ receiver, bloodGroup, hospitalName, donation
         headers: authHeaders(),
         body: JSON.stringify({ receiver, bloodGroup, hospitalName, donationDate }),
     });
+};
+
+/**
+ * PUT /requests/:id — update a blood request
+ */
+export const updateBloodRequest = async (id, requestData) => {
+    return apiFetch(`/requests/${id}`, { method: "PUT", headers: authHeaders(), body: JSON.stringify(requestData) });
+};
+
+/**
+ * DELETE /requests/:id — delete a blood request
+ */
+export const deleteBloodRequest = async (id) => {
+    return apiFetch(`/requests/${id}`, { method: "DELETE", headers: authHeaders() });
 };
 
 /** GET /donation/my-history — donor's own donation history */

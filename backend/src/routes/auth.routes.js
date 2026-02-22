@@ -9,6 +9,7 @@ import {
     getMe
 } from "../controllers/authController.js";
 import { protect } from "../middleware/authMiddleware.js";
+import User from "../models/User.js";
 import { upload } from "../utils/cloudinary.js";
 
 const router = express.Router();

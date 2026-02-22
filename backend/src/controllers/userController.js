@@ -45,3 +45,20 @@ export const updateMe = async (req, res) => {
         res.status(500).json({ success: false, message: "Server error while updating profile." });
     }
 };
+
+// @desc    Get all donors
+// @route   GET /api/v1/users/donors
+// @access  Private
+export const getDonors = async (req, res) => {
+    try {
+        // Find users with role 'donor'
+        const donors = await User.find({ role: "donor" })
+            .select("-password") // exclude password
+            .sort({ createdAt: -1 });
+
+        res.json({ success: true, data: donors });
+    } catch (error) {
+        console.error("Fetch donors error:", error);
+        res.status(500).json({ success: false, message: "Server error fetching donors." });
+    }
+};
