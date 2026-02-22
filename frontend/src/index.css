@@ -348,3 +348,9 @@
 .pulse-red {
   animation: pulse-red 2s infinite;
 }
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(150%) skewX(-12deg);
+  }
+}

@@ -7,6 +7,9 @@ import DashboardHome from "../components/dashboard/DashboardHome";
 import DonorManagement from "../components/dashboard/DonorManagement";
 import RequestManagement from "../components/dashboard/RequestManagement";
 import ComingSoon from "../components/dashboard/ComingSoon";
+import SettingsPanel from "../components/dashboard/Settings";
+import Analytics from "../components/dashboard/Analytics";
+import Chat from "./Chat";
 
 import { useAuth } from "../context/AuthContext";
 
@@ -15,6 +18,7 @@ const TAB_TITLES = {
     donors: "Donors",
     requests: "Blood Requests",
     camps: "Blood Camps",
+    chat: "Secure Chat",
     analytics: "Analytics",
     settings: "Settings",
 };
@@ -24,6 +28,7 @@ const TAB_SUBTITLES = {
     donors: "Manage registered donors and their availability.",
     requests: "Track and fulfill urgent blood requests.",
     camps: "Organize and monitor blood donation camps.",
+    chat: "Communicate securely with donors and patients.",
     analytics: "Deep insights into donation patterns.",
     settings: "Configure your account preferences.",
 };
@@ -51,8 +56,9 @@ export default function Dashboard() {
             case "donors": return <DonorManagement />;
             case "requests": return <RequestManagement />;
             case "camps": return <ComingSoon title="Blood Camps" icon={BarChart3} />;
-            case "analytics": return <ComingSoon title="Analytics" icon={BarChart3} />;
-            case "settings": return <ComingSoon title="Settings" icon={Settings} />;
+            case "chat": return <Chat />;
+            case "analytics": return <Analytics />;
+            case "settings": return <SettingsPanel />;
             default: return <DashboardHome setActiveTab={setActiveTab} user={user} />;
         }
     };
@@ -118,13 +124,17 @@ export default function Dashboard() {
 
                         {/* User avatar */}
                         <div className="flex items-center gap-2.5 cursor-pointer hover:bg-slate-50 rounded-xl px-3 py-1.5 transition-colors border border-transparent hover:border-slate-100">
-                            <div className="w-8 h-8 bg-gradient-to-br from-red-500 to-red-700 rounded-lg flex items-center justify-center text-white font-black text-xs shadow-sm">
-                                {user?.name?.charAt(0) || 'U'}
-                            </div>
+                            {user?.profilePicture ? (
+                                <img src={user.profilePicture} alt={user?.name} className="w-8 h-8 rounded-lg object-cover shadow-sm border border-slate-200" />
+                            ) : (
+                                <div className="w-8 h-8 bg-gradient-to-br from-red-500 to-red-700 rounded-lg flex items-center justify-center text-white font-black text-xs shadow-sm">
+                                    {user?.name?.charAt(0) || 'U'}
+                                </div>
+                            )}
                             <div className="hidden sm:block">
-                                <p className="text-xs font-black text-slate-800 leading-none">{user?.name?.split(' ')[0] || 'User'}</p>
+                                <p className="text-xs font-black text-slate-800 leading-none">{user?.name ? user.name.split(' ')[0] : 'User'}</p>
                                 {user?.bloodGroup && (
-                                    <p className="text-[10px] text-red-600 font-bold">{user.bloodGroup} • {user.role}</p>
+                                    <p className="text-[10px] text-red-600 font-bold">{user.bloodGroup} • <span className="capitalize">{user.role}</span></p>
                                 )}
                             </div>
                         </div>

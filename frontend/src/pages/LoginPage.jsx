@@ -85,7 +85,8 @@ export default function LoginPage() {
             await login({ email: form.email, password: form.password, aadhaarLast4: useAadhaar ? aadhaarLast4 : undefined });
             navigate("/dashboard");
         } catch (err) {
-            setError(err.message || "Login failed. Please check your credentials.");
+            console.error("Login caught error:", err);
+            setError(err.message || err.response?.data?.message || err.toString() || "Invalid email or password. Please try again.");
         } finally {
             setLoading(false);
         }

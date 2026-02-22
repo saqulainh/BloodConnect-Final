@@ -185,14 +185,14 @@ export const verifyAadhaar = async ({ email, aadhaarNumber }) => {
 // USER ENDPOINTS
 // ─────────────────────────────────────────────────────────────────────
 
-/** GET /user/me — current user profile + eligibility */
+/** GET /auth/me — current user profile + eligibility */
 export const getMe = async () => {
-    return apiFetch("/user/me", { method: "GET", headers: authHeaders() });
+    return apiFetch("/auth/me", { method: "GET", headers: authHeaders() });
 };
 
-/** PATCH /user/update-me — update profile / availability */
+/** PATCH /users/update-me — update profile / availability */
 export const updateMe = async (updates) => {
-    return apiFetch("/user/update-me", {
+    return apiFetch("/users/update-me", {
         method: "PATCH",
         headers: authHeaders(),
         body: JSON.stringify(updates),
@@ -222,19 +222,25 @@ export const getDonorStats = async () => {
 };
 
 // ─────────────────────────────────────────────────────────────────────
+// ANALYTICS ENDPOINTS
+// ─────────────────────────────────────────────────────────────────────
+
+export const getAnalytics = async () => {
+    return apiFetch("/analytics", { method: "GET", headers: authHeaders() });
+};
+
+// ─────────────────────────────────────────────────────────────────────
 // RECEIVER / BLOOD REQUEST ENDPOINTS
 // ─────────────────────────────────────────────────────────────────────
 
 /**
- * POST /receiver/request — create urgent blood request
- * Body: { bloodGroup, unitsRequired, hospitalName, urgency, lat, lng }
- * urgency: 'Urgent' | 'Normal'
+ * POST /requests — create urgent blood request
  */
-export const createBloodRequest = async (requestData) => {
-    return apiFetch("/receiver/request", {
+export const createBloodRequest = async (data) => {
+    return apiFetch("/requests", {
         method: "POST",
         headers: authHeaders(),
-        body: JSON.stringify(requestData),
+        body: JSON.stringify(data),
     });
 };
 
@@ -292,3 +298,26 @@ export const getCurrentLocation = () =>
             { timeout: 10000 }
         );
     });
+
+// ─────────────────────────────────────────────────────────────────────
+// CHAT ENDPOINTS
+// ─────────────────────────────────────────────────────────────────────
+
+/** GET /chat/conversations — list of users the current user chatted with */
+export const getConversations = async () => {
+    return apiFetch("/chat/conversations", { method: "GET", headers: authHeaders() });
+};
+
+/** GET /chat/history/:id — chat history with a specific user */
+export const getMessages = async (otherUserId) => {
+    return apiFetch(`/chat/history/${otherUserId}`, { method: "GET", headers: authHeaders() });
+};
+
+/** POST /chat/send/:id — send message to user */
+export const sendMessage = async (receiverId, text) => {
+    return apiFetch(`/chat/send/${receiverId}`, {
+        method: "POST",
+        headers: authHeaders(),
+        body: JSON.stringify({ text }),
+    });
+};

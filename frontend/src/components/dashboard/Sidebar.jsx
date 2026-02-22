@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     LayoutDashboard, Users, Ticket, Tent,
-    BarChart3, Settings, LogOut, X, Droplets, Search
+    BarChart3, Settings, LogOut, X, Droplets, Search, MessageSquare
 } from 'lucide-react';
 
 const NAV_ITEMS = [
@@ -9,6 +9,7 @@ const NAV_ITEMS = [
     { id: "donors", icon: Users, label: "Donors" },
     { id: "requests", icon: Ticket, label: "Blood Requests" },
     { id: "camps", icon: Tent, label: "Blood Camps" },
+    { id: "chat", icon: MessageSquare, label: "Secure Chat", badge: "New" },
 ];
 
 const MGMT_ITEMS = [
@@ -42,7 +43,8 @@ const NavItem = ({ id, icon: Icon, label, badge, activeTab, setActiveTab, setIsS
 };
 
 export default function Sidebar({ isSidebarOpen, setIsSidebarOpen, activeTab, setActiveTab, user, logout }) {
-    const initials = user?.name?.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || 'U';
+    const name = user?.name || '';
+    const initials = name ? name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) : 'U';
     const bloodGroup = user?.bloodGroup || '';
     const roleLabel = user?.role === 'donor' ? 'Donor' : user?.role === 'receiver' ? 'Receiver' : 'Member';
 
@@ -70,9 +72,15 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen, activeTab, se
             <div className="mx-3 mt-4 p-3.5 bg-gradient-to-br from-slate-50 to-white rounded-2xl border border-slate-100">
                 <div className="flex items-center gap-3">
                     <div className="relative">
-                        <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center text-white font-black text-sm shadow-md shadow-red-200">
-                            {initials}
-                        </div>
+                        {user?.profilePicture ? (
+                            <div className="w-11 h-11 rounded-xl shadow-md border border-slate-200 overflow-hidden">
+                                <img src={user.profilePicture} alt={user?.name} className="w-full h-full object-cover" />
+                            </div>
+                        ) : (
+                            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center text-white font-black text-sm shadow-md shadow-red-200">
+                                {initials}
+                            </div>
+                        )}
                         {bloodGroup && (
                             <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-white border-2 border-red-100 rounded-full flex items-center justify-center text-[7px] font-black text-red-600">
                                 {bloodGroup}

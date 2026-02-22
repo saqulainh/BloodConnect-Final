@@ -26,7 +26,7 @@ import { lineChartData, pieChartData, recentActivity, COLORS } from '../../data/
 const DashboardHome = ({ setActiveTab, user }) => {
     const hour = new Date().getHours();
     const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
-    const firstName = user?.name?.split(' ')[0] || 'there';
+    const firstName = user?.name ? user.name.split(' ')[0] : 'there';
 
     return (
         <div className="space-y-6 animate-in fade-in duration-500">
