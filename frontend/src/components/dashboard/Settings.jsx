@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { User, Phone, MapPin, Droplet, UserCheck, ShieldCheck, Mail, ShieldAlert, Settings as SettingsIcon, Award, History, Heart } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { updateMe, getMyDonations } from "../../services/api";
+import BloodJourney from "./BloodJourney";
 
 export default function Settings() {
     const { user, login } = useAuth(); // getting logic to update global context if necessary
@@ -10,6 +11,7 @@ export default function Settings() {
     const [errorMsg, setErrorMsg] = useState("");
 
     const [donationsData, setDonationsData] = useState({ records: [], totalDonations: 0, totalUnits: 0 });
+    const [trackingJourneyId, setTrackingJourneyId] = useState(null);
 
     const [formData, setFormData] = useState({
         name: "",
@@ -288,6 +290,28 @@ export default function Settings() {
                                             </span>
                                         </div>
                                         <p className="text-sm text-slate-600 font-medium">Donated <span className="font-bold text-slate-800">{record.units} unit(s)</span> for patient <strong>{record.patientName}</strong></p>
+
+                                        <div className="mt-4 pt-4 border-t border-slate-100 flex flex-col gap-4">
+                                            <button
+                                                onClick={() => setTrackingJourneyId(trackingJourneyId === record._id ? null : record._id)}
+                                                className={`text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 py-2 px-4 rounded-xl transition-all ${trackingJourneyId === record._id
+                                                    ? 'bg-slate-800 text-white'
+                                                    : 'bg-white text-red-600 border border-red-100 hover:bg-red-50'
+                                                    }`}
+                                            >
+                                                {trackingJourneyId === record._id ? 'Close Tracker' : 'Track My Journey'}
+                                                {trackingJourneyId === record._id ? <ShieldAlert size={12} /> : <Droplet size={12} className="animate-pulse" />}
+                                            </button>
+
+                                            {trackingJourneyId === record._id && (
+                                                <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden animate-in slide-in-from-top-2 duration-300">
+                                                    <BloodJourney
+                                                        journey={record.journey}
+                                                        currentStage={record.currentStage}
+                                                    />
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             ))}

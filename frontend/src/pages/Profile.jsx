@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, User, Mail, Phone, Droplets, MapPin, Shield, Edit2, Save, X, LogOut, CheckCircle, Clock, Camera, Loader2 } from "lucide-react";
+import { ArrowLeft, User, Mail, Phone, Droplets, MapPin, Shield, Edit2, Save, X, LogOut, CheckCircle, Clock, Camera, Loader2, ShieldCheck, AlertCircle } from "lucide-react";
 import { getMe, updateMe, logoutUser, isLoggedIn } from "../services/api";
 
 export default function Profile() {
@@ -69,6 +69,7 @@ export default function Profile() {
     const isEligible = user?.eligibility?.isEligible !== false;
     const nextEligible = user?.eligibility?.nextEligibleDate ? new Date(user.eligibility.nextEligibleDate).toLocaleDateString() : null;
     const isVerified = user?.isVerified;
+    const isAadhaarVerified = user?.aadhaarVerified;
     const isAvailable = user?.isAvailable;
 
     const lbl = { fontSize: 11, fontWeight: 800, color: "#aaa", letterSpacing: "0.07em", textTransform: "uppercase", marginBottom: 4, display: "block" };
@@ -108,8 +109,25 @@ export default function Profile() {
                     <h2 style={{ margin: "0 0 4px", fontWeight: 900, fontSize: 20, color: "#111" }}>{name}</h2>
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
                         <span style={{ fontSize: 13, color: "#aaa" }}>{user?.role === "donor" ? "🩸 Donor" : "🏥 Receiver"}</span>
-                        {isVerified && <span style={{ display: "flex", alignItems: "center", gap: 3, fontSize: 12, color: "#4caf50", fontWeight: 700 }}><CheckCircle size={12} /> Verified</span>}
+                        {isAadhaarVerified ? (
+                            <span style={{ display: "flex", alignItems: "center", gap: 3, fontSize: 12, color: "#2e7d32", fontWeight: 700 }}>
+                                <ShieldCheck size={12} /> Aadhaar Verified
+                            </span>
+                        ) : isVerified && (
+                            <span style={{ display: "flex", alignItems: "center", gap: 3, fontSize: 12, color: "#4682B4", fontWeight: 700 }}>
+                                <CheckCircle size={12} /> Email Verified
+                            </span>
+                        )}
                     </div>
+                    {!isAadhaarVerified && user?.role === "donor" && (
+                        <button
+                            onClick={() => navigate("/verify-aadhaar")} // Assuming a route exists or will be created
+                            style={{ marginTop: 12, background: "#fff5f5", border: "1px solid #ffcdd2", color: "#e53935", padding: "6px 12px", borderRadius: 20, fontSize: 11, fontWeight: 800, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 5 }}
+                        >
+                            <AlertCircle size={12} />
+                            GET AADHAAR VERIFIED
+                        </button>
+                    )}
 
                     {/* Stats row */}
                     <div style={{ display: "flex", justifyContent: "center", gap: 0, marginTop: 20, borderTop: "1px solid #f5f5f5", paddingTop: 16 }}>

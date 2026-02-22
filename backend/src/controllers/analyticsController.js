@@ -1,30 +1,89 @@
 import Request from "../models/Request.js";
 import User from "../models/User.js";
+import Donation from "../models/Donation.js";
 
 export const getAnalytics = async (req, res) => {
     try {
+        const { timeframe = 'week' } = req.query;
+
         // Simple aggregate stats
         const totalDonors = await User.countDocuments({ role: "donor" });
         const totalRequests = await Request.countDocuments();
-        const fulfilledRequests = await Request.countDocuments({ status: "fulfilled" });
-        const urgentRequests = await Request.countDocuments({ urgency: "Urgent", status: "pending" });
+        const fulfilledRequests = await Request.countDocuments({ status: "Completed" });
+        const urgentRequests = await Request.countDocuments({ urgency: { $in: ["Urgent", "Critical"] }, status: "Active" });
 
-        // Requests over the last 6 months (mocked or aggregated)
-        // For simplicity, we'll return some dynamic recent data based on counts
-        const recentMonths = [
-            { name: "Jan", requests: Math.floor(totalRequests * 0.1) || 5, donations: 12 },
-            { name: "Feb", requests: Math.floor(totalRequests * 0.15) || 8, donations: 19 },
-            { name: "Mar", requests: Math.floor(totalRequests * 0.2) || 12, donations: 15 },
-            { name: "Apr", requests: Math.floor(totalRequests * 0.25) || 18, donations: 22 },
-            { name: "May", requests: Math.floor(totalRequests * 0.1) || 10, donations: 25 },
-            { name: "Jun", requests: totalRequests || 25, donations: fulfilledRequests || 30 },
-        ];
+        // Calculate timeframe
+        const now = new Date();
+        let startDate = new Date();
+        if (timeframe === 'month') {
+            startDate.setMonth(now.getMonth() - 1);
+        } else {
+            startDate.setDate(now.getDate() - 7);
+        }
+
+        // Aggregate Requests vs Donations Data
+        const requestStats = await Request.aggregate([
+            { $match: { createdAt: { $gte: startDate } } },
+            {
+                $group: {
+                    _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+                    count: { $sum: 1 }
+                }
+            },
+            { $sort: { _id: 1 } }
+        ]);
+
+        const donationStats = await Donation.aggregate([
+            { $match: { createdAt: { $gte: startDate } } },
+            {
+                $group: {
+                    _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+                    count: { $sum: 1 }
+                }
+            },
+            { $sort: { _id: 1 } }
+        ]);
+
+        // Merge stats for chart
+        const dateMap = {};
+        requestStats.forEach(item => {
+            dateMap[item._id] = { name: item._id, requests: item.count, donations: 0 };
+        });
+        donationStats.forEach(item => {
+            if (dateMap[item._id]) {
+                dateMap[item._id].donations = item.count;
+            } else {
+                dateMap[item._id] = { name: item._id, requests: 0, donations: item.count };
+            }
+        });
+
+        const recentActivityChart = Object.values(dateMap).sort((a, b) => a.name.localeCompare(b.name));
+
+        // Fetch Recent Activity Logs
+        const recentRequests = await Request.find().sort({ createdAt: -1 }).limit(10).populate('requester', 'name');
+        const recentDonations = await Donation.find().sort({ createdAt: -1 }).limit(10).populate('donor', 'name');
+
+        const combinedActivity = [
+            ...recentRequests.map(r => ({
+                id: r._id,
+                type: 'request',
+                message: `${r.requester?.name || 'Someone'} requested ${r.bloodGroup} at ${r.hospital}`,
+                time: r.createdAt,
+                urgency: r.urgency
+            })),
+            ...recentDonations.map(d => ({
+                id: d._id,
+                type: 'donation',
+                message: `${d.donor?.name || 'A donor'} donated ${d.units} unit(s) at ${d.hospital}`,
+                time: d.createdAt
+            }))
+        ].sort((a, b) => new Date(b.time) - new Date(a.time)).slice(0, 10);
 
         // Blood group distribution
         const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
         const distribution = await Promise.all(bloodGroups.map(async (bg) => {
             const count = await User.countDocuments({ bloodGroup: bg, role: "donor" });
-            return { name: bg, value: count || Math.floor(Math.random() * 10) + 1 }; // fallback to random if 0 for UI demo
+            return { name: bg, value: count };
         }));
 
         res.json({
@@ -34,7 +93,8 @@ export const getAnalytics = async (req, res) => {
                 totalRequests,
                 fulfilledRequests,
                 urgentRequests,
-                recentActivity: recentMonths,
+                recentActivityChart,
+                recentActivityLogs: combinedActivity,
                 bloodGroupDistribution: distribution
             }
         });

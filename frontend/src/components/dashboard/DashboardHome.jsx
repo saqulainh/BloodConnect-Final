@@ -5,7 +5,11 @@ import {
     Clock,
     Tent,
     Plus,
-    Bell
+    Bell,
+    CheckCircle,
+    Droplets as BloodIcon,
+    Heart as HeartIcon,
+    X
 } from 'lucide-react';
 import {
     AreaChart,
@@ -24,6 +28,7 @@ import { getAnalytics } from '../../services/api';
 import QuickActionButton from './QuickActionButton';
 import { recentActivity as fallbackRecentActivity, COLORS } from '../../data/dashboardData';
 import LiveMap from './LiveMap';
+import DonateModal from './DonateModal';
 
 const DashboardHome = ({ setActiveTab, user }) => {
     const hour = new Date().getHours();
@@ -35,14 +40,19 @@ const DashboardHome = ({ setActiveTab, user }) => {
         totalRequests: "...",
         fulfilledRequests: "...",
         urgentRequests: "...",
-        recentActivity: [],
+        recentActivityChart: [],
+        recentActivityLogs: [],
         bloodGroupDistribution: []
     });
+
+    const [timeframe, setTimeframe] = useState('week');
+    const [showAllActivity, setShowAllActivity] = useState(false);
+    const [showDonateModal, setShowDonateModal] = useState(false);
 
     useEffect(() => {
         const fetchAnalytics = async () => {
             try {
-                const res = await getAnalytics();
+                const res = await getAnalytics(timeframe);
                 if (res && res.success) {
                     setAnalytics(res.data);
                 }
@@ -51,7 +61,7 @@ const DashboardHome = ({ setActiveTab, user }) => {
             }
         };
         fetchAnalytics();
-    }, []);
+    }, [timeframe]);
 
     return (
         <div className="space-y-6 animate-in fade-in duration-500">
@@ -105,6 +115,29 @@ const DashboardHome = ({ setActiveTab, user }) => {
                 ))}
             </div>
 
+            {/* ── Support & Mission Promotion ── */}
+            <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden group hover:shadow-lg transition-all duration-500">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-red-50 rounded-full translate-x-10 -translate-y-10 group-hover:scale-110 transition-transform duration-700" />
+                <div className="flex items-center gap-5 relative z-10">
+                    <div className="w-14 h-14 bg-red-50 rounded-2xl flex items-center justify-center text-red-600 shadow-inner">
+                        <HeartIcon className="animate-pulse" fill="currentColor" size={24} />
+                    </div>
+                    <div>
+                        <h3 className="text-xl font-black text-slate-800 tracking-tight">Support Our National Mission</h3>
+                        <p className="text-sm font-medium text-slate-500 max-w-md">
+                            Your contributions help us scale BloodConnect across every city in India, ensuring no life is lost due to blood unavailability.
+                        </p>
+                    </div>
+                </div>
+                <button
+                    onClick={() => setShowDonateModal(true)}
+                    className="relative z-10 px-8 py-3.5 bg-slate-900 text-white font-black rounded-2xl hover:bg-slate-800 transition-all hover:scale-105 active:scale-95 shadow-xl shadow-slate-200 flex items-center gap-2 whitespace-nowrap"
+                >
+                    <CreditCard size={18} />
+                    CONTRIBUTE NOW
+                </button>
+            </div>
+
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Main Content Column (Charts & Map) */}
                 <div className="lg:col-span-2 space-y-6">
@@ -124,9 +157,13 @@ const DashboardHome = ({ setActiveTab, user }) => {
                         <div className="flex items-center justify-between mb-8">
                             <h3 className="font-bold text-slate-800 text-lg">Request vs Donations</h3>
                             <div className="relative">
-                                <select className="appearance-none text-xs bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 font-bold text-slate-600 focus:outline-none focus:ring-2 focus:ring-red-500/20 pr-8 cursor-pointer hover:bg-slate-100 transition-colors">
-                                    <option>This Week</option>
-                                    <option>This Month</option>
+                                <select
+                                    value={timeframe}
+                                    onChange={(e) => setTimeframe(e.target.value)}
+                                    className="appearance-none text-xs bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 font-bold text-slate-600 focus:outline-none focus:ring-2 focus:ring-red-500/20 pr-8 cursor-pointer hover:bg-slate-100 transition-colors"
+                                >
+                                    <option value="week">This Week</option>
+                                    <option value="month">This Month</option>
                                 </select>
                                 <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
                                     <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
@@ -134,30 +171,40 @@ const DashboardHome = ({ setActiveTab, user }) => {
                             </div>
                         </div>
                         <div className="h-[300px] w-full">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <AreaChart data={analytics.recentActivity.length > 0 ? analytics.recentActivity : fallbackRecentActivity} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                                    <defs>
-                                        <linearGradient id="colorReq" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="5%" stopColor="#ef4444" stopOpacity={0.1} />
-                                            <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
-                                        </linearGradient>
-                                        <linearGradient id="colorDon" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.1} />
-                                            <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
-                                        </linearGradient>
-                                    </defs>
-                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11, fontWeight: 600 }} dy={10} />
-                                    <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11, fontWeight: 600 }} />
-                                    <Tooltip
-                                        contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)' }}
-                                        itemStyle={{ fontSize: '12px', fontWeight: 'bold' }}
-                                        labelStyle={{ fontSize: '12px', color: '#64748b', marginBottom: '8px' }}
-                                    />
-                                    <Area type="monotone" dataKey="requests" stroke="#ef4444" strokeWidth={3} fillOpacity={1} fill="url(#colorReq)" />
-                                    <Area type="monotone" dataKey="donations" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorDon)" />
-                                </AreaChart>
-                            </ResponsiveContainer>
+                            {analytics.recentActivityChart.length > 0 ? (
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <AreaChart
+                                        data={analytics.recentActivityChart}
+                                        margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                                    >
+                                        <defs>
+                                            <linearGradient id="colorReq" x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="5%" stopColor="#ef4444" stopOpacity={0.1} />
+                                                <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
+                                            </linearGradient>
+                                            <linearGradient id="colorDon" x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.1} />
+                                                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                                            </linearGradient>
+                                        </defs>
+                                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                                        <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11, fontWeight: 600 }} dy={10} />
+                                        <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11, fontWeight: 600 }} />
+                                        <Tooltip
+                                            contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)' }}
+                                            itemStyle={{ fontSize: '12px', fontWeight: 'bold' }}
+                                            labelStyle={{ fontSize: '12px', color: '#64748b', marginBottom: '8px' }}
+                                        />
+                                        <Area type="monotone" dataKey="requests" stroke="#ef4444" strokeWidth={3} fillOpacity={1} fill="url(#colorReq)" />
+                                        <Area type="monotone" dataKey="donations" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorDon)" />
+                                    </AreaChart>
+                                </ResponsiveContainer>
+                            ) : (
+                                <div className="h-full flex flex-col items-center justify-center bg-slate-50 border border-dashed border-slate-200 rounded-2xl p-8 text-center">
+                                    <Clock className="w-8 h-8 text-slate-200 mb-2" />
+                                    <p className="text-sm font-bold text-slate-400">No activity data found for this period.</p>
+                                </div>
+                            )}
                         </div>
                     </div>
 
@@ -206,27 +253,92 @@ const DashboardHome = ({ setActiveTab, user }) => {
                     </div>
 
                     {/* Recent Activity */}
-                    <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+                    <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm transition-all duration-300">
                         <div className="flex items-center justify-between mb-6">
                             <h3 className="font-bold text-slate-800 text-lg">Recent Activity</h3>
-                            <button className="text-xs font-bold text-blue-600 hover:text-blue-700 hover:underline transition-colors">View All</button>
+                            <button
+                                onClick={() => setShowAllActivity(true)}
+                                className="text-xs font-bold text-blue-600 hover:text-blue-700 hover:underline transition-colors"
+                            >
+                                View All
+                            </button>
                         </div>
                         <div className="space-y-5">
-                            {fallbackRecentActivity.map((item) => (
-                                <div key={item.id} className="flex items-start gap-3 group cursor-pointer">
-                                    <div className={`mt-0.5 min-w-[32px] h-8 rounded-full flex items-center justify-center ${item.color} group-hover:scale-110 transition-transform`}>
-                                        <item.icon size={14} />
-                                    </div>
-                                    <div>
-                                        <p className="text-sm font-bold text-slate-700 leading-tight group-hover:text-red-600 transition-colors">{item.message}</p>
-                                        <p className="text-[11px] text-slate-400 font-bold mt-1">{item.time}</p>
-                                    </div>
+                            {analytics.recentActivityLogs.length > 0 ? (
+                                analytics.recentActivityLogs.map((item) => {
+                                    const isRequest = item.type === 'request';
+                                    const Icon = isRequest ? BloodIcon : HeartIcon;
+                                    const color = isRequest
+                                        ? (item.urgency === 'Critical' ? 'bg-red-100 text-red-600' : 'bg-orange-100 text-orange-600')
+                                        : 'bg-emerald-100 text-emerald-600';
+
+                                    return (
+                                        <div key={item.id} className="flex items-start gap-3 group cursor-pointer">
+                                            <div className={`mt-0.5 min-w-[32px] h-8 rounded-full flex items-center justify-center ${color} group-hover:scale-110 transition-transform`}>
+                                                <Icon size={14} />
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <p className="text-sm font-bold text-slate-700 leading-tight group-hover:text-red-600 transition-colors truncate">
+                                                    {item.message}
+                                                </p>
+                                                <p className="text-[11px] text-slate-400 font-bold mt-1">
+                                                    {new Date(item.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} •
+                                                    {new Date(item.time).toLocaleDateString([], { day: 'numeric', month: 'short' })}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    );
+                                })
+                            ) : (
+                                <div className="text-center py-10">
+                                    <Clock className="w-8 h-8 text-slate-200 mx-auto mb-2" />
+                                    <p className="text-xs font-bold text-slate-400">No activity yet</p>
                                 </div>
-                            ))}
+                            )}
                         </div>
                     </div>
                 </div>
             </div>
+
+            {/* ── View All Activity Modal ── */}
+            {showAllActivity && (
+                <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => setShowAllActivity(false)} />
+                    <div className="bg-white w-full max-w-xl rounded-3xl shadow-2xl relative animate-in zoom-in duration-300 overflow-hidden max-h-[80vh] flex flex-col">
+                        <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-white sticky top-0">
+                            <h3 className="text-xl font-black text-slate-800">Complete Activity Log</h3>
+                            <button onClick={() => setShowAllActivity(false)} className="p-2 hover:bg-slate-100 rounded-xl text-slate-400 transition-colors">
+                                <X size={20} />
+                            </button>
+                        </div>
+                        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                            {analytics.recentActivityLogs.map((item) => {
+                                const isRequest = item.type === 'request';
+                                const Icon = isRequest ? BloodIcon : HeartIcon;
+                                const color = isRequest
+                                    ? (item.urgency === 'Critical' ? 'bg-red-100 text-red-600' : 'bg-orange-100 text-orange-600')
+                                    : 'bg-emerald-100 text-emerald-600';
+
+                                return (
+                                    <div key={item.id} className="flex items-start gap-4 p-4 rounded-2xl border border-slate-50 hover:bg-slate-50 transition-colors">
+                                        <div className={`mt-0.5 min-w-[40px] h-10 rounded-full flex items-center justify-center ${color}`}>
+                                            <Icon size={18} />
+                                        </div>
+                                        <div>
+                                            <p className="font-black text-slate-800 leading-tight mb-1">{item.message}</p>
+                                            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">
+                                                {new Date(item.time).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}
+                                            </p>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </div>
+            )}
+            {/* ── Donation Modal ── */}
+            {showDonateModal && <DonateModal closeModal={() => setShowDonateModal(false)} />}
         </div>
     );
 };

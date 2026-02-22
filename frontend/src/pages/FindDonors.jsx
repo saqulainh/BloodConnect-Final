@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, MapPin, Phone, Droplets, ChevronDown, ArrowLeft, CheckCircle, Clock } from "lucide-react";
+import { Search, MapPin, Phone, Droplets, ChevronDown, ArrowLeft, CheckCircle, Clock, ShieldCheck } from "lucide-react";
 import { getNearbyDonors, getCurrentLocation } from "../services/api";
 
 const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"];
@@ -207,6 +207,7 @@ function DonorCard({ donor, expanded, onToggle }) {
     const phone = donor.phone || donor.contact;
     const isAvailable = donor.isAvailable;
     const isVerified = donor.isVerified;
+    const isAadhaarVerified = donor.aadhaarVerified; // Get Aadhaar verification status
     const donationCount = donor.donationCount || 0;
 
     return (
@@ -236,9 +237,16 @@ function DonorCard({ donor, expanded, onToggle }) {
 
             {/* Info */}
             <div style={{ padding: "16px" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8, flexWrap: "wrap" }}>
                     <h3 style={{ margin: 0, fontWeight: 800, fontSize: 15, color: "#111" }}>{name}</h3>
-                    {isVerified && <CheckCircle size={14} color="#4caf50" />}
+                    {isAadhaarVerified ? (
+                        <div style={{ display: "flex", alignItems: "center", gap: 3, background: "#e8f5e9", color: "#2e7d32", padding: "2px 8px", borderRadius: 12, fontSize: 10, fontWeight: 700 }}>
+                            <ShieldCheck size={12} />
+                            VERIFIED
+                        </div>
+                    ) : isVerified && (
+                        <CheckCircle size={14} color="#4682B4" />
+                    )}
                 </div>
 
                 {donor.address && (

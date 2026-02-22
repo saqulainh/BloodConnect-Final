@@ -8,6 +8,9 @@ const LoginPage = lazy(() => import("../pages/LoginPage"));
 const RegisterPage = lazy(() => import("../pages/RegisterPage"));
 const Dashboard = lazy(() => import("../pages/Dashboard"));
 const OtpVerifyPage = lazy(() => import("../pages/OtpVerifyPage"));
+const FindDonors = lazy(() => import("../pages/FindDonors"));
+const Profile = lazy(() => import("../pages/Profile"));
+const AadhaarVerifyPage = lazy(() => import("../pages/AadhaarVerifyPage"));
 const ForgotPassword = lazy(() => import("../components/auth/ForgotPassword"));
 const ResetPassword = lazy(() => import("../components/auth/ResetPassword"));
 
@@ -35,6 +38,9 @@ const AppRouter = () => {
                 {/* Protected Routes */}
                 <Route element={<ProtectedRoute />}>
                     <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/find-donors" element={<FindDonors />} />
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/verify-aadhaar" element={<AadhaarVerifyPage />} />
                 </Route>
 
                 {/* Fallback */}

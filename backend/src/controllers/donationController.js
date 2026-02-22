@@ -14,7 +14,13 @@ const addDonation = async (req, res) => {
             patientName,
             hospital,
             date: donationDate,
-            units
+            units,
+            currentStage: 'Donated',
+            journey: [{
+                stage: 'Donated',
+                timestamp: donationDate,
+                message: `Donation of ${units} unit(s) recorded at ${hospital}.`
+            }]
         });
 
         res.status(201).json({ success: true, data: donation });

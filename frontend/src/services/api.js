@@ -254,8 +254,8 @@ export const getDonorStats = async () => {
 // ANALYTICS ENDPOINTS
 // ─────────────────────────────────────────────────────────────────────
 
-export const getAnalytics = async () => {
-    return apiFetch("/analytics", { method: "GET", headers: authHeaders() });
+export const getAnalytics = async (timeframe = 'week') => {
+    return apiFetch(`/analytics?timeframe=${timeframe}`, { method: "GET", headers: authHeaders() });
 };
 
 // ─────────────────────────────────────────────────────────────────────
@@ -367,5 +367,26 @@ export const sendMessage = async (receiverId, text) => {
         method: "POST",
         headers: authHeaders(),
         body: JSON.stringify({ text }),
+    });
+};
+// ─────────────────────────────────────────────────────────────────────
+// PAYMENT & DONATION ENDPOINTS
+// ─────────────────────────────────────────────────────────────────────
+
+/** POST /payment/create-order — Create a new Razorpay order */
+export const createOrder = async (amount) => {
+    return apiFetch("/payment/create-order", {
+        method: "POST",
+        headers: authHeaders(),
+        body: JSON.stringify({ amount }),
+    });
+};
+
+/** POST /payment/verify — Verify Razorpay payment signature */
+export const verifyPayment = async (paymentData) => {
+    return apiFetch("/payment/verify", {
+        method: "POST",
+        headers: authHeaders(),
+        body: JSON.stringify(paymentData),
     });
 };
