@@ -22,7 +22,10 @@ const DonorManagement = () => (
                 <button className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-600 hover:bg-slate-50">
                     <Filter size={16} /> Filter
                 </button>
-                <button className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-bold shadow-sm hover:bg-red-700 transition-colors">
+                <button
+                    onClick={() => alert("To onboard a new donor securely into BloodConnect, please direct them to the public Registration page for OTP and Aadhaar verification.")}
+                    className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-bold shadow-sm hover:bg-red-700 transition-colors"
+                >
                     <Plus size={16} /> Add Donor
                 </button>
             </div>

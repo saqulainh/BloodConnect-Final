@@ -32,7 +32,12 @@ const RequestBloodForm = ({ onClose }) => {
         setError('');
         try {
             const loc = await getCurrentLocation().catch(() => ({ lat: 0, lng: 0 }));
-            await createBloodRequest({ ...form, lat: loc.lat, lng: loc.lng });
+            await createBloodRequest({
+                ...form,
+                hospital: form.hospitalName,
+                lat: loc.lat,
+                lng: loc.lng
+            });
             alert("Request created successfully!");
             onClose();
         } catch (err) {

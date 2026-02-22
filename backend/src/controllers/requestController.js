@@ -25,9 +25,9 @@ const createRequest = async (req, res) => {
 
         // Trigger Pusher event here (optional for now)
 
-        res.status(201).json(createdRequest);
+        res.status(201).json({ success: true, data: createdRequest });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ success: false, message: error.message });
     }
 };
 
@@ -39,9 +39,9 @@ const getRequests = async (req, res) => {
         const requests = await Request.find({ status: "Active" })
             .populate("requester", "name phone")
             .sort({ createdAt: -1 });
-        res.json(requests);
+        res.json({ success: true, data: requests });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ success: false, message: error.message });
     }
 };
 
