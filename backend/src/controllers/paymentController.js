@@ -1,11 +1,12 @@
 import crypto from "crypto";
 import razorpay from "../utils/razorpay.js";
 import Donation from "../models/Donation.js";
+import { generateReceiptPDF } from "../utils/ReceiptGenerator.js";
 
 // CREATE ORDER
 export const createOrder = async (req, res) => {
     try {
-        const { amount } = req.body;
+        const { amount, donorName, donorEmail, donorPhone } = req.body;
 
         if (!amount || amount < 10) {
             return res.status(400).json({ success: false, message: "Invalid donation amount (min ₹10)" });
@@ -19,11 +20,14 @@ export const createOrder = async (req, res) => {
 
         const order = await razorpay.orders.create(options);
 
-        await Donation.create({
-            userId: req.user?._id, // Link to user if logged in
+        const donation = await Donation.create({
+            userId: req.user?._id,
             orderId: order.id,
             amount,
             status: "created",
+            donorName: donorName || "Anonymous",
+            donorEmail: donorEmail || "",
+            donorPhone: donorPhone || "",
         });
 
         res.status(200).json({ success: true, data: order });
@@ -53,48 +57,60 @@ export const verifyPayment = async (req, res) => {
             return res.status(400).json({ success: false, message: "Invalid signature" });
         }
 
-        await Donation.findOneAndUpdate(
+        const donation = await Donation.findOneAndUpdate(
             { orderId: razorpay_order_id },
             {
                 paymentId: razorpay_payment_id,
                 status: "success",
-            }
+            },
+            { new: true }
         );
 
-        res.status(200).json({ success: true, message: "Payment verified successfully" });
+        res.status(200).json({
+            success: true,
+            message: "Payment verified successfully",
+            data: { receiptNumber: donation?.receiptNumber, orderId: razorpay_order_id }
+        });
     } catch (error) {
         console.error("Verify Payment Error:", error);
         res.status(500).json({ success: false, message: error.message });
     }
 };
 
-// WEBHOOK HANDLER
+// WEBHOOK HANDLER (receives raw body from express.raw middleware)
 export const handleWebhook = async (req, res) => {
     try {
         const secret = process.env.RAZORPAY_WEBHOOK_SECRET;
         const signature = req.headers["x-razorpay-signature"];
 
+        // req.body is a Buffer because of express.raw() middleware
+        const rawBody = req.body.toString("utf8");
+
         const expectedSignature = crypto
             .createHmac("sha256", secret)
-            .update(JSON.stringify(req.body))
+            .update(rawBody)
             .digest("hex");
 
         if (expectedSignature !== signature) {
+            console.warn("⚠️ Invalid webhook signature received");
             return res.status(400).json({ success: false, message: "Invalid webhook signature" });
         }
 
-        const event = req.body.event;
+        const event = JSON.parse(rawBody);
+        const eventType = event.event;
 
-        if (event === "payment.captured") {
-            const payment = req.body.payload.payment.entity;
+        console.log(`✅ Razorpay Webhook Event: ${eventType}`);
+
+        if (eventType === "payment.captured") {
+            const payment = event.payload.payment.entity;
             await Donation.findOneAndUpdate(
                 { orderId: payment.order_id },
                 { status: "success", paymentId: payment.id }
             );
         }
 
-        if (event === "payment.failed") {
-            const payment = req.body.payload.payment.entity;
+        if (eventType === "payment.failed") {
+            const payment = event.payload.payment.entity;
             await Donation.findOneAndUpdate(
                 { orderId: payment.order_id },
                 { status: "failed" }
@@ -104,6 +120,30 @@ export const handleWebhook = async (req, res) => {
         res.status(200).json({ received: true });
     } catch (error) {
         console.error("Webhook Error:", error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+// DOWNLOAD RECEIPT — GET /payment/:orderId/receipt
+export const downloadReceipt = async (req, res) => {
+    try {
+        const { orderId } = req.params;
+        const donation = await Donation.findOne({ orderId, status: "success" });
+
+        if (!donation) {
+            return res.status(404).json({ success: false, message: "Successful donation not found for this order ID" });
+        }
+
+        res.setHeader("Content-Type", "application/pdf");
+        res.setHeader(
+            "Content-Disposition",
+            `attachment; filename="BloodConnect-Receipt-${donation.receiptNumber}.pdf"`
+        );
+
+        const pdfStream = generateReceiptPDF(donation);
+        pdfStream.pipe(res);
+    } catch (error) {
+        console.error("Receipt Error:", error);
         res.status(500).json({ success: false, message: error.message });
     }
 };

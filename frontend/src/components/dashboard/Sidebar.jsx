@@ -1,20 +1,28 @@
 import React from 'react';
 import {
     LayoutDashboard, Users, Ticket, Tent,
-    BarChart3, Settings, LogOut, X, Droplets, Search, MessageSquare
+    BarChart3, Settings, LogOut, X, Droplets, Search, MessageSquare, ShieldAlert,
+    Navigation, Wallet, Siren
 } from 'lucide-react';
 
 const NAV_ITEMS = [
     { id: "dashboard", icon: LayoutDashboard, label: "Dashboard" },
     { id: "donors", icon: Users, label: "Donors" },
     { id: "requests", icon: Ticket, label: "Blood Requests" },
+    { id: "proximity", icon: Navigation, label: "Nearby Donors", badge: "AI" },
     { id: "camps", icon: Tent, label: "Blood Camps" },
     { id: "chat", icon: MessageSquare, label: "Secure Chat", badge: "New" },
 ];
 
 const MGMT_ITEMS = [
     { id: "analytics", icon: BarChart3, label: "Analytics" },
+    { id: "health-wallet", icon: Wallet, label: "Health Wallet" },
+    { id: "sos", icon: Siren, label: "SOS Broadcast", badge: "🚨" },
     { id: "settings", icon: Settings, label: "Settings" },
+];
+
+const ADMIN_ITEMS = [
+    { id: "admin-analytics", icon: ShieldAlert, label: "Mission Intel", badge: "Admin" },
 ];
 
 const NavItem = ({ id, icon: Icon, label, badge, activeTab, setActiveTab, setIsSidebarOpen }) => {
@@ -109,6 +117,16 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen, activeTab, se
                 {MGMT_ITEMS.map(item => (
                     <NavItem key={item.id} {...item} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />
                 ))}
+
+                {/* Admin-only section */}
+                {user?.role === "admin" && (
+                    <>
+                        <p className="px-4 text-[9px] font-black text-red-400 uppercase tracking-widest mb-2 mt-6">⬡ Admin</p>
+                        {ADMIN_ITEMS.map(item => (
+                            <NavItem key={item.id} {...item} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />
+                        ))}
+                    </>
+                )}
             </div>
 
             {/* ── Quick search hint ── */}

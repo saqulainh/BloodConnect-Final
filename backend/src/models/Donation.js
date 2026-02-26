@@ -24,10 +24,21 @@ const donationSchema = new mongoose.Schema({
         enum: ["created", "success", "failed"],
         default: "created",
     },
-    createdAt: {
-        type: Date,
-        default: Date.now,
-    },
+    // For tax receipt generation
+    donorName: { type: String, default: "Anonymous" },
+    donorEmail: { type: String, default: "" },
+    donorPhone: { type: String, default: "" },
+    receiptGenerated: { type: Boolean, default: false },
+    receiptNumber: { type: String },
+}, { timestamps: true });
+
+// Auto-generate receipt number before save
+donationSchema.pre("save", function (next) {
+    if (!this.receiptNumber) {
+        const year = new Date().getFullYear();
+        this.receiptNumber = `BC-${year}-${Math.floor(100000 + Math.random() * 900000)}`;
+    }
+    next();
 });
 
 const Donation = mongoose.model("Donation", donationSchema);

@@ -373,12 +373,12 @@ export const sendMessage = async (receiverId, text) => {
 // PAYMENT & DONATION ENDPOINTS
 // ─────────────────────────────────────────────────────────────────────
 
-/** POST /payment/create-order — Create a new Razorpay order */
-export const createOrder = async (amount) => {
+/** POST /payment/create-order — Create a new Razorpay order with donor info for receipt */
+export const createOrder = async (amount, donorName = "", donorEmail = "", donorPhone = "") => {
     return apiFetch("/payment/create-order", {
         method: "POST",
         headers: authHeaders(),
-        body: JSON.stringify({ amount }),
+        body: JSON.stringify({ amount, donorName, donorEmail, donorPhone }),
     });
 };
 
@@ -389,4 +389,42 @@ export const verifyPayment = async (paymentData) => {
         headers: authHeaders(),
         body: JSON.stringify(paymentData),
     });
+};
+
+// ─────────────────────────────────────────────────────────────────────
+// ADMIN ANALYTICS ENDPOINTS
+// ─────────────────────────────────────────────────────────────────────
+
+/** GET /admin/mission-stats — Admin-only platform intelligence */
+export const getAdminMissionStats = async () => {
+    return apiFetch("/admin/mission-stats", { method: "GET", headers: authHeaders() });
+};
+
+// ─────────────────────────────────────────────────────────────────────
+// PROXIMITY MATCHING ENDPOINTS
+// ─────────────────────────────────────────────────────────────────────
+
+/** GET /proximity/donors — AI geo-sorted donor search with drive time */
+export const getProximityDonors = async ({ lat, lng, bloodGroup = "All", radius = 20 }) => {
+    const params = new URLSearchParams({ lat, lng, radius });
+    if (bloodGroup && bloodGroup !== "All") params.append("bloodGroup", bloodGroup);
+    return apiFetch(`/proximity/donors?${params.toString()}`, { method: "GET", headers: authHeaders() });
+};
+
+// ─────────────────────────────────────────────────────────────────────
+// SOS BROADCAST ENDPOINTS
+// ─────────────────────────────────────────────────────────────────────
+
+/** POST /sos/broadcast — Broadcast emergency alert to nearby donors */
+export const broadcastSOS = async ({ bloodGroup, hospital, patientName, message, lat, lng }) => {
+    return apiFetch("/sos/broadcast", {
+        method: "POST",
+        headers: authHeaders(),
+        body: JSON.stringify({ bloodGroup, hospital, patientName, message, lat, lng }),
+    });
+};
+
+/** GET /sos/active — Get active critical requests from last 12 hours */
+export const getActiveSOSAlerts = async () => {
+    return apiFetch("/sos/active", { method: "GET", headers: authHeaders() });
 };

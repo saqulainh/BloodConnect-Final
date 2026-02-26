@@ -10,6 +10,10 @@ import BloodCamps from "../components/dashboard/BloodCamps";
 import ComingSoon from "../components/dashboard/ComingSoon";
 import SettingsPanel from "../components/dashboard/Settings";
 import Analytics from "../components/dashboard/Analytics";
+import AdminAnalytics from "../components/dashboard/AdminAnalytics";
+import ProximityFinder from "../components/dashboard/ProximityFinder";
+import HealthWallet from "../components/dashboard/HealthWallet";
+import SOSBroadcast from "../components/dashboard/SOSBroadcast";
 import Chat from "./Chat";
 
 import { useAuth } from "../context/AuthContext";
@@ -18,20 +22,28 @@ const TAB_TITLES = {
     dashboard: "Overview",
     donors: "Donors",
     requests: "Blood Requests",
+    proximity: "Nearby Donors",
     camps: "Blood Camps",
     chat: "Secure Chat",
     analytics: "Analytics",
+    "health-wallet": "Health Wallet",
+    sos: "SOS Broadcast",
     settings: "Settings",
+    "admin-analytics": "Mission Intel",
 };
 
 const TAB_SUBTITLES = {
     dashboard: "Welcome back! Here's today's summary.",
     donors: "Manage registered donors and their availability.",
     requests: "Track and fulfill urgent blood requests.",
+    proximity: "AI-powered geo-matching with drive-time estimates.",
     camps: "Organize and monitor blood donation camps.",
     chat: "Communicate securely with donors and patients.",
     analytics: "Deep insights into donation patterns.",
+    "health-wallet": "Your donation history, badges, and recovery tracker.",
+    sos: "Broadcast critical requests to nearby donors instantly.",
     settings: "Configure your account preferences.",
+    "admin-analytics": "Platform intelligence — revenue, growth, and impact metrics.",
 };
 
 export default function Dashboard() {
@@ -62,10 +74,14 @@ export default function Dashboard() {
             case "dashboard": return <DashboardHome setActiveTab={setActiveTab} user={user} />;
             case "donors": return <DonorManagement onStartChat={handleStartChat} />;
             case "requests": return <RequestManagement onStartChat={handleStartChat} currentUser={user} />;
+            case "proximity": return <ProximityFinder onStartChat={handleStartChat} />;
             case "camps": return <BloodCamps />;
             case "chat": return <Chat preselectedUser={chatTargetUser} />;
             case "analytics": return <Analytics />;
+            case "health-wallet": return <HealthWallet />;
+            case "sos": return <SOSBroadcast />;
             case "settings": return <SettingsPanel />;
+            case "admin-analytics": return <AdminAnalytics />;
             default: return <DashboardHome setActiveTab={setActiveTab} user={user} />;
         }
     };
