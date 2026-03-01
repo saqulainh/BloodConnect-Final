@@ -2,6 +2,7 @@
     "name": "blood-connect-backend",
     "version": "1.0.0",
     "description": "Backend for BloodConnect application",
+    "author": "Saqulain Haider",
     "main": "index.js",
     "type": "module",
     "scripts": {

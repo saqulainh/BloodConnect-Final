@@ -136,4 +136,5 @@ Bhai/Behen, humne BloodConnect ko ekdam next-level bana diya hai. Dekho kya kya 
    ```
 
 ---
-*Developed with a mission to make every drop count.*
+*Developed by **Saqulain Haider** with a mission to make every drop count.*  
+*© 2026 Saqulain Haider. All rights reserved.*
