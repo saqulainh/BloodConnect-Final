@@ -15,6 +15,7 @@ import ProximityFinder from "../components/dashboard/ProximityFinder";
 import HealthWallet from "../components/dashboard/HealthWallet";
 import SOSBroadcast from "../components/dashboard/SOSBroadcast";
 import Chat from "./Chat";
+import BloodJourney from "../components/dashboard/BloodJourney";
 
 import { useAuth } from "../context/AuthContext";
 
@@ -27,6 +28,7 @@ const TAB_TITLES = {
     chat: "Secure Chat",
     analytics: "Analytics",
     "health-wallet": "Health Wallet",
+    "blood-journey": "Blood Journey",
     sos: "SOS Broadcast",
     settings: "Settings",
     "admin-analytics": "Mission Intel",
@@ -41,6 +43,7 @@ const TAB_SUBTITLES = {
     chat: "Communicate securely with donors and patients.",
     analytics: "Deep insights into donation patterns.",
     "health-wallet": "Your donation history, badges, and recovery tracker.",
+    "blood-journey": "Track your donation from collection to life saved.",
     sos: "Broadcast critical requests to nearby donors instantly.",
     settings: "Configure your account preferences.",
     "admin-analytics": "Platform intelligence — revenue, growth, and impact metrics.",
@@ -79,6 +82,7 @@ export default function Dashboard() {
             case "chat": return <Chat preselectedUser={chatTargetUser} />;
             case "analytics": return <Analytics />;
             case "health-wallet": return <HealthWallet />;
+            case "blood-journey": return <BloodJourney />;
             case "sos": return <SOSBroadcast />;
             case "settings": return <SettingsPanel />;
             case "admin-analytics": return <AdminAnalytics />;

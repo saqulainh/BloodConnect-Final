@@ -1,45 +1,31 @@
 import mongoose from "mongoose";
 
 const donationSchema = new mongoose.Schema({
-    userId: {
+    donor: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-    },
-    orderId: {
-        type: String,
         required: true,
-        unique: true
+        index: true
     },
-    paymentId: String,
-    amount: {
-        type: Number,
-        required: true
-    },
-    currency: {
+    patientName: { type: String },
+    hospital: { type: String },
+    bloodGroup: { type: String, required: true, index: true },
+    date: { type: Date, default: Date.now },
+    units: { type: Number, default: 1 },
+    currentStage: {
         type: String,
-        default: "INR",
+        enum: ["Donated", "Processing", "Tested", "Transferred", "Life Saved"],
+        default: "Donated",
+        index: true
     },
-    status: {
-        type: String,
-        enum: ["created", "success", "failed"],
-        default: "created",
-    },
-    // For tax receipt generation
-    donorName: { type: String, default: "Anonymous" },
-    donorEmail: { type: String, default: "" },
-    donorPhone: { type: String, default: "" },
-    receiptGenerated: { type: Boolean, default: false },
-    receiptNumber: { type: String },
+    journey: [
+        {
+            stage: { type: String },
+            timestamp: { type: Date, default: Date.now },
+            message: { type: String }
+        }
+    ]
 }, { timestamps: true });
-
-// Auto-generate receipt number before save
-donationSchema.pre("save", function (next) {
-    if (!this.receiptNumber) {
-        const year = new Date().getFullYear();
-        this.receiptNumber = `BC-${year}-${Math.floor(100000 + Math.random() * 900000)}`;
-    }
-    next();
-});
 
 const Donation = mongoose.model("Donation", donationSchema);
 export default Donation;

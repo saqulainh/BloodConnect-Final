@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema({
     bloodGroup: { type: String, required: true, index: true }, // Index for donor search
     aadhaarNumber: { type: String, required: true, unique: true }, // In a real app, encrypt this field
     address: { type: String },
+    city: { type: String, default: "", index: true }, // Used by admin analytics top-cities aggregation
     location: {
         type: { type: String, default: "Point" },
         coordinates: { type: [Number], index: "2dsphere" } // [lng, lat]

@@ -9,7 +9,8 @@ import {
     CheckCircle,
     Droplets as BloodIcon,
     Heart as HeartIcon,
-    X
+    X,
+    CreditCard
 } from 'lucide-react';
 import {
     AreaChart,

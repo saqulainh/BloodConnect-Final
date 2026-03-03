@@ -260,7 +260,12 @@ export default function RegisterPage() {
             const res = await registerUser(fd);
             navigate(`/verify-otp?email=${encodeURIComponent(form.email.trim().toLowerCase())}`);
         } catch (err) {
-            setError(err.message || "Registration failed. Please try again.");
+            let msg = "Registration failed. Please try again.";
+            if (typeof err === "string") msg = err;
+            else if (err?.message) msg = err.message;
+            else if (err?.response?.data?.message) msg = err.response.data.message;
+            else msg = JSON.stringify(err);
+            setError(msg);
         } finally {
             setLoading(false);
         }

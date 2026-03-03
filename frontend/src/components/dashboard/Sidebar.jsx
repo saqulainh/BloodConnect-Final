@@ -2,7 +2,7 @@ import React from 'react';
 import {
     LayoutDashboard, Users, Ticket, Tent,
     BarChart3, Settings, LogOut, X, Droplets, Search, MessageSquare, ShieldAlert,
-    Navigation, Wallet, Siren
+    Navigation, Wallet, Siren, Route
 } from 'lucide-react';
 
 const NAV_ITEMS = [
@@ -17,6 +17,7 @@ const NAV_ITEMS = [
 const MGMT_ITEMS = [
     { id: "analytics", icon: BarChart3, label: "Analytics" },
     { id: "health-wallet", icon: Wallet, label: "Health Wallet" },
+    { id: "blood-journey", icon: Route, label: "Blood Journey", badge: "New" },
     { id: "sos", icon: Siren, label: "SOS Broadcast", badge: "🚨" },
     { id: "settings", icon: Settings, label: "Settings" },
 ];

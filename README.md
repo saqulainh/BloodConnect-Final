@@ -88,6 +88,66 @@ Bhai/Behen, humne BloodConnect ko ekdam next-level bana diya hai. Dekho kya kya 
 
 ---
 
+## 📸 Screenshots
+
+Here is a visual tour of all the key features currently live and working in the application:
+
+### 🏠 Landing / Home Page
+> Beautiful hero section with live stats, CTA, and step-by-step explainer.
+
+![Home Page](screenshots/01_home.png)
+
+---
+
+### 🔐 User Registration (Multi-Step Form)
+> Secure multi-step sign-up flow with Aadhaar verification and blood group selection.
+
+![Register Page](screenshots/02_register.png)
+
+---
+
+### 🔑 Login
+> Clean, minimal login interface with secure JWT-based authentication.
+
+![Login Page](screenshots/03_login.png)
+
+---
+
+### 📊 Dashboard – Analytics Home
+> Real-time stats, live heatmap, area charts for donation vs request trends, and quick actions.
+
+![Dashboard Home](screenshots/04_dashboard_home.png)
+
+---
+
+### 🚨 Blood Requests Management
+> Create, view, filter, and manage urgent blood requests with urgency levels (Normal / High / Critical).
+
+![Blood Requests](screenshots/05_blood_requests.png)
+
+---
+
+### 👥 Donor Directory
+> Browse and search verified donors by blood group, distance, and availability status.
+
+![Donors](screenshots/06_donors.png)
+
+---
+
+### 🏕️ Blood Donation Camps
+> Discover and register for upcoming blood donation camps in your area.
+
+![Blood Camps](screenshots/07_blood_camps.png)
+
+---
+
+### 💬 Real-Time Secure Chat
+> Connect directly with donors or requesters via Pusher-powered live messaging.
+
+![Secure Chat](screenshots/08_chat.png)
+
+---
+
 ## 🛠️ Technology Stack
 
 **Frontend Framework:** React.js (Vite), TailwindCSS, Recharts, React-Leaflet, Lucide Icons  

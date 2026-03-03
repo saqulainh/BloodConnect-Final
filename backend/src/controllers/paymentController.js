@@ -1,6 +1,6 @@
 import crypto from "crypto";
 import razorpay from "../utils/razorpay.js";
-import Donation from "../models/Donation.js";
+import Payment from "../models/Payment.js";
 import { generateReceiptPDF } from "../utils/ReceiptGenerator.js";
 
 // CREATE ORDER
@@ -20,7 +20,7 @@ export const createOrder = async (req, res) => {
 
         const order = await razorpay.orders.create(options);
 
-        const donation = await Donation.create({
+        const payment = await Payment.create({
             userId: req.user?._id,
             orderId: order.id,
             amount,
@@ -57,7 +57,7 @@ export const verifyPayment = async (req, res) => {
             return res.status(400).json({ success: false, message: "Invalid signature" });
         }
 
-        const donation = await Donation.findOneAndUpdate(
+        const payment = await Payment.findOneAndUpdate(
             { orderId: razorpay_order_id },
             {
                 paymentId: razorpay_payment_id,
@@ -69,7 +69,7 @@ export const verifyPayment = async (req, res) => {
         res.status(200).json({
             success: true,
             message: "Payment verified successfully",
-            data: { receiptNumber: donation?.receiptNumber, orderId: razorpay_order_id }
+            data: { receiptNumber: payment?.receiptNumber, orderId: razorpay_order_id }
         });
     } catch (error) {
         console.error("Verify Payment Error:", error);
@@ -103,7 +103,7 @@ export const handleWebhook = async (req, res) => {
 
         if (eventType === "payment.captured") {
             const payment = event.payload.payment.entity;
-            await Donation.findOneAndUpdate(
+            await Payment.findOneAndUpdate(
                 { orderId: payment.order_id },
                 { status: "success", paymentId: payment.id }
             );
@@ -111,7 +111,7 @@ export const handleWebhook = async (req, res) => {
 
         if (eventType === "payment.failed") {
             const payment = event.payload.payment.entity;
-            await Donation.findOneAndUpdate(
+            await Payment.findOneAndUpdate(
                 { orderId: payment.order_id },
                 { status: "failed" }
             );
@@ -128,19 +128,19 @@ export const handleWebhook = async (req, res) => {
 export const downloadReceipt = async (req, res) => {
     try {
         const { orderId } = req.params;
-        const donation = await Donation.findOne({ orderId, status: "success" });
+        const payment = await Payment.findOne({ orderId, status: "success" });
 
-        if (!donation) {
+        if (!payment) {
             return res.status(404).json({ success: false, message: "Successful donation not found for this order ID" });
         }
 
         res.setHeader("Content-Type", "application/pdf");
         res.setHeader(
             "Content-Disposition",
-            `attachment; filename="BloodConnect-Receipt-${donation.receiptNumber}.pdf"`
+            `attachment; filename="BloodConnect-Receipt-${payment.receiptNumber}.pdf"`
         );
 
-        const pdfStream = generateReceiptPDF(donation);
+        const pdfStream = generateReceiptPDF(payment);
         pdfStream.pipe(res);
     } catch (error) {
         console.error("Receipt Error:", error);

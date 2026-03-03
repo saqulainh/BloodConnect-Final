@@ -335,4 +335,78 @@ const getMe = async (req, res) => {
     }
 };
 
-export { registerUser, loginUser, logoutUser, verifyOtp, resendOtp, verifyAadhaar, getMe };
+// ─── Forgot Password ─────────────────────────────────────────────────────────
+
+// @desc    Send password reset OTP to email
+// @route   POST /api/v1/auth/forgot-password
+// @access  Public
+const forgotPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+        const user = await User.findOne({ email });
+
+        // Return 200 even if user not found (security: don't reveal if email exists)
+        if (!user) {
+            return res.status(200).json({ success: true, message: "If this email is registered, an OTP has been sent." });
+        }
+
+        const otp = generateOtp();
+        user.otp = otp;
+        user.otpExpires = Date.now() + 10 * 60 * 1000; // 10 min
+        await user.save();
+
+        await sendEmail(
+            user.email,
+            "BloodConnect – Password Reset OTP",
+            `Your password reset OTP is ${otp}. It expires in 10 minutes.`,
+            `
+            <div style="font-family:Inter,sans-serif;max-width:500px;margin:0 auto">
+              <div style="background:#e53935;padding:24px;border-radius:12px 12px 0 0;text-align:center">
+                <h1 style="color:#fff;margin:0;font-size:22px">🩸 BloodConnect</h1>
+              </div>
+              <div style="background:#fff;padding:28px;border-radius:0 0 12px 12px;border:1px solid #f0f0f0">
+                <h2 style="color:#111;font-size:18px">Reset Your Password</h2>
+                <p style="color:#666">You requested a password reset. Use this OTP:</p>
+                <div style="background:#f9f9f9;border:1.5px solid #eee;border-radius:10px;padding:20px;text-align:center;margin:20px 0">
+                  <span style="font-size:36px;font-weight:900;letter-spacing:8px;color:#e53935">${otp}</span>
+                </div>
+                <p style="color:#aaa;font-size:13px">This code expires in <strong>10 minutes</strong>. If you did not request this, ignore this email.</p>
+              </div>
+            </div>
+            `
+        );
+
+        res.status(200).json({ success: true, message: "If this email is registered, an OTP has been sent." });
+    } catch (error) {
+        console.error("Forgot password error:", error);
+        res.status(500).json({ success: false, message: "Server error. Please try again." });
+    }
+};
+
+// ─── Reset Password ───────────────────────────────────────────────────────────
+
+// @desc    Reset password using OTP
+// @route   POST /api/v1/auth/reset-password
+// @access  Public
+const resetPassword = async (req, res) => {
+    try {
+        const { email, otp, password } = req.body;
+
+        const user = await User.findOne({ email });
+        if (!user) return res.status(404).json({ success: false, message: "User not found." });
+        if (user.otp !== otp) return res.status(400).json({ success: false, message: "Invalid OTP." });
+        if (user.otpExpires < Date.now()) return res.status(400).json({ success: false, message: "OTP has expired. Please request a new one." });
+
+        user.password = password; // Will be hashed by pre-save hook
+        user.otp = undefined;
+        user.otpExpires = undefined;
+        await user.save();
+
+        res.status(200).json({ success: true, message: "Password reset successful. You can now log in with your new password." });
+    } catch (error) {
+        console.error("Reset password error:", error);
+        res.status(500).json({ success: false, message: "Server error. Please try again." });
+    }
+};
+
+export { registerUser, loginUser, logoutUser, verifyOtp, resendOtp, verifyAadhaar, getMe, forgotPassword, resetPassword };

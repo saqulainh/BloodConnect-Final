@@ -1,6 +1,7 @@
 import User from "../models/User.js";
 import Request from "../models/Request.js";
 import Donation from "../models/Donation.js";
+import Payment from "../models/Payment.js";
 
 // GET /api/v1/admin/mission-stats (admin only)
 export const getMissionStats = async (req, res) => {
@@ -28,12 +29,12 @@ export const getMissionStats = async (req, res) => {
             User.countDocuments({ role: "donor" }),
             Request.countDocuments(),
             Request.countDocuments({ status: "Completed" }),
-            Donation.aggregate([
+            Payment.aggregate([
                 { $match: { status: "success" } },
                 { $group: { _id: null, total: { $sum: "$amount" } } },
             ]),
             User.countDocuments({ createdAt: { $gte: sevenDaysAgo } }),
-            Donation.countDocuments({ status: "success" }),
+            Payment.countDocuments({ status: "success" }),
         ]);
 
         const totalRevenueAmount = totalRevenue[0]?.total || 0;
@@ -58,7 +59,7 @@ export const getMissionStats = async (req, res) => {
         ]);
 
         // ── Revenue Trend (Last 30 Days) ──────────────────────────────
-        const revenueTrend = await Donation.aggregate([
+        const revenueTrend = await Payment.aggregate([
             { $match: { status: "success", createdAt: { $gte: thirtyDaysAgo } } },
             {
                 $group: {
@@ -95,7 +96,7 @@ export const getMissionStats = async (req, res) => {
         ]);
 
         // ── Recent Transactions ───────────────────────────────────────
-        const recentTransactions = await Donation.find({ status: "success" })
+        const recentTransactions = await Payment.find({ status: "success" })
             .sort({ createdAt: -1 })
             .limit(10)
             .select("donorName donorEmail amount receiptNumber createdAt");

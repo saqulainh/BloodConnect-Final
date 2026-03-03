@@ -12,6 +12,7 @@ import paymentRoutes from "./routes/payment.routes.js";
 import adminAnalyticsRoutes from "./routes/adminAnalytics.routes.js";
 import proximityRoutes from "./routes/proximity.routes.js";
 import sosRoutes from "./routes/sos.routes.js";
+import healthWalletRoutes from "./routes/healthWallet.routes.js";
 import { handleWebhook } from "./controllers/paymentController.js";
 
 const app = express();
@@ -43,10 +44,20 @@ app.use("/api/v1/donations", donationRoutes);
 app.use("/api/v1/payment", paymentRoutes);
 app.use("/api/v1/proximity", proximityRoutes);
 app.use("/api/v1/sos", sosRoutes);
+app.use("/api/v1/health-wallet", healthWalletRoutes);
 
 // Health Check
 app.get("/", (req, res) => {
     res.send("API is running...");
+});
+
+// Global Error Handler
+app.use((err, req, res, next) => {
+    console.error("Unhandled Error:", err);
+    res.status(err.status || 500).json({
+        success: false,
+        message: err.message || "An unexpected server error occurred."
+    });
 });
 
 export default app;

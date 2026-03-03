@@ -1,11 +1,13 @@
 import express from "express";
 import { protect } from "../middleware/authMiddleware.js";
 import { createRequest, getRequests, updateRequest, deleteRequest } from "../controllers/requestController.js";
+import { requestCreationLimiter } from "../middleware/rateLimiter.js";
+import { validateBloodRequest } from "../middleware/validate.js";
 
 const router = express.Router();
 
 router.route("/")
-    .post(protect, createRequest)
+    .post(protect, requestCreationLimiter, validateBloodRequest, createRequest)
     .get(protect, getRequests);
 
 router.route("/:id")
