@@ -6,6 +6,10 @@ const campSchema = new mongoose.Schema({
     date: { type: Date, required: true },
     time: { type: String, required: true },
     location: { type: String, required: true },
+    coordinates: {
+        type: { type: String, enum: ['Point'], default: 'Point' },
+        coordinates: { type: [Number], index: '2dsphere' } // [longitude, latitude]
+    },
     status: { type: String, enum: ['Planning', 'Upcoming', 'Active', 'Completed', 'Cancelled'], default: 'Upcoming' },
     registeredDonors: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }

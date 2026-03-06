@@ -9,6 +9,11 @@ export default defineConfig({
     tailwindcss(),
     react(),
   ],
+  build: {
+    rollupOptions: {
+      external: ['leaflet', 'react-leaflet', 'socket.io-client', 'react-leaflet-cluster', 'leaflet.heat'],
+    }
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
@@ -23,4 +28,10 @@ export default defineConfig({
       },
     },
   },
+  optimizeDeps: {
+    exclude: ['leaflet', 'react-leaflet', 'socket.io-client', 'react-leaflet-cluster', 'leaflet.heat']
+  },
+  ssr: {
+    external: ['leaflet', 'react-leaflet', 'socket.io-client', 'react-leaflet-cluster', 'leaflet.heat']
+  }
 })

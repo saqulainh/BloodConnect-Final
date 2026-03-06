@@ -32,6 +32,8 @@ export const subscribeToUserChannel = (userId, onEvent) => {
     channel.bind("new-message", (data) => onEvent("new-message", data));
     // Donation confirmed
     channel.bind("donation-confirmed", (data) => onEvent("donation-confirmed", data));
+    // Incoming call (audio/video)
+    channel.bind("incoming-call", (data) => onEvent("incoming-call", data));
 
     return channel;
 };

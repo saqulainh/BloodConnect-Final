@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Calendar, Droplets, Heart, CheckCircle, Clock, Plus, X, Loader2 } from "lucide-react";
+import { Calendar, Droplets, Heart, CheckCircle, Clock, Plus, X, Loader2, Search as SearchIcon } from "lucide-react";
 import { useToast } from "../ui/Toast";
 
 const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
@@ -116,20 +116,40 @@ function LogModal({ onClose, onSaved }) {
 // ── Main Timeline Component ───────────────────────────────────────────────────
 export default function DonationTimeline({ timeline = [], onRefresh }) {
     const [showModal, setShowModal] = useState(false);
+    const [searchTerm, setSearchTerm] = useState("");
+
+    const filteredTimeline = timeline.filter(record =>
+        record.hospital.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        record.patientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        record.bloodGroup.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     return (
         <div className="bg-white rounded-3xl border border-slate-100 p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                 <div className="flex items-center gap-2">
                     <Calendar size={15} className="text-slate-400" />
                     <p className="text-xs font-black text-slate-500 uppercase tracking-wider">Donation Timeline 2.0</p>
                 </div>
-                <button
-                    onClick={() => setShowModal(true)}
-                    className="flex items-center gap-1.5 px-3.5 py-2 bg-red-600 text-white text-xs font-black rounded-xl hover:bg-red-700 transition-colors shadow-md shadow-red-200"
-                >
-                    <Plus size={13} /> Log Donation
-                </button>
+                <div className="flex items-center gap-3">
+                    {/* Search Field */}
+                    <div className="relative flex-1 sm:flex-none sm:w-64">
+                        <SearchIcon size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                        <input
+                            type="text"
+                            placeholder="Filter timeline..."
+                            className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-100 rounded-xl text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:bg-white transition-all"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
+                    <button
+                        onClick={() => setShowModal(true)}
+                        className="flex items-center gap-1.5 px-3.5 py-2 bg-red-600 text-white text-xs font-black rounded-xl hover:bg-red-700 transition-colors shadow-md shadow-red-200 shrink-0"
+                    >
+                        <Plus size={13} /> Log
+                    </button>
+                </div>
             </div>
 
             {timeline.length === 0 ? (
@@ -146,9 +166,14 @@ export default function DonationTimeline({ timeline = [], onRefresh }) {
                         Log Your First Donation
                     </button>
                 </div>
+            ) : filteredTimeline.length === 0 ? (
+                <div className="text-center py-10 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+                    <p className="text-xs font-black text-slate-400">No results matching "{searchTerm}"</p>
+                    <button onClick={() => setSearchTerm("")} className="text-[10px] font-black text-red-600 uppercase mt-2 hover:underline">Clear Search</button>
+                </div>
             ) : (
                 <div className="relative border-l-2 border-red-100 ml-4 space-y-5 pb-2">
-                    {timeline.map((record, i) => (
+                    {filteredTimeline.map((record, i) => (
                         <div key={record._id || i} className="relative pl-6">
                             {/* Timeline dot */}
                             <div className={`absolute -left-[9px] top-1.5 w-4 h-4 rounded-full border-[3px] shadow-sm ${record.currentStage === "Life Saved" ? "bg-emerald-400 border-emerald-600" : "bg-white border-red-500"

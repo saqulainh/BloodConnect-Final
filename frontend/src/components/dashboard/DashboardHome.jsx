@@ -150,7 +150,7 @@ const DashboardHome = ({ setActiveTab, user }) => {
                                 <p className="text-sm font-medium text-slate-500">Real-time geographic view of requests and available donors.</p>
                             </div>
                         </div>
-                        <LiveMap />
+                        <LiveMap setActiveTab={setActiveTab} />
                     </div>
 
                     {/* Analytics Section */}
@@ -214,7 +214,7 @@ const DashboardHome = ({ setActiveTab, user }) => {
                         <QuickActionButton icon={Plus} label="Add Donor" onClick={() => setActiveTab('donors')} colorClass="border-blue-100 text-blue-600 bg-blue-50 hover:bg-blue-100" />
                         <QuickActionButton icon={AlertCircle} label="Create Request" onClick={() => setActiveTab('requests')} colorClass="border-red-100 text-red-600 bg-red-50 hover:bg-red-100" />
                         <QuickActionButton icon={Tent} label="Create Camp" onClick={() => setActiveTab('camps')} colorClass="border-green-100 text-green-600 bg-green-50 hover:bg-green-100" />
-                        <QuickActionButton icon={Bell} label="Send Alert" onClick={() => { }} colorClass="border-amber-100 text-amber-600 bg-amber-50 hover:bg-amber-100" />
+                        <QuickActionButton icon={Bell} label="Send Alert" onClick={() => setActiveTab('sos')} colorClass="border-amber-100 text-amber-600 bg-amber-50 hover:bg-amber-100" />
                     </div>
                 </div>
 

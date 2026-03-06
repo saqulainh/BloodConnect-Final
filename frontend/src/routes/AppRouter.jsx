@@ -13,6 +13,7 @@ const Profile = lazy(() => import("../pages/Profile"));
 const AadhaarVerifyPage = lazy(() => import("../pages/AadhaarVerifyPage"));
 const ForgotPassword = lazy(() => import("../components/auth/ForgotPassword"));
 const ResetPassword = lazy(() => import("../components/auth/ResetPassword"));
+const AdminLogin = lazy(() => import("../pages/AdminLogin"));
 
 const LoadingFallback = () => (
     <div className="flex h-screen w-full items-center justify-center bg-white">
@@ -34,6 +35,7 @@ const AppRouter = () => {
                 <Route path="/verify-otp" element={<OtpVerifyPage />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
+                <Route path="/admin-login" element={<AdminLogin />} />
 
                 {/* Protected Routes */}
                 <Route element={<ProtectedRoute />}>

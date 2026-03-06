@@ -9,11 +9,13 @@ import {
     getMe,
     forgotPassword,
     resetPassword,
+    adminLogin,
+    changePassword,
 } from "../controllers/authController.js";
 import { protect } from "../middleware/authMiddleware.js";
 import User from "../models/User.js";
 import { upload } from "../utils/cloudinary.js";
-import { authLimiter } from "../middleware/rateLimiter.js";
+import { authLimiter, adminLoginLimiter } from "../middleware/rateLimiter.js";
 import { validateRegister, validateLogin, validateForgotPassword, validateResetPassword } from "../middleware/validate.js";
 
 const router = express.Router();
@@ -31,9 +33,14 @@ router.post("/resend-otp", resendOtp);
 router.post("/verify-aadhaar", verifyAadhaar);
 router.get("/me", protect, getMe);
 
-// ── Password Recovery ──────────────────────────────────────────
+// ── Password Recovery & Change ─────────────────────────────────
 router.post("/forgot-password", authLimiter, validateForgotPassword, forgotPassword);
 router.post("/reset-password", validateResetPassword, resetPassword);
+router.post("/change-password", protect, authLimiter, changePassword);
+
+// ── Admin Login (Secret Key Required) ──────────────────────────
+router.post("/admin-login", adminLoginLimiter, adminLogin);
 
 export default router;
+
 

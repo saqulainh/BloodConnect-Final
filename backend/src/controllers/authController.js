@@ -126,6 +126,14 @@ const loginUser = async (req, res) => {
             return res.status(401).json({ success: false, message: "Invalid email or password." });
         }
 
+        // 🔒 Ban check — banned users cannot login
+        if (user.isBanned) {
+            return res.status(403).json({
+                success: false,
+                message: "Your account has been suspended. Contact support for assistance."
+            });
+        }
+
         if (!user.isVerified) {
             return res.status(401).json({
                 success: false,
@@ -350,6 +358,11 @@ const forgotPassword = async (req, res) => {
             return res.status(200).json({ success: true, message: "If this email is registered, an OTP has been sent." });
         }
 
+        // 🔒 Banned users cannot reset password
+        if (user.isBanned) {
+            return res.status(200).json({ success: true, message: "If this email is registered, an OTP has been sent." });
+        }
+
         const otp = generateOtp();
         user.otp = otp;
         user.otpExpires = Date.now() + 10 * 60 * 1000; // 10 min
@@ -409,4 +422,100 @@ const resetPassword = async (req, res) => {
     }
 };
 
-export { registerUser, loginUser, logoutUser, verifyOtp, resendOtp, verifyAadhaar, getMe, forgotPassword, resetPassword };
+// ─── Admin Login ─────────────────────────────────────────────────────────────
+
+// @desc    Special admin login with secret key
+// @route   POST /api/v1/auth/admin-login
+// @access  Public (but requires ADMIN_SECRET_KEY)
+const adminLogin = async (req, res) => {
+    try {
+        const { email, password, adminKey } = req.body;
+
+        // Step 1: Validate inputs
+        if (!email || !password || !adminKey) {
+            return res.status(400).json({ success: false, message: "Email, password, and admin key are required." });
+        }
+
+        // Step 2: Verify admin secret key
+        const ADMIN_SECRET = process.env.ADMIN_SECRET_KEY || "BLOODCONNECT_ADMIN_2026";
+        if (adminKey !== ADMIN_SECRET) {
+            return res.status(403).json({ success: false, message: "Invalid admin access key." });
+        }
+
+        // Step 3: Find user and verify password
+        const user = await User.findOne({ email });
+        if (!user || !(await user.matchPassword(password))) {
+            return res.status(401).json({ success: false, message: "Invalid credentials." });
+        }
+
+        // Step 4: Must be admin role
+        if (user.role !== "admin") {
+            return res.status(403).json({ success: false, message: "Access denied. Not an admin account." });
+        }
+
+        // Step 5: Ban check
+        if (user.isBanned) {
+            return res.status(403).json({ success: false, message: "Account suspended." });
+        }
+
+        // Step 6: Generate token
+        const token = generateToken(res, user._id);
+
+        res.json({
+            success: true,
+            data: {
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                bloodGroup: user.bloodGroup || null,
+                aadhaarVerified: user.aadhaarVerified,
+                accessToken: token
+            }
+        });
+    } catch (error) {
+        console.error("Admin login error:", error);
+        res.status(500).json({ success: false, message: "Server error." });
+    }
+};
+
+// ─── Change Password ─────────────────────────────────────────────────────────
+
+// @desc    Change password from authenticated settings panel
+// @route   POST /api/v1/auth/change-password
+// @access  Private
+const changePassword = async (req, res) => {
+    try {
+        const { currentPassword, newPassword } = req.body;
+
+        if (!currentPassword || !newPassword) {
+            return res.status(400).json({ success: false, message: "Please provide both current and new passwords" });
+        }
+
+        if (newPassword.length < 6) {
+            return res.status(400).json({ success: false, message: "New password must be at least 6 characters" });
+        }
+
+        // Must explicitly select password since it's default null
+        const user = await User.findById(req.user._id).select("+password");
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        const isMatch = await user.matchPassword(currentPassword);
+        if (!isMatch) {
+            return res.status(401).json({ success: false, message: "Current password is incorrect" });
+        }
+
+        user.password = newPassword;
+        await user.save(); // Pre-save hook will hash the new password
+
+        res.json({ success: true, message: "Password changed successfully" });
+    } catch (error) {
+        console.error("Change Password Error:", error);
+        res.status(500).json({ success: false, message: "Server error" });
+    }
+}
+
+export { registerUser, loginUser, logoutUser, verifyOtp, resendOtp, verifyAadhaar, getMe, forgotPassword, resetPassword, adminLogin, changePassword };

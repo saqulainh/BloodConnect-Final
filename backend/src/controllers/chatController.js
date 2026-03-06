@@ -113,3 +113,50 @@ export const getConversations = async (req, res) => {
         res.status(500).json({ success: false, message: "Failed to load conversations" });
     }
 };
+
+// @desc    Clear chat history
+// @route   DELETE /api/v1/chat/clear/:id
+// @access  Private
+export const clearChat = async (req, res) => {
+    try {
+        const { id: otherUserId } = req.params;
+        const currentUserId = req.user._id;
+
+        await Message.deleteMany({
+            $or: [
+                { senderId: currentUserId, receiverId: otherUserId },
+                { senderId: otherUserId, receiverId: currentUserId }
+            ]
+        });
+
+        res.status(200).json({ success: true, message: "Chat history cleared" });
+    } catch (error) {
+        console.error("Error in clearChat:", error.message);
+        res.status(500).json({ success: false, message: "Failed to clear chat" });
+    }
+};
+
+// @desc    Initiate a call (signaling)
+// @route   POST /api/v1/chat/call/:id
+// @access  Private
+export const initiateCall = async (req, res) => {
+    try {
+        const { id: otherUserId } = req.params;
+        const { type } = req.body; // 'audio' or 'video'
+        const senderId = req.user._id;
+
+        const sender = await User.findById(senderId, "name profilePicture");
+
+        const pusher = getPusher();
+        pusher.trigger(`user-${otherUserId}`, "incoming-call", {
+            caller: sender,
+            type,
+            roomId: `room-${Date.now()}`
+        });
+
+        res.status(200).json({ success: true, message: "Call initiated" });
+    } catch (error) {
+        console.error("Error in initiateCall:", error.message);
+        res.status(500).json({ success: false, message: "Failed to initiate call" });
+    }
+};

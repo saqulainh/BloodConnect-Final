@@ -1,0 +1,33 @@
+[
+  {
+    "v": 2,
+    "key": {
+      "_id": 1
+    },
+    "name": "_id_"
+  },
+  {
+    "v": 2,
+    "key": {
+      "donor": 1
+    },
+    "name": "donor_1",
+    "background": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "bloodGroup": 1
+    },
+    "name": "bloodGroup_1",
+    "background": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "currentStage": 1
+    },
+    "name": "currentStage_1",
+    "background": true
+  }
+]

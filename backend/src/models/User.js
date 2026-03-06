@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
+import { encryptAadhaar } from "../utils/encryption.js";
+
 const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true, index: true }, // Index for fast login lookup
@@ -8,13 +10,19 @@ const userSchema = new mongoose.Schema({
     phone: { type: String, required: true },
     role: { type: String, enum: ["donor", "receiver", "admin"], default: "donor", index: true }, // Index for filtering
     bloodGroup: { type: String, required: true, index: true }, // Index for donor search
-    aadhaarNumber: { type: String, required: true, unique: true }, // In a real app, encrypt this field
+    aadhaarNumber: { type: String, required: true, unique: true }, // Encrypted before save
     address: { type: String },
     city: { type: String, default: "", index: true }, // Used by admin analytics top-cities aggregation
     location: {
-        type: { type: String, default: "Point" },
+        type: { type: String, enum: ["Point"], default: "Point" },
         coordinates: { type: [Number], index: "2dsphere" } // [lng, lat]
     },
+    eligibilityStatus: {
+        type: String,
+        enum: ["eligible", "cooling", "inactive"],
+        default: "eligible"
+    },
+    isOnline: { type: Boolean, default: false },
     aadhaarImage: { type: String },
     medicalCertificate: { type: String },
     profilePicture: { type: String },
@@ -25,10 +33,17 @@ const userSchema = new mongoose.Schema({
     isVerified: { type: Boolean, default: false },
     aadhaarVerified: { type: Boolean, default: false },
     aadhaarVerifiedAt: { type: Date },
+    isBanned: { type: Boolean, default: false },
 }, { timestamps: true });
 
-// Encrypt password before saving
+// Encrypt password and Aadhaar before saving
 userSchema.pre("save", async function (next) {
+    // Encrypt Aadhaar
+    if (this.isModified("aadhaarNumber") && this.aadhaarNumber) {
+        this.aadhaarNumber = encryptAadhaar(this.aadhaarNumber);
+    }
+
+    // Encrypt Password
     if (!this.isModified("password")) return next();
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);

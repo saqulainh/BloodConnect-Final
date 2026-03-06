@@ -2,9 +2,10 @@
 // In development: use Vite proxy → localhost:5000 (no CORS issues)
 // In production: use the deployed Vercel backend
 const BASE_URL =
-    import.meta.env.DEV
+    import.meta.env.VITE_API_URL ||
+    (import.meta.env.DEV
         ? "/api/v1"
-        : "https://bloodconnect-vert.vercel.app/api/v1";
+        : "https://bloodconnect-vert.vercel.app/api/v1");
 
 // ── Token helpers ──────────────────────────────────────────────────────
 export const getAccessToken = () => localStorage.getItem("accessToken");
@@ -58,6 +59,20 @@ const refreshAccessToken = async () => {
 
 // ── Core fetch wrapper (handles 401 → refresh → retry) ────────────────
 const apiFetch = async (endpoint, options = {}, retry = true) => {
+    // Before making any auth request, check if token is expired
+    // Exclude login/register/refresh-token endpoints from this check
+    if (!endpoint.includes("/auth/login") && !endpoint.includes("/auth/register") && !endpoint.includes("/auth/refresh-token")) {
+        if (checkTokenExpiry()) {
+            // Allow public endpoints (like /camps for viewing) to proceed, but throw for others
+            // The original logic for 401 will handle actual session expiration
+            if (!endpoint.startsWith("/camps")) { // Assuming /camps are public viewable
+                clearTokens(); // Clear tokens if expired and not a public endpoint
+                window.location.href = "/login";
+                throw new Error("Session expired. Please login again.");
+            }
+        }
+    }
+
     const res = await fetch(`${BASE_URL}${endpoint}`, options);
 
     if (res.status === 401 && retry && !endpoint.includes("/auth/login") && !endpoint.includes("/auth/register")) {
@@ -151,45 +166,45 @@ export const verifyOtp = async ({ email, otp }) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, otp }),
     });
-    if (data.data?.accessToken) saveTokens(data.data);
-    saveUser(data.data); // User data is directly in data.data
-    return data;
+    return apiFetch("/auth/verify-otp", {
+        method: "POST", body: JSON.stringify({ email, otp }),
+    }, false); // no retry
 };
 
 /** POST /auth/resend-otp — { email } */
 export const resendOtp = async ({ email }) => {
     return apiFetch("/auth/resend-otp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-    });
+        method: "POST", body: JSON.stringify({ email }),
+    }, false); // no retry
 };
 
 /** POST /auth/forgot-password — { email } */
 export const forgotPassword = async ({ email }) => {
     return apiFetch("/auth/forgot-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-    });
+        method: "POST", body: JSON.stringify({ email }),
+    }, false); // no retry
 };
 
 /** POST /auth/reset-password — { email, otp, password } */
 export const resetPassword = async ({ email, otp, newPassword }) => {
     return apiFetch("/auth/reset-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, otp, password: newPassword }),
+        method: "POST", body: JSON.stringify({ email, otp, newPassword }),
+    }, false); // no retry
+};
+
+/** POST /auth/change-password — { currentPassword, newPassword } */
+export const changePassword = async (data) => {
+    return apiFetch("/auth/change-password", {
+        method: "POST", headers: authHeaders(), body: JSON.stringify(data),
     });
 };
 
 /** POST /auth/logout */
 export const logoutUser = async () => {
     try {
-        await apiFetch("/auth/logout", {
-            method: "POST",
-            headers: authHeaders(),
-        });
+        await apiFetch("/auth/logout", { method: "POST", headers: authHeaders() }, false);
+    } catch (err) {
+        // Ignore logout errors
     } finally {
         clearTokens();
     }
@@ -369,6 +384,23 @@ export const sendMessage = async (receiverId, text) => {
         body: JSON.stringify({ text }),
     });
 };
+
+/** DELETE /chat/clear/:id — clear chat history */
+export const clearChatHistory = async (otherUserId) => {
+    return apiFetch(`/chat/clear/${otherUserId}`, {
+        method: "DELETE",
+        headers: authHeaders(),
+    });
+};
+
+/** POST /chat/call/:id — initiate audio/video call */
+export const initiateCall = async (otherUserId, type) => {
+    return apiFetch(`/chat/call/${otherUserId}`, {
+        method: "POST",
+        headers: authHeaders(),
+        body: JSON.stringify({ type }),
+    });
+};
 // ─────────────────────────────────────────────────────────────────────
 // PAYMENT & DONATION ENDPOINTS
 // ─────────────────────────────────────────────────────────────────────
@@ -427,4 +459,181 @@ export const broadcastSOS = async ({ bloodGroup, hospital, patientName, message,
 /** GET /sos/active — Get active critical requests from last 12 hours */
 export const getActiveSOSAlerts = async () => {
     return apiFetch("/sos/active", { method: "GET", headers: authHeaders() });
+};
+
+// ─────────────────────────────────────────────────────────────────────
+// RECEIVER DASHBOARD ENDPOINTS
+// ─────────────────────────────────────────────────────────────────────
+
+/** GET /receiver/stats — Receiver dashboard overview stats */
+export const getReceiverStats = async () => {
+    return apiFetch("/receiver/stats", { method: "GET", headers: authHeaders() });
+};
+
+/** GET /receiver/my-requests — All requests created by this receiver */
+export const getMyReceiverRequests = async () => {
+    return apiFetch("/receiver/my-requests", { method: "GET", headers: authHeaders() });
+};
+
+/** GET /receiver/wallet — Receiver wallet (badges, impact, gratitude) */
+export const getReceiverWallet = async () => {
+    return apiFetch("/receiver/wallet", { method: "GET", headers: authHeaders() });
+};
+
+/** GET /receiver/analytics — Receiver personal analytics */
+export const getReceiverAnalytics = async () => {
+    return apiFetch("/receiver/analytics", { method: "GET", headers: authHeaders() });
+};
+
+/** POST /receiver/gratitude — Send gratitude to a donor */
+export const sendGratitudeTodonor = async ({ requestId, donorId, message }) => {
+    return apiFetch("/receiver/gratitude", {
+        method: "POST",
+        headers: authHeaders(),
+        body: JSON.stringify({ requestId, donorId, message }),
+    });
+};
+
+/** GET /receiver/timeline/:requestId — Full journey of a request */
+export const getRequestTimeline = async (requestId) => {
+    return apiFetch(`/receiver/timeline/${requestId}`, { method: "GET", headers: authHeaders() });
+};
+
+// ─────────────────────────────────────────────────────────────────────
+// ADMIN PANEL ENDPOINTS
+// ─────────────────────────────────────────────────────────────────────
+
+/** GET /admin/dashboard — Admin overview stats */
+export const getAdminDashboard = async () => {
+    return apiFetch("/admin/dashboard", { method: "GET", headers: authHeaders() });
+};
+
+/** GET /admin/users — All users (paginated, filterable) */
+export const getAdminUsers = async (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    return apiFetch(`/admin/users?${qs}`, { method: "GET", headers: authHeaders() });
+};
+
+/** PATCH /admin/users/:id — Update user */
+export const adminUpdateUser = async (id, data) => {
+    return apiFetch(`/admin/users/${id}`, {
+        method: "PATCH", headers: authHeaders(), body: JSON.stringify(data),
+    });
+};
+
+/** DELETE /admin/users/:id — Delete user */
+export const adminDeleteUser = async (id) => {
+    return apiFetch(`/admin/users/${id}`, { method: "DELETE", headers: authHeaders() });
+};
+
+/** PATCH /admin/users/:id/ban — Toggle ban */
+export const adminToggleBan = async (id) => {
+    return apiFetch(`/admin/users/${id}/ban`, { method: "PATCH", headers: authHeaders() });
+};
+
+/** PATCH /admin/users/:id/promote — Change role */
+export const adminPromoteUser = async (id, role) => {
+    return apiFetch(`/admin/users/${id}/promote`, {
+        method: "PATCH", headers: authHeaders(), body: JSON.stringify({ role }),
+    });
+};
+
+/** GET /admin/requests — All requests */
+export const getAdminRequests = async (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    return apiFetch(`/admin/requests?${qs}`, { method: "GET", headers: authHeaders() });
+};
+
+/** PATCH /admin/requests/:id — Update request */
+export const adminUpdateRequest = async (id, data) => {
+    return apiFetch(`/admin/requests/${id}`, {
+        method: "PATCH", headers: authHeaders(), body: JSON.stringify(data),
+    });
+};
+
+/** DELETE /admin/requests/:id — Delete request */
+export const adminDeleteRequest = async (id) => {
+    return apiFetch(`/admin/requests/${id}`, { method: "DELETE", headers: authHeaders() });
+};
+
+/** POST /admin/requests/:id/fulfill — Force fulfill */
+export const adminForceFulfill = async (id, donorId) => {
+    return apiFetch(`/admin/requests/${id}/fulfill`, {
+        method: "POST", headers: authHeaders(), body: JSON.stringify({ donorId }),
+    });
+};
+
+/** GET /admin/camps — All camps */
+export const getAdminCamps = async () => {
+    return apiFetch("/admin/camps", { method: "GET", headers: authHeaders() });
+};
+
+/** POST /admin/camps — Create camp */
+export const adminCreateCamp = async (data) => {
+    return apiFetch("/admin/camps", {
+        method: "POST", headers: authHeaders(), body: JSON.stringify(data),
+    });
+};
+
+/** PATCH /admin/camps/:id — Edit camp */
+export const adminUpdateCamp = async (id, data) => {
+    return apiFetch(`/admin/camps/${id}`, {
+        method: "PATCH", headers: authHeaders(), body: JSON.stringify(data),
+    });
+};
+
+/** DELETE /admin/camps/:id — Delete camp */
+export const adminDeleteCamp = async (id) => {
+    return apiFetch(`/admin/camps/${id}`, { method: "DELETE", headers: authHeaders() });
+};
+
+/** GET /admin/system-health — Server & DB stats */
+export const getSystemHealth = async () => {
+    return apiFetch("/admin/system-health", { method: "GET", headers: authHeaders() });
+};
+
+/** POST /admin/broadcast — Send platform announcement */
+export const adminBroadcast = async (data) => {
+    return apiFetch("/admin/broadcast", {
+        method: "POST", headers: authHeaders(), body: JSON.stringify(data),
+    });
+};
+
+/** GET /admin/revenue — Financial details */
+export const getAdminRevenue = async (period = 30) => {
+    return apiFetch(`/admin/revenue?period=${period}`, { method: "GET", headers: authHeaders() });
+};
+
+/** GET /admin/audit-logs — Audit trail */
+export const getSystemLogs = async (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    return apiFetch(`/admin/logs?${qs}`, { method: "GET", headers: authHeaders() });
+};
+
+// ─────────────────────────────────────────────────────────────────────
+// INVENTORY ENDPOINTS
+// ─────────────────────────────────────────────────────────────────────
+
+/** GET /inventory — Fetch overall blood bank inventory */
+export const getInventory = async () => {
+    return apiFetch("/inventory", { method: "GET" }); // Public to view
+};
+
+/** PUT /inventory/:id — Update units for a specific blood group */
+export const adminUpdateInventory = async (id, units) => {
+    return apiFetch(`/inventory/${id}`, {
+        method: "PUT", headers: authHeaders(), body: JSON.stringify({ units }),
+    });
+};
+
+/** POST /auth/admin-login — Admin login with secret key */
+export const adminLogin = async ({ email, password, adminKey }) => {
+    const data = await apiFetch("/auth/admin-login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, adminKey }),
+    });
+    saveTokens(data.data);
+    saveUser(data.data);
+    return data;
 };

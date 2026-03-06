@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { User, Phone, MapPin, Droplet, UserCheck, ShieldCheck, Mail, ShieldAlert, Settings as SettingsIcon, Award, History, Heart } from "lucide-react";
+import { User, Phone, MapPin, Droplet, UserCheck, ShieldCheck, Mail, ShieldAlert, Settings as SettingsIcon, Award, History, Heart, Key, CheckCircle, XCircle } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
-import { updateMe, getMyDonations } from "../../services/api";
+import { updateMe, getMyDonations, changePassword } from "../../services/api";
 import BloodJourney from "./BloodJourney";
 
 export default function Settings() {
@@ -9,6 +9,10 @@ export default function Settings() {
     const [loading, setLoading] = useState(false);
     const [successMsg, setSuccessMsg] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
+
+    const [passwordLoading, setPasswordLoading] = useState(false);
+    const [pwdSuccess, setPwdSuccess] = useState("");
+    const [pwdError, setPwdError] = useState("");
 
     const [donationsData, setDonationsData] = useState({ records: [], totalDonations: 0, totalUnits: 0 });
     const [trackingJourneyId, setTrackingJourneyId] = useState(null);
@@ -19,6 +23,12 @@ export default function Settings() {
         bloodGroup: "",
         address: "",
         availability: true,
+    });
+
+    const [passwordData, setPasswordData] = useState({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: ""
     });
 
     useEffect(() => {
@@ -63,6 +73,39 @@ export default function Settings() {
             ...prev,
             [name]: type === "checkbox" ? checked : value,
         }));
+    };
+
+    const handlePasswordChange = async (e) => {
+        e.preventDefault();
+        setPwdError("");
+        setPwdSuccess("");
+
+        if (!passwordData.currentPassword || !passwordData.newPassword) {
+            return setPwdError("Please fill in all fields.");
+        }
+        if (passwordData.newPassword !== passwordData.confirmPassword) {
+            return setPwdError("New passwords do not match.");
+        }
+        if (passwordData.newPassword.length < 6) {
+            return setPwdError("New password must be at least 6 characters.");
+        }
+
+        setPasswordLoading(true);
+        try {
+            const response = await changePassword({
+                currentPassword: passwordData.currentPassword,
+                newPassword: passwordData.newPassword
+            });
+
+            if (response.success) {
+                setPwdSuccess("Password updated successfully.");
+                setPasswordData({ currentPassword: "", newPassword: "", confirmPassword: "" });
+            }
+        } catch (err) {
+            setPwdError(err.response?.data?.message || err.message || "Failed to update password.");
+        } finally {
+            setPasswordLoading(false);
+        }
     };
 
     const handleSave = async (e) => {
@@ -117,11 +160,86 @@ export default function Settings() {
                 </div>
             </div>
 
+            {/* ── Security & Password ── */}
+            <form onSubmit={handlePasswordChange} className="bg-white rounded-3xl p-6 lg:p-8 shadow-sm border border-slate-100">
+                <h3 className="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
+                    <ShieldAlert className="w-5 h-5 text-red-500" />
+                    Security & Password
+                </h3>
+
+                {pwdSuccess && (
+                    <div className="mb-6 bg-emerald-50 text-emerald-600 px-4 py-3 rounded-xl text-sm font-medium border border-emerald-100 flex items-center gap-2">
+                        <CheckCircle className="w-4 h-4" /> {pwdSuccess}
+                    </div>
+                )}
+
+                {pwdError && (
+                    <div className="mb-6 bg-red-50 text-red-600 px-4 py-3 rounded-xl text-sm font-medium border border-red-100 flex items-center gap-2">
+                        <XCircle className="w-4 h-4" /> {pwdError}
+                    </div>
+                )}
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="space-y-2">
+                        <label className="text-sm font-bold text-slate-700 ml-1">Current Password</label>
+                        <div className="relative">
+                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+                                <Key size={18} />
+                            </div>
+                            <input
+                                type="password"
+                                value={passwordData.currentPassword}
+                                onChange={(e) => setPasswordData(p => ({ ...p, currentPassword: e.target.value }))}
+                                className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-colors"
+                            />
+                        </div>
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-sm font-bold text-slate-700 ml-1">New Password</label>
+                        <div className="relative">
+                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+                                <Key size={18} />
+                            </div>
+                            <input
+                                type="password"
+                                value={passwordData.newPassword}
+                                onChange={(e) => setPasswordData(p => ({ ...p, newPassword: e.target.value }))}
+                                className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-colors"
+                            />
+                        </div>
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-sm font-bold text-slate-700 ml-1">Confirm New Password</label>
+                        <div className="relative">
+                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+                                <Key size={18} />
+                            </div>
+                            <input
+                                type="password"
+                                value={passwordData.confirmPassword}
+                                onChange={(e) => setPasswordData(p => ({ ...p, confirmPassword: e.target.value }))}
+                                className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-colors"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div className="mt-6 flex justify-end">
+                    <button
+                        type="submit"
+                        disabled={passwordLoading}
+                        className="px-6 py-3 bg-slate-800 hover:bg-slate-900 text-white text-sm font-bold rounded-xl transition-all shadow-md shadow-slate-500/20 disabled:opacity-50"
+                    >
+                        {passwordLoading ? "Updating..." : "Update Password"}
+                    </button>
+                </div>
+            </form>
+
             <form onSubmit={handleSave} className="bg-white rounded-3xl p-6 lg:p-8 shadow-sm border border-slate-100">
                 <h3 className="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
                     <SettingsIcon className="w-5 h-5 text-red-500" />
                     Personal Information
                 </h3>
+
 
                 {successMsg && (
                     <div className="mb-6 bg-emerald-50 text-emerald-600 px-4 py-3 rounded-xl text-sm font-medium border border-emerald-100">

@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Search, Menu, X, Droplets } from "lucide-react";
 import gsap from "gsap";
+import { useAuth } from "../context/AuthContext";
+import NotificationBell from "./ui/NotificationBell";
 
 const NAV_LINKS = [
     { label: "Home", to: "/" },
@@ -14,6 +16,7 @@ export default function Navbar() {
     const location = useLocation();
     const [menuOpen, setMenuOpen] = useState(false);
     const navRef = useRef(null);
+    const { isAuthenticated, user, logout } = useAuth();
 
     useEffect(() => {
         if (!navRef.current) return;
@@ -48,8 +51,8 @@ export default function Navbar() {
                             key={link.to}
                             to={link.to}
                             className={`nav-link text-sm font-medium transition-colors ${location.pathname === link.to
-                                    ? "text-red-600"
-                                    : "text-gray-600 hover:text-red-600"
+                                ? "text-red-600"
+                                : "text-gray-600 hover:text-red-600"
                                 }`}
                         >
                             {link.label}
@@ -62,18 +65,35 @@ export default function Navbar() {
                     <button className="p-2 text-gray-500 hover:text-red-600 transition-colors">
                         <Search className="w-5 h-5" />
                     </button>
-                    <Link
-                        to="/login"
-                        className="hidden md:inline-flex items-center px-4 py-2 text-sm font-semibold text-red-600 border border-red-600 rounded-lg hover:bg-red-600 hover:text-white transition-all"
-                    >
-                        Sign In
-                    </Link>
-                    <Link
-                        to="/register"
-                        className="hidden md:inline-flex items-center px-4 py-2 text-sm font-semibold bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all"
-                    >
-                        Register
-                    </Link>
+
+                    {isAuthenticated ? (
+                        <div className="hidden md:flex items-center gap-2">
+                            <NotificationBell userId={user?._id} />
+                            <Link to="/dashboard" className="flex items-center gap-2 py-1.5 px-3 rounded-full hover:bg-red-50 transition-colors border border-transparent hover:border-red-100">
+                                <img
+                                    src={user?.profilePicture || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || "User")}&background=fee2e2&color=dc2626&bold=true`}
+                                    alt="Profile"
+                                    className="w-7 h-7 rounded-full object-cover"
+                                />
+                                <span className="text-sm font-bold text-gray-800">{user?.name?.split(' ')[0] || "Dashboard"}</span>
+                            </Link>
+                        </div>
+                    ) : (
+                        <>
+                            <Link
+                                to="/login"
+                                className="hidden md:inline-flex items-center px-4 py-2 text-sm font-semibold text-red-600 border border-red-600 rounded-lg hover:bg-red-600 hover:text-white transition-all"
+                            >
+                                Sign In
+                            </Link>
+                            <Link
+                                to="/register"
+                                className="hidden md:inline-flex items-center px-4 py-2 text-sm font-semibold bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all"
+                            >
+                                Register
+                            </Link>
+                        </>
+                    )}
                     {/* Mobile menu toggle */}
                     <button
                         className="md:hidden p-2 text-gray-600"
