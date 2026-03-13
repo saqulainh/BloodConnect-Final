@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import {
     Ticket, Search, Trash2, Edit, CheckCircle, ChevronLeft, ChevronRight,
-    Loader2, AlertCircle, X, Filter, Zap
+    Loader2, AlertCircle, X, Filter, Zap, DownloadCloud
 } from 'lucide-react';
-import { getAdminRequests, adminUpdateRequest, adminDeleteRequest, adminForceFulfill } from '../../services/api';
+import { getAdminRequests, adminUpdateRequest, adminDeleteRequest, adminForceFulfill, exportAdminRequestsCSV } from '../../services/api';
 
 const STATUS_OPTIONS = ["Active", "Completed", "Cancelled", "resolved", "active"];
 const URGENCY_OPTIONS = ["Normal", "Urgent", "Critical"];
@@ -87,6 +87,17 @@ export default function RequestOperations() {
                     <p className="text-sm text-slate-400 mt-1">{pagination.total} total blood requests</p>
                 </div>
                 <div className="flex items-center gap-2 flex-wrap">
+                    <button onClick={async () => {
+                        try {
+                            setFeedback('Exporting...');
+                            await exportAdminRequestsCSV();
+                            setFeedback('Export Successful!');
+                        } catch (err) {
+                            showFeedback('Export Failed.');
+                        }
+                    }} className="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-600 rounded-xl text-sm font-bold shadow-sm hover:bg-emerald-100 transition-colors border border-emerald-200">
+                        <DownloadCloud size={16} /> Export CSV
+                    </button>
                     <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}
                         className="px-3 py-2 bg-white border border-slate-200 rounded-xl text-sm font-bold focus:outline-none">
                         <option value="">All Status</option>

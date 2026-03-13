@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import {
     Users, Search, Shield, Trash2, Ban, Edit, ChevronLeft, ChevronRight,
-    Loader2, AlertCircle, CheckCircle, X, Filter, UserCog
+    Loader2, AlertCircle, CheckCircle, X, Filter, UserCog, DownloadCloud
 } from 'lucide-react';
 import {
-    getAdminUsers, adminUpdateUser, adminDeleteUser, adminToggleBan, adminPromoteUser
+    getAdminUsers, adminUpdateUser, adminDeleteUser, adminToggleBan, adminPromoteUser, exportAdminUsersCSV
 } from '../../services/api';
 
 const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
@@ -103,7 +103,18 @@ export default function UserManagement() {
                     </h2>
                     <p className="text-sm text-slate-400 mt-1">{pagination.total} total users on platform</p>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
+                    <button onClick={async () => {
+                        try {
+                            setFeedback('Exporting...');
+                            await exportAdminUsersCSV();
+                            setFeedback('Export Successful!');
+                        } catch (err) {
+                            showFeedback('Export Failed.');
+                        }
+                    }} className="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-600 rounded-xl text-sm font-bold shadow-sm hover:bg-emerald-100 transition-colors border border-emerald-200">
+                        <DownloadCloud size={16} /> Export CSV
+                    </button>
                     <div className="relative">
                         <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                         <input value={search} onChange={e => setSearch(e.target.value)} onKeyDown={handleSearch}

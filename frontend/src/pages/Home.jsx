@@ -2,10 +2,12 @@ import React, { useEffect, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { ChevronRight, Droplets, LogIn, LayoutDashboard, UserPlus } from "lucide-react";
 import gsap from "gsap";
+import { useTranslation } from "react-i18next";
 
 export default function Home() {
     const navigate = useNavigate();
     const containerRef = useRef(null);
+    const { t } = useTranslation();
 
     useEffect(() => {
         const ctx = gsap.context(() => {
@@ -48,11 +50,11 @@ export default function Home() {
                     </div>
 
                     <h1 className="text-4xl md:text-6xl font-black text-slate-900 leading-tight mb-6">
-                        Donate Blood,<br />
-                        <span className="text-red-600">Save a Life.</span>
+                        {t("Donate Blood")},<br />
+                        <span className="text-red-600">{t("Save a Life")}.</span>
                     </h1>
                     <p className="text-slate-500 text-lg leading-relaxed mb-8 max-w-md">
-                        Your single donation can save up to three lives. Join our community of heroes today and make a difference.
+                        {t("Your single donation can save up to three lives. Join our community of heroes today and make a difference.")}
                     </p>
 
                     <div className="flex items-center gap-4 text-sm font-bold text-slate-400">
@@ -61,7 +63,7 @@ export default function Home() {
                                 <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-slate-200" />
                             ))}
                         </div>
-                        <span>1,200+ Donors Joined</span>
+                        <span>{t("1,200+ Donors Joined")}</span>
                     </div>
                 </div>
 
@@ -76,28 +78,28 @@ export default function Home() {
                     <NavCard
                         to="/login"
                         icon={LogIn}
-                        title="Login"
-                        desc="Access your account to manage donations"
+                        title={t("Login")}
+                        desc={t("Access your account to manage donations")}
                         color="bg-slate-800"
                     />
                     <NavCard
                         to="/register"
                         icon={UserPlus}
-                        title="Register"
-                        desc="New here? Create an account to start"
+                        title={t("Register")}
+                        desc={t("New here? Create an account to start")}
                         color="bg-red-600"
                     />
                     <NavCard
                         to="/dashboard"
                         icon={LayoutDashboard}
-                        title="Dashboard"
-                        desc="Go directly to your dashboard if logged in"
+                        title={t("Dashboard")}
+                        desc={t("Go directly to your dashboard if logged in")}
                         color="bg-blue-600"
                     />
                 </div>
 
                 <div className="mt-12 text-center">
-                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Powered by BloodConnect</p>
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">{t("Powered by BloodConnect")}</p>
                 </div>
             </div>
 

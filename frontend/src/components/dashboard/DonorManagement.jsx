@@ -84,27 +84,37 @@ const DonorManagement = ({ onStartChat }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [viewingDonor, setViewingDonor] = useState(null);
 
-    useEffect(() => {
-        const fetchAllDonors = async () => {
-            try {
-                const res = await getDonors();
-                if (res && res.success) {
-                    setDonors(res.data);
-                }
-            } catch (error) {
-                console.error("Failed to load donors", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchAllDonors();
-    }, []);
+    // Advanced Filters
+    const [showFilters, setShowFilters] = useState(false);
+    const [filterGroup, setFilterGroup] = useState('');
+    const [filterCity, setFilterCity] = useState('');
 
-    const filteredDonors = donors.filter(d =>
-        d.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        d.bloodGroup?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        d.address?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const fetchAllDonors = async () => {
+        setLoading(true);
+        try {
+            const filters = {};
+            if (searchTerm) filters.search = searchTerm;
+            if (filterGroup) filters.bloodGroup = filterGroup;
+            if (filterCity) filters.city = filterCity;
+
+            const res = await getDonors(filters);
+            if (res && res.success) {
+                setDonors(res.data);
+            }
+        } catch (error) {
+            console.error("Failed to load donors", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Refetch when filters change
+    useEffect(() => {
+        const debounce = setTimeout(() => {
+            fetchAllDonors();
+        }, 500); // 500ms debounce
+        return () => clearTimeout(debounce);
+    }, [searchTerm, filterGroup, filterCity]);
 
     return (
         <div className="space-y-4">
@@ -114,15 +124,18 @@ const DonorManagement = ({ onStartChat }) => {
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
                     <input
                         type="text"
-                        placeholder="Search donors..."
+                        placeholder="Search donors by name..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="w-full pl-10 pr-4 py-2 bg-slate-50 border-none rounded-lg text-sm font-medium focus:ring-2 focus:ring-red-100 outline-none"
                     />
                 </div>
                 <div className="flex w-full md:w-auto gap-2">
-                    <button className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-600 hover:bg-slate-50">
-                        <Filter size={16} /> Filter
+                    <button
+                        onClick={() => setShowFilters(!showFilters)}
+                        className={`flex items-center gap-2 px-4 py-2 border rounded-lg text-sm font-bold transition-colors ${showFilters ? 'bg-red-50 text-red-600 border-red-100' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}`}
+                    >
+                        <Filter size={16} /> Filters
                     </button>
                     <button
                         onClick={() => alert("To onboard a new donor securely into BloodConnect, please direct them to the public Registration page for OTP and Aadhaar verification.")}
@@ -132,6 +145,43 @@ const DonorManagement = ({ onStartChat }) => {
                     </button>
                 </div>
             </div>
+
+            {/* Advanced Filters Drawer */}
+            {showFilters && (
+                <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 grid md:grid-cols-3 gap-4 animate-in slide-in-from-top-2">
+                    <div>
+                        <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Blood Group</label>
+                        <select
+                            value={filterGroup}
+                            onChange={(e) => setFilterGroup(e.target.value)}
+                            className="w-full bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-700 p-2.5 outline-none focus:border-red-300"
+                        >
+                            <option value="">Any Blood Group</option>
+                            {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map(g => (
+                                <option key={g} value={g}>{g}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div>
+                        <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">City</label>
+                        <input
+                            type="text"
+                            placeholder="e.g. Mumbai, Delhi"
+                            value={filterCity}
+                            onChange={(e) => setFilterCity(e.target.value)}
+                            className="w-full bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-700 p-2.5 outline-none focus:border-red-300"
+                        />
+                    </div>
+                    <div className="flex items-end">
+                        <button
+                            onClick={() => { setFilterGroup(''); setFilterCity(''); setSearchTerm(''); }}
+                            className="w-full bg-white border border-slate-200 text-slate-600 font-bold py-2.5 rounded-lg hover:bg-slate-100 transition-colors text-sm"
+                        >
+                            Clear Filters
+                        </button>
+                    </div>
+                </div>
+            )}
 
             {/* Table */}
             <div className="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">
@@ -152,12 +202,12 @@ const DonorManagement = ({ onStartChat }) => {
                                 <tr>
                                     <td colSpan="6" className="text-center py-8 text-slate-400 font-medium">Loading donors...</td>
                                 </tr>
-                            ) : filteredDonors.length === 0 ? (
+                            ) : donors.length === 0 ? (
                                 <tr>
                                     <td colSpan="6" className="text-center py-8 text-slate-400 font-medium">No donors found.</td>
                                 </tr>
                             ) : (
-                                filteredDonors.map((d) => (
+                                donors.map((d) => (
                                     <tr key={d._id} className="hover:bg-slate-50 transition-colors cursor-pointer group" onClick={() => setViewingDonor(d)}>
                                         <td className="px-6 py-4 font-bold text-slate-800">
                                             <div className="flex items-center gap-3">

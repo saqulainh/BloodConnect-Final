@@ -208,9 +208,21 @@ const RequestManagement = ({ onStartChat, currentUser }) => {
     const [requests, setRequests] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    // Advanced Filters
+    const [searchTerm, setSearchTerm] = useState('');
+    const [showFilters, setShowFilters] = useState(false);
+    const [filterGroup, setFilterGroup] = useState('');
+    const [filterUrgency, setFilterUrgency] = useState('');
+
     const fetchRequests = async () => {
+        setLoading(true);
         try {
-            const res = await getAllRequests();
+            const filters = {};
+            if (searchTerm) filters.hospital = searchTerm; // Back-end supports regex on hospital
+            if (filterGroup) filters.bloodGroup = filterGroup;
+            if (filterUrgency) filters.urgency = filterUrgency;
+
+            const res = await getAllRequests(filters);
             if (res && res.success) {
                 setRequests(res.data);
             }
@@ -222,8 +234,11 @@ const RequestManagement = ({ onStartChat, currentUser }) => {
     };
 
     useEffect(() => {
-        fetchRequests();
-    }, []);
+        const debounce = setTimeout(() => {
+            fetchRequests();
+        }, 500);
+        return () => clearTimeout(debounce);
+    }, [searchTerm, filterGroup, filterUrgency]);
 
     const handleDelete = async (id) => {
         if (!window.confirm("Are you sure you want to delete this blood request?")) return;
@@ -244,12 +259,73 @@ const RequestManagement = ({ onStartChat, currentUser }) => {
 
     return (
         <div className="space-y-4">
-            <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
-                <h2 className="font-bold text-slate-800 text-lg">Active Requests</h2>
-                <button onClick={() => setIsFormOpen(true)} className="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-red-700 transition-colors">
-                    New Request
-                </button>
+            {/* Toolbar */}
+            <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
+                <div className="relative w-full md:w-64">
+                    <AlertCircle className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+                    <input
+                        type="text"
+                        placeholder="Search hospitals..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full pl-10 pr-4 py-2 bg-slate-50 border-none rounded-lg text-sm font-medium focus:ring-2 focus:ring-red-100 outline-none"
+                    />
+                </div>
+                <div className="flex w-full md:w-auto gap-2">
+                    <button
+                        onClick={() => setShowFilters(!showFilters)}
+                        className={`flex items-center gap-2 px-4 py-2 border rounded-lg text-sm font-bold transition-colors ${showFilters ? 'bg-red-50 text-red-600 border-red-100' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}`}
+                    >
+                        Filters
+                    </button>
+                    <button
+                        onClick={() => setIsFormOpen(true)}
+                        className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-bold shadow-sm hover:bg-red-700 transition-colors"
+                    >
+                        New Request
+                    </button>
+                </div>
             </div>
+
+            {/* Advanced Filters Drawer */}
+            {showFilters && (
+                <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 grid md:grid-cols-3 gap-4 animate-in slide-in-from-top-2">
+                    <div>
+                        <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Blood Group</label>
+                        <select
+                            value={filterGroup}
+                            onChange={(e) => setFilterGroup(e.target.value)}
+                            className="w-full bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-700 p-2.5 outline-none focus:border-red-300"
+                        >
+                            <option value="">Any Blood Group</option>
+                            {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map(g => (
+                                <option key={g} value={g}>{g}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div>
+                        <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Urgency</label>
+                        <select
+                            value={filterUrgency}
+                            onChange={(e) => setFilterUrgency(e.target.value)}
+                            className="w-full bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-700 p-2.5 outline-none focus:border-red-300"
+                        >
+                            <option value="">Any Urgency</option>
+                            {["Normal", "Urgent", "Critical"].map(u => (
+                                <option key={u} value={u}>{u}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="flex items-end">
+                        <button
+                            onClick={() => { setFilterGroup(''); setFilterUrgency(''); setSearchTerm(''); }}
+                            className="w-full bg-white border border-slate-200 text-slate-600 font-bold py-2.5 rounded-lg hover:bg-slate-100 transition-colors text-sm"
+                        >
+                            Clear Filters
+                        </button>
+                    </div>
+                </div>
+            )}
 
             <div className="space-y-3">
                 {loading ? (

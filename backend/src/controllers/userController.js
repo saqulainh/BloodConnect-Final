@@ -56,7 +56,7 @@ export const updateMe = async (req, res) => {
     }
 };
 
-// @desc    Get all donors (with pagination + search)
+// @desc    Get all donors (with pagination + advanced search)
 // @route   GET /api/v1/users/donors
 // @access  Private
 export const getDonors = async (req, res) => {
@@ -69,8 +69,26 @@ export const getDonors = async (req, res) => {
         const filter = { role: "donor" };
         if (req.query.bloodGroup) filter.bloodGroup = req.query.bloodGroup;
         if (req.query.availability !== undefined) filter.availability = req.query.availability === "true";
+        if (req.query.eligibilityStatus) filter.eligibilityStatus = req.query.eligibilityStatus;
         if (req.query.search) {
             filter.name = { $regex: req.query.search, $options: "i" };
+        }
+        if (req.query.city) {
+            filter.city = { $regex: req.query.city, $options: "i" };
+        }
+
+        // Geospatial search: lat, lng, and radius (in km, default 50km)
+        if (req.query.lat && req.query.lng) {
+            const lat = parseFloat(req.query.lat);
+            const lng = parseFloat(req.query.lng);
+            const radiusInKm = parseFloat(req.query.radius) || 50;
+            const radiusInRadians = radiusInKm / 6378.1; // Earth's radius in km
+
+            filter.location = {
+                $geoWithin: {
+                    $centerSphere: [[lng, lat], radiusInRadians]
+                }
+            };
         }
 
         const [donors, total] = await Promise.all([

@@ -25,8 +25,12 @@ export const validateRegister = [
         .isEmail().withMessage("Please provide a valid email address."),
     body("password")
         .notEmpty().withMessage("Password is required.")
-        .isLength({ min: 6 }).withMessage("Password must be at least 6 characters long.")
-        .matches(/\d/).withMessage("Password must contain at least one number."),
+        // 8+ chars, uppercase, lowercase, number, special char
+        .isLength({ min: 8 }).withMessage("Password must be at least 8 characters long.")
+        .matches(/[A-Z]/).withMessage("Password must contain at least one uppercase letter.")
+        .matches(/[a-z]/).withMessage("Password must contain at least one lowercase letter.")
+        .matches(/\d/).withMessage("Password must contain at least one number.")
+        .matches(/[!@#$%^&*(),.?":{}|<>]/).withMessage("Password must contain at least one special character (!@#$%^&*)"),
     body("phone")
         .trim()
         .notEmpty().withMessage("Phone number is required.")
@@ -80,7 +84,48 @@ export const validateResetPassword = [
     body("otp").trim().notEmpty().withMessage("OTP is required.").isLength({ min: 6, max: 6 }).withMessage("OTP must be 6 digits."),
     body("password")
         .notEmpty().withMessage("New password is required.")
-        .isLength({ min: 6 }).withMessage("Password must be at least 6 characters.")
-        .matches(/\d/).withMessage("Password must contain at least one number."),
+        .isLength({ min: 8 }).withMessage("Password must be at least 8 characters.")
+        .matches(/[A-Z]/).withMessage("Password must contain at least one uppercase letter.")
+        .matches(/[a-z]/).withMessage("Password must contain at least one lowercase letter.")
+        .matches(/\d/).withMessage("Password must contain at least one number.")
+        .matches(/[!@#$%^&*(),.?":{}|<>]/).withMessage("Password must contain at least one special character."),
     handleValidationErrors,
 ];
+// ── File Upload Validation ───────────────────────────────────────────────
+// Server-side MIME type whitelist. Multer/Cloudinary check extension but
+// a malicious client can spoof Content-Type — this double-checks at the
+// middleware level before the file ever touches cloud storage.
+const ALLOWED_MIME_TYPES = [
+    "image/jpeg",
+    "image/jpg",
+    "image/png",
+    "image/webp",
+    "application/pdf",
+];
+const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5MB per file
+
+export const validateFileUpload = (req, res, next) => {
+    if (!req.files && !req.file) return next(); // No files — no problem
+
+    const files = req.files
+        ? Object.values(req.files).flat()
+        : [req.file];
+
+    for (const file of files) {
+        // Check MIME type
+        if (!ALLOWED_MIME_TYPES.includes(file.mimetype)) {
+            return res.status(400).json({
+                success: false,
+                message: `Invalid file type: "${file.mimetype}". Only JPEG, PNG, WebP, and PDF are allowed.`,
+            });
+        }
+        // Check file size
+        if (file.size > MAX_FILE_SIZE_BYTES) {
+            return res.status(400).json({
+                success: false,
+                message: `File "${file.originalname}" exceeds the 5MB size limit.`,
+            });
+        }
+    }
+    next();
+};

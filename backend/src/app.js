@@ -22,7 +22,10 @@ import mapRoutes from "./routes/map.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 import notificationRoutes from "./routes/notification.routes.js";
 import inventoryRoutes from "./routes/inventory.routes.js";
+import receiverRoutes from "./routes/receiver.routes.js";
+import exportRoutes from "./routes/export.routes.js";
 import { handleWebhook } from "./controllers/paymentController.js";
+import mongoose from "mongoose";
 
 const app = express();
 
@@ -94,6 +97,7 @@ app.use("/api/v1/map", mapRoutes);
 app.use("/api/v1/receiver", receiverRoutes);
 app.use("/api/v1/notifications", notificationRoutes);
 app.use("/api/v1/inventory", inventoryRoutes);
+app.use("/api/v1/export", exportRoutes);
 
 // Health Check
 app.get("/health", (req, res) => {

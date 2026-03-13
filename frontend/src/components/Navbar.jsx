@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Search, Menu, X, Droplets } from "lucide-react";
+import { Search, Menu, X, Droplets, Globe } from "lucide-react";
 import gsap from "gsap";
 import { useAuth } from "../context/AuthContext";
 import NotificationBell from "./ui/NotificationBell";
+import { useTranslation } from "react-i18next";
 
 const NAV_LINKS = [
     { label: "Home", to: "/" },
@@ -17,6 +18,7 @@ export default function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false);
     const navRef = useRef(null);
     const { isAuthenticated, user, logout } = useAuth();
+    const { t, i18n } = useTranslation();
 
     useEffect(() => {
         if (!navRef.current) return;
@@ -55,13 +57,25 @@ export default function Navbar() {
                                 : "text-gray-600 hover:text-red-600"
                                 }`}
                         >
-                            {link.label}
+                            {t(link.label)}
                         </Link>
                     ))}
                 </div>
 
                 {/* Right Actions */}
                 <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-1 text-gray-500 hover:text-red-600 transition-colors bg-gray-50 px-2 py-1.5 rounded-lg border border-gray-100">
+                        <Globe className="w-4 h-4" />
+                        <select
+                            value={i18n.language}
+                            onChange={(e) => i18n.changeLanguage(e.target.value)}
+                            className="text-xs font-bold bg-transparent border-none outline-none cursor-pointer uppercase appearance-none"
+                        >
+                            <option value="en">EN</option>
+                            <option value="hi">HI</option>
+                        </select>
+                    </div>
+
                     <button className="p-2 text-gray-500 hover:text-red-600 transition-colors">
                         <Search className="w-5 h-5" />
                     </button>

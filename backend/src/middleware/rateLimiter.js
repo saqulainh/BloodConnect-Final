@@ -77,3 +77,38 @@ export const adminLoginLimiter = rateLimit({
     standardHeaders: true,
     legacyHeaders: false,
 });
+
+// ── OTP Rate Limiter ──────────────────────────────────────────────────
+// Max 5 OTP verify/resend attempts per 15 minutes per IP
+// Prevents OTP brute-force: 6-digit OTP = 1M combos, but without this
+// limit an attacker can try all combinations in seconds.
+export const otpLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 5,
+    message: {
+        success: false,
+        message: "Too many OTP attempts. Please wait 15 minutes before trying again.",
+    },
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
+// ── User + IP Fingerprint Limiter ─────────────────────────────────────
+// IP-only rate limits can be bypassed with a VPN rotation.
+// This limiter combines the authenticated user's MongoDB _id AND their IP
+// as a composite key — switching VPN does NOT help since the account ID
+// remains the same. Apply on sensitive authenticated endpoints.
+export const userFingerprintLimiter = rateLimit({
+    windowMs: 60 * 1000, // 1 minute window
+    max: 30,
+    keyGenerator: (req) => {
+        const userId = req.user?._id?.toString() || "anon";
+        return `${userId}:${req.ip}`;
+    },
+    message: {
+        success: false,
+        message: "Rate limit exceeded for your account. Please slow down.",
+    },
+    standardHeaders: true,
+    legacyHeaders: false,
+});

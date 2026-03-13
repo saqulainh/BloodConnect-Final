@@ -40,6 +40,11 @@ export default function NotificationBell({ userId }) {
         };
         document.addEventListener('mousedown', handleClickOutside);
 
+        // Request Native Notification Permission
+        if ('Notification' in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+            Notification.requestPermission();
+        }
+
         // Setup Pusher for real-time notifications
         if (!PUSHER_KEY) return;
 
@@ -49,7 +54,14 @@ export default function NotificationBell({ userId }) {
         const handleNewNotification = (data) => {
             setNotifications(prev => [data, ...prev]);
             setUnreadCount(prev => prev + 1);
-            // Optional: Play a sound or show a toast here
+
+            // Trigger OS-level native push notification
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification(data.title || "BloodConnect Alert", {
+                    body: data.message,
+                    icon: "/vite.svg", // Fallback icon
+                });
+            }
         };
 
         globalChannel.bind('newNotification', handleNewNotification);

@@ -3,11 +3,12 @@ import { Link, useNavigate } from "react-router-dom";
 import {
     Heart, Search, Users, Activity, ArrowRight,
     ShieldCheck, Clock, Droplets, Menu, X,
-    MapPin, Bell, BarChart2, ChevronRight
+    MapPin, Bell, BarChart2, ChevronRight, Globe
 } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useAuth } from "../context/AuthContext";
+import { useTranslation } from "react-i18next";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -74,6 +75,7 @@ export default function HomePage() {
     const stepsRef = useRef(null);
     const statsRef = useRef(null);
     const [menuOpen, setMenuOpen] = React.useState(false);
+    const { t, i18n } = useTranslation();
 
     useEffect(() => {
         // Hero animation
@@ -152,21 +154,34 @@ export default function HomePage() {
 
                     {/* Desktop Nav */}
                     <div className="hidden md:flex items-center gap-8 text-sm font-bold text-slate-500">
-                        <a href="#workflow" className="hover:text-red-600 transition-colors">How it Works</a>
-                        <Link to="/register" className="hover:text-red-600 transition-colors">Become a Donor</Link>
+                        <a href="#workflow" className="hover:text-red-600 transition-colors">{t("How it Works")}</a>
+                        <Link to="/register" className="hover:text-red-600 transition-colors">{t("Become a Donor")}</Link>
                     </div>
 
                     {/* Actions */}
                     <div className="hidden md:flex items-center gap-3">
+                        {/* Language Switcher */}
+                        <div className="flex items-center gap-1 text-slate-500 hover:text-red-600 transition-colors bg-slate-50 px-2 py-1.5 rounded-lg border border-slate-100 mr-2">
+                            <Globe size={16} />
+                            <select
+                                value={i18n.language}
+                                onChange={(e) => i18n.changeLanguage(e.target.value)}
+                                className="text-xs font-bold bg-transparent border-none outline-none cursor-pointer uppercase appearance-none"
+                            >
+                                <option value="en">EN</option>
+                                <option value="hi">HI</option>
+                            </select>
+                        </div>
+
                         {isAuthenticated ? (
                             <Link to="/dashboard"
                                 className="flex items-center gap-2 px-5 py-2.5 bg-red-600 text-white text-sm font-bold rounded-xl hover:bg-red-700 transition-all shadow-lg shadow-red-200">
-                                Go to Dashboard <ArrowRight size={16} />
+                                {t("Go to Dashboard")} <ArrowRight size={16} />
                             </Link>
                         ) : (
                             <>
                                 <Link to="/login" className="text-sm font-bold text-slate-600 hover:text-red-600 transition-colors px-4 py-2">
-                                    Sign In
+                                    {t("Sign In")}
                                 </Link>
                                 <Link to="/register"
                                     className="px-5 py-2.5 bg-red-600 text-white text-sm font-bold rounded-xl hover:bg-red-700 transition-all shadow-lg shadow-red-200 flex items-center gap-2">
@@ -224,12 +239,12 @@ export default function HomePage() {
                         </div>
 
                         <h1 className="hero-h1 text-6xl lg:text-[80px] font-black tracking-tighter leading-[0.9] text-slate-900 drop-shadow-sm">
-                            Save a Life,<br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-400">Be a Hero.</span>
+                            {t("Save a Life")},<br />
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-400">{t("Be a Hero")}.</span>
                         </h1>
 
                         <p className="hero-p text-lg lg:text-xl text-slate-600 font-medium max-w-lg leading-relaxed mix-blend-multiply">
-                            Connect directly with verified blood donors in your area. Fast, secure, and completely free — because every second counts in an emergency.
+                            {t("Connect directly with verified blood donors in your area. Fast, secure, and completely free — because every second counts in an emergency.")}
                         </p>
 
                         <div className="flex flex-col sm:flex-row gap-4">
@@ -515,10 +530,10 @@ export default function HomePage() {
                 <div className="max-w-3xl mx-auto text-center relative z-10 space-y-8">
                     <div className="text-6xl">🩸</div>
                     <h2 className="text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
-                        Every Drop Counts.<br />Be Someone's Hero.
+                        {t("Every Drop Counts.")}<br />{t("Be Someone's Hero.")}
                     </h2>
                     <p className="text-red-100 font-medium text-lg leading-relaxed">
-                        Register as a donor today and get notified when someone in your area urgently needs blood that matches yours.
+                        {t("Register as a donor today and get notified when someone in your area urgently needs blood that matches yours.")}
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <button onClick={handleGetStarted}

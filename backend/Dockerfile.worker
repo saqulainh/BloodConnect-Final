@@ -1,0 +1,29 @@
+# ═══════════════════════════════════════════════════════════════════
+# BloodConnect — Background Worker Microservice
+# Isolated container for cron jobs (bloodMatchWorker, urgency engine)
+# Separated from the API so heavy batch jobs don't block HTTP traffic
+# ═══════════════════════════════════════════════════════════════════
+
+FROM node:20-alpine AS deps
+WORKDIR /app
+COPY package.json package-lock.json* ./
+RUN npm ci --omit=dev --legacy-peer-deps
+
+FROM node:20-alpine AS runner
+WORKDIR /app
+
+RUN addgroup -g 1001 -S nodejs && adduser -S bloodworker -u 1001
+
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+RUN mkdir -p logs && chown -R bloodworker:nodejs logs
+
+USER bloodworker
+
+# Worker doesn't serve HTTP, but we still health-check via a simple script
+HEALTHCHECK --interval=60s --timeout=10s --retries=3 \
+    CMD node -e "process.exit(0)" || exit 1
+
+# Start only the worker entry point
+CMD ["node", "worker.js"]

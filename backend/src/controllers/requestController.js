@@ -91,15 +91,52 @@ const createRequest = async (req, res) => {
     }
 };
 
-// @desc    Get all requests (or filter by nearness)
+// @desc    Get all requests (with pagination + advanced search filters)
 // @route   GET /api/v1/requests
 // @access  Private
 const getRequests = async (req, res) => {
     try {
-        const requests = await Request.find({ status: "Active" })
-            .populate("requester", "name phone")
-            .sort({ createdAt: -1 });
-        res.json({ success: true, data: requests });
+        const page = Math.max(1, parseInt(req.query.page) || 1);
+        const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 50));
+        const skip = (page - 1) * limit;
+
+        const filter = {};
+
+        // Defaults to Active if not specified
+        filter.status = req.query.status ? req.query.status : "Active";
+
+        if (req.query.bloodGroup) filter.bloodGroup = req.query.bloodGroup;
+        if (req.query.urgency) filter.urgency = req.query.urgency;
+        if (req.query.hospital) filter.hospital = { $regex: req.query.hospital, $options: "i" };
+
+        // Geospatial search: lat, lng, and radius (in km, default 50km)
+        if (req.query.lat && req.query.lng) {
+            const lat = parseFloat(req.query.lat);
+            const lng = parseFloat(req.query.lng);
+            const radiusInKm = parseFloat(req.query.radius) || 50;
+            const radiusInRadians = radiusInKm / 6378.1;
+
+            filter.location = {
+                $geoWithin: {
+                    $centerSphere: [[lng, lat], radiusInRadians]
+                }
+            };
+        }
+
+        const [requests, total] = await Promise.all([
+            Request.find(filter)
+                .populate("requester", "name phone profilePicture")
+                .sort({ urgencyScore: -1, createdAt: -1 })
+                .skip(skip)
+                .limit(limit),
+            Request.countDocuments(filter)
+        ]);
+
+        res.json({
+            success: true,
+            data: requests,
+            pagination: { page, limit, total, pages: Math.ceil(total / limit) }
+        });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
