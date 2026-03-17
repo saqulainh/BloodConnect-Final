@@ -73,7 +73,7 @@ export default function RequestOperations() {
     };
 
     const statusBadge = (status) => {
-        const map = { Active: 'bg-blue-100 text-blue-700', active: 'bg-blue-100 text-blue-700', Completed: 'bg-emerald-100 text-emerald-700', resolved: 'bg-emerald-100 text-emerald-700', Cancelled: 'bg-slate-100 text-slate-500' };
+        const map = { Active: 'bg-blue-100 text-blue-700', active: 'bg-blue-100 text-blue-700', Completed: 'bg-rose-100 text-rose-700', resolved: 'bg-rose-100 text-rose-700', Cancelled: 'bg-slate-100 text-slate-500' };
         return <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${map[status] || 'bg-slate-100 text-slate-500'}`}>{status}</span>;
     };
 
@@ -95,7 +95,7 @@ export default function RequestOperations() {
                         } catch (err) {
                             showFeedback('Export Failed.');
                         }
-                    }} className="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-600 rounded-xl text-sm font-bold shadow-sm hover:bg-emerald-100 transition-colors border border-emerald-200">
+                    }} className="flex items-center gap-2 px-4 py-2 bg-rose-50 text-rose-600 rounded-xl text-sm font-bold shadow-sm hover:bg-rose-100 transition-colors border border-rose-200">
                         <DownloadCloud size={16} /> Export CSV
                     </button>
                     <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}
@@ -117,7 +117,7 @@ export default function RequestOperations() {
             </div>
 
             {feedback && (
-                <div className="px-4 py-3 bg-emerald-50 border border-emerald-200 rounded-xl text-sm font-bold text-emerald-700 flex items-center gap-2">
+                <div className="px-4 py-3 bg-rose-50 border border-rose-200 rounded-xl text-sm font-bold text-rose-700 flex items-center gap-2">
                     <CheckCircle size={16} /> {feedback}
                 </div>
             )}
@@ -149,7 +149,7 @@ export default function RequestOperations() {
                                             <div className="flex items-center justify-end gap-1.5">
                                                 {(r.status === 'Active' || r.status === 'active') && (
                                                     <button onClick={() => handleForceFulfill(r._id)} disabled={actionLoading === r._id}
-                                                        className="p-1.5 hover:bg-emerald-50 rounded-lg text-emerald-500 transition-colors" title="Force Fulfill">
+                                                        className="p-1.5 hover:bg-rose-50 rounded-lg text-rose-500 transition-colors" title="Force Fulfill">
                                                         <Zap size={14} />
                                                     </button>
                                                 )}

@@ -21,7 +21,7 @@ export default function SystemHealth() {
     if (loading) return (
         <div className="flex items-center justify-center py-32">
             <div className="flex flex-col items-center gap-3">
-                <Loader2 size={36} className="text-emerald-500 animate-spin" />
+                <Loader2 size={36} className="text-rose-500 animate-spin" />
                 <p className="text-sm font-bold text-slate-400">Checking system health...</p>
             </div>
         </div>
@@ -42,7 +42,7 @@ export default function SystemHealth() {
             <div className="flex items-center justify-between">
                 <div>
                     <h2 className="text-2xl font-black text-slate-800 flex items-center gap-2">
-                        <Activity size={24} className="text-emerald-600" /> System Health
+                        <Activity size={24} className="text-rose-600" /> System Health
                     </h2>
                     <p className="text-sm text-slate-400 mt-1">Server & database monitoring</p>
                 </div>
@@ -52,10 +52,10 @@ export default function SystemHealth() {
             </div>
 
             {/* Status Banner */}
-            <div className={`rounded-2xl p-5 flex items-center gap-4 ${database.connected ? 'bg-emerald-50 border border-emerald-200' : 'bg-red-50 border border-red-200'}`}>
-                {database.connected ? <CheckCircle size={24} className="text-emerald-600" /> : <AlertCircle size={24} className="text-red-600" />}
+            <div className={`rounded-2xl p-5 flex items-center gap-4 ${database.connected ? 'bg-rose-50 border border-rose-200' : 'bg-red-50 border border-red-200'}`}>
+                {database.connected ? <CheckCircle size={24} className="text-rose-600" /> : <AlertCircle size={24} className="text-red-600" />}
                 <div>
-                    <p className={`font-black ${database.connected ? 'text-emerald-700' : 'text-red-700'}`}>
+                    <p className={`font-black ${database.connected ? 'text-rose-700' : 'text-red-700'}`}>
                         {database.connected ? 'All Systems Operational' : 'Database Connection Issue'}
                     </p>
                     <p className="text-xs text-slate-500 mt-0.5">
@@ -109,12 +109,12 @@ export default function SystemHealth() {
                 {/* Database */}
                 <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
                     <h3 className="font-black text-slate-800 flex items-center gap-2 mb-5">
-                        <Database size={18} className="text-emerald-600" /> Database
+                        <Database size={18} className="text-rose-600" /> Database
                     </h3>
                     <div className="space-y-3">
                         <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
                             <span className="text-xs font-bold text-slate-500">Status</span>
-                            <span className={`text-sm font-black ${database.connected ? 'text-emerald-600' : 'text-red-600'}`}>{database.status}</span>
+                            <span className={`text-sm font-black ${database.connected ? 'text-rose-600' : 'text-red-600'}`}>{database.status}</span>
                         </div>
                         <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
                             <span className="text-xs font-bold text-slate-500">Host</span>

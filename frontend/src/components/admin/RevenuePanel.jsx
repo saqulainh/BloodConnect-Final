@@ -56,7 +56,7 @@ export default function RevenuePanel() {
             <div className="flex items-center justify-between">
                 <div>
                     <h2 className="text-2xl font-black text-slate-800 flex items-center gap-2">
-                        <DollarSign size={24} className="text-emerald-600" /> Revenue & Donations
+                        <DollarSign size={24} className="text-rose-600" /> Revenue & Donations
                     </h2>
                     <p className="text-sm text-slate-400 mt-1">Financial overview and donor analytics</p>
                 </div>
@@ -72,9 +72,9 @@ export default function RevenuePanel() {
 
             {/* Summary Cards */}
             <div className="grid grid-cols-3 gap-4">
-                <div className="bg-gradient-to-br from-emerald-600 to-emerald-800 text-white rounded-2xl p-5 relative overflow-hidden">
+                <div className="bg-gradient-to-br from-rose-600 to-rose-800 text-white rounded-2xl p-5 relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-16 h-16 bg-white/5 rounded-full -translate-y-1/3 translate-x-1/3" />
-                    <p className="text-[10px] font-black uppercase tracking-widest text-emerald-200 mb-2">Total Revenue</p>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-rose-200 mb-2">Total Revenue</p>
                     <p className="text-3xl font-black">{fmt(summary.totalRevenue)}</p>
                 </div>
                 <div className="bg-gradient-to-br from-blue-600 to-blue-800 text-white rounded-2xl p-5">
@@ -143,7 +143,7 @@ export default function RevenuePanel() {
                                         <p className="text-sm font-bold text-slate-700 truncate">{d.name || d.email || 'Anonymous'}</p>
                                         <p className="text-[10px] text-slate-400">{d.count} donations</p>
                                     </div>
-                                    <p className="text-sm font-black text-emerald-600">{fmt(d.totalAmount)}</p>
+                                    <p className="text-sm font-black text-rose-600">{fmt(d.totalAmount)}</p>
                                 </div>
                             ))}
                         </div>
@@ -156,14 +156,14 @@ export default function RevenuePanel() {
                         <div className="space-y-2">
                             {recentPayments.slice(0, 8).map(tx => (
                                 <div key={tx._id} className="flex items-center gap-3 p-3 rounded-xl bg-slate-50">
-                                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${tx.status === 'success' ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-600'}`}>
+                                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${tx.status === 'success' ? 'bg-rose-100 text-rose-600' : 'bg-red-100 text-red-600'}`}>
                                         {tx.status === 'success' ? <CheckCircle size={14} /> : <AlertCircle size={14} />}
                                     </div>
                                     <div className="flex-1 min-w-0">
                                         <p className="text-sm font-bold text-slate-700 truncate">{tx.donorName || 'Anonymous'}</p>
                                         <p className="text-[10px] text-slate-400 flex items-center gap-1"><Clock size={8} />{new Date(tx.createdAt).toLocaleDateString()}</p>
                                     </div>
-                                    <p className={`text-sm font-black ${tx.status === 'success' ? 'text-emerald-600' : 'text-red-500'}`}>{fmt(tx.amount)}</p>
+                                    <p className={`text-sm font-black ${tx.status === 'success' ? 'text-rose-600' : 'text-red-500'}`}>{fmt(tx.amount)}</p>
                                 </div>
                             ))}
                         </div>

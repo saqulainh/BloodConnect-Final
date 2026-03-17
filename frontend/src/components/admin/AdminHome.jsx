@@ -67,9 +67,9 @@ export default function AdminHome({ setActiveTab }) {
                             Managing {users.total.toLocaleString()} users • {requests.total.toLocaleString()} requests • ₹{(revenue.total || 0).toLocaleString("en-IN")} revenue
                         </p>
                     </div>
-                    <div className="flex items-center gap-2 px-4 py-2 bg-emerald-500/20 border border-emerald-500/30 rounded-xl">
-                        <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-                        <span className="text-xs font-black text-emerald-400 uppercase tracking-wider">All Systems Online</span>
+                    <div className="flex items-center gap-2 px-4 py-2 bg-rose-500/20 border border-rose-500/30 rounded-xl">
+                        <div className="w-2 h-2 bg-rose-400 rounded-full animate-pulse" />
+                        <span className="text-xs font-black text-rose-400 uppercase tracking-wider">All Systems Online</span>
                     </div>
                 </div>
             </div>
@@ -81,7 +81,7 @@ export default function AdminHome({ setActiveTab }) {
                 <StatCard icon={Ticket} label="Active Requests" value={requests.active.toLocaleString()}
                     sub={`${requests.fulfillmentRate}% fulfillment rate`} color="bg-gradient-to-br from-red-600 to-red-800" />
                 <StatCard icon={DollarSign} label="Revenue" value={`₹${(revenue.total || 0).toLocaleString("en-IN")}`}
-                    sub={`₹${(revenue.today || 0).toLocaleString("en-IN")} today`} color="bg-gradient-to-br from-emerald-600 to-emerald-800" />
+                    sub={`₹${(revenue.today || 0).toLocaleString("en-IN")} today`} color="bg-gradient-to-br from-rose-600 to-rose-800" />
                 <StatCard icon={TrendingUp} label="Today's Signups" value={registrations.today}
                     sub={`${registrations.thisWeek} this week`} color="bg-gradient-to-br from-purple-600 to-purple-800" />
             </div>
@@ -90,7 +90,7 @@ export default function AdminHome({ setActiveTab }) {
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 {[
                     { label: "Total Donations", value: totalDonations, icon: Droplets, color: "text-red-600", bg: "bg-red-50" },
-                    { label: "Fulfilled Requests", value: requests.fulfilled, icon: Activity, color: "text-emerald-600", bg: "bg-emerald-50" },
+                    { label: "Fulfilled Requests", value: requests.fulfilled, icon: Activity, color: "text-rose-600", bg: "bg-rose-50" },
                     { label: "Blood Camps", value: totalCamps, icon: Tent, color: "text-blue-600", bg: "bg-blue-50" },
                     { label: "Admin Accounts", value: users.admins, icon: Shield, color: "text-amber-600", bg: "bg-amber-50" },
                 ].map((stat, idx) => (
@@ -144,7 +144,7 @@ export default function AdminHome({ setActiveTab }) {
                 {[
                     { label: "Manage Users", tab: "admin-users", icon: Users, color: "from-blue-500 to-blue-700" },
                     { label: "Manage Requests", tab: "admin-requests", icon: Ticket, color: "from-red-500 to-red-700" },
-                    { label: "System Health", tab: "admin-health", icon: Activity, color: "from-emerald-500 to-emerald-700" },
+                    { label: "System Health", tab: "admin-health", icon: Activity, color: "from-rose-500 to-rose-700" },
                     { label: "Revenue", tab: "admin-revenue", icon: DollarSign, color: "from-purple-500 to-purple-700" },
                 ].map(item => (
                     <button key={item.tab} onClick={() => setActiveTab(item.tab)}

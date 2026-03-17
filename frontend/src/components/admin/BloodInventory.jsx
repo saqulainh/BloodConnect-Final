@@ -83,7 +83,7 @@ export default function BloodInventory() {
             </div>
 
             {feedback && (
-                <div className="px-4 py-3 bg-emerald-50 border border-emerald-200 rounded-xl text-sm font-bold text-emerald-700 flex items-center gap-2">
+                <div className="px-4 py-3 bg-rose-50 border border-rose-200 rounded-xl text-sm font-bold text-rose-700 flex items-center gap-2">
                     <CheckCircle size={16} /> {feedback}
                 </div>
             )}
@@ -120,7 +120,7 @@ export default function BloodInventory() {
                                     <button
                                         onClick={() => handleUpdate(item._id)}
                                         disabled={actionLoading}
-                                        className="bg-emerald-500 hover:bg-emerald-600 text-white p-1.5 rounded-lg transition-colors disabled:opacity-50"
+                                        className="bg-rose-500 hover:bg-rose-600 text-white p-1.5 rounded-lg transition-colors disabled:opacity-50"
                                     >
                                         <CheckCircle size={16} />
                                     </button>

@@ -29,7 +29,7 @@ const ReceiverAnalytics = () => {
 
     if (loading) return (
         <div className="flex items-center justify-center py-32">
-            <div className="w-12 h-12 border-4 border-teal-200 border-t-teal-600 rounded-full animate-spin" />
+            <div className="w-12 h-12 border-4 border-red-200 border-t-red-600 rounded-full animate-spin" />
         </div>
     );
 
@@ -51,8 +51,8 @@ const ReceiverAnalytics = () => {
             {/* ── Key Metrics ── */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 {[
-                    { label: "Total Requests", value: data.totalRequests, icon: Droplets, color: "text-teal-600", bg: "bg-teal-50" },
-                    { label: "Fulfilled", value: data.totalFulfilled, icon: CheckCircle2, color: "text-emerald-600", bg: "bg-emerald-50" },
+                    { label: "Total Requests", value: data.totalRequests, icon: Droplets, color: "text-red-600", bg: "bg-red-50" },
+                    { label: "Fulfilled", value: data.totalFulfilled, icon: CheckCircle2, color: "text-rose-600", bg: "bg-rose-50" },
                     { label: "Fulfillment Rate", value: `${data.fulfillmentRate}%`, icon: TrendingUp, color: "text-blue-600", bg: "bg-blue-50" },
                     { label: "Unique Donors", value: data.uniqueDonors, icon: Users, color: "text-purple-600", bg: "bg-purple-50" },
                 ].map((stat, idx) => (
@@ -178,7 +178,7 @@ const ReceiverAnalytics = () => {
                         </div>
                         <div className="flex items-center justify-between">
                             <span className="text-sm font-bold text-slate-500">Fulfilled</span>
-                            <span className="text-lg font-black text-emerald-600">{data.totalFulfilled}</span>
+                            <span className="text-lg font-black text-rose-600">{data.totalFulfilled}</span>
                         </div>
                         <div className="flex items-center justify-between">
                             <span className="text-sm font-bold text-slate-500">Pending</span>
@@ -187,10 +187,10 @@ const ReceiverAnalytics = () => {
                         <div className="pt-4 border-t border-slate-100">
                             <div className="flex items-center justify-between mb-2">
                                 <span className="text-sm font-bold text-slate-500">Rate</span>
-                                <span className="text-2xl font-black text-teal-600">{data.fulfillmentRate}%</span>
+                                <span className="text-2xl font-black text-red-600">{data.fulfillmentRate}%</span>
                             </div>
                             <div className="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
-                                <div className="h-full bg-gradient-to-r from-teal-500 to-emerald-500 rounded-full transition-all duration-1000"
+                                <div className="h-full bg-gradient-to-r from-red-500 to-rose-500 rounded-full transition-all duration-1000"
                                     style={{ width: `${data.fulfillmentRate}%` }} />
                             </div>
                         </div>

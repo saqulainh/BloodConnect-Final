@@ -50,14 +50,14 @@ const RequestForm = ({ onClose, initialData = null }) => {
                     <div>
                         <label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block">Patient Name</label>
                         <input type="text" required value={form.patientName} onChange={e => setForm(f => ({ ...f, patientName: e.target.value }))}
-                            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-400" placeholder="Enter patient name" />
+                            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-red-500/30 focus:border-red-400" placeholder="Enter patient name" />
                     </div>
                     <div>
                         <label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block">Blood Group</label>
                         <div className="grid grid-cols-4 gap-2">
                             {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map(bg => (
                                 <button key={bg} type="button" onClick={() => setForm(f => ({ ...f, bloodGroup: bg }))}
-                                    className={`py-2.5 rounded-xl text-sm font-black transition-all ${form.bloodGroup === bg ? 'bg-teal-600 text-white shadow-lg shadow-teal-200' : 'bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200'}`}>
+                                    className={`py-2.5 rounded-xl text-sm font-black transition-all ${form.bloodGroup === bg ? 'bg-red-600 text-white shadow-lg shadow-red-200' : 'bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200'}`}>
                                     {bg}
                                 </button>
                             ))}
@@ -66,13 +66,13 @@ const RequestForm = ({ onClose, initialData = null }) => {
                     <div>
                         <label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block">Hospital</label>
                         <input type="text" required value={form.hospital} onChange={e => setForm(f => ({ ...f, hospital: e.target.value }))}
-                            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-400" placeholder="Hospital name" />
+                            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-red-500/30 focus:border-red-400" placeholder="Hospital name" />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                         <div>
                             <label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block">Urgency</label>
                             <select value={form.urgency} onChange={e => setForm(f => ({ ...f, urgency: e.target.value }))}
-                                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-teal-500/30">
+                                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-red-500/30">
                                 <option>Normal</option>
                                 <option>Urgent</option>
                                 <option>Critical</option>
@@ -81,12 +81,12 @@ const RequestForm = ({ onClose, initialData = null }) => {
                         <div>
                             <label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block">Units</label>
                             <input type="number" min="1" max="10" value={form.units} onChange={e => setForm(f => ({ ...f, units: parseInt(e.target.value) || 1 }))}
-                                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-teal-500/30" />
+                                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-red-500/30" />
                         </div>
                     </div>
                     {error && <p className="text-xs text-red-500 font-bold bg-red-50 p-3 rounded-xl">{error}</p>}
                     <button type="submit" disabled={loading || !form.bloodGroup}
-                        className="w-full py-3.5 bg-teal-600 text-white font-black rounded-xl hover:bg-teal-700 transition-all disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg shadow-teal-200">
+                        className="w-full py-3.5 bg-red-600 text-white font-black rounded-xl hover:bg-red-700 transition-all disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg shadow-red-200">
                         {loading ? <Loader2 size={18} className="animate-spin" /> : null}
                         {initialData ? 'Update Request' : 'Submit Request'}
                     </button>
@@ -143,8 +143,8 @@ const MyRequests = ({ onStartChat }) => {
 
     const getStatusStyle = (status) => {
         switch (status) {
-            case 'Active': case 'active': return 'bg-teal-100 text-teal-700 border-teal-200';
-            case 'Completed': case 'resolved': return 'bg-emerald-100 text-emerald-700 border-emerald-200';
+            case 'Active': case 'active': return 'bg-red-100 text-red-700 border-red-200';
+            case 'Completed': case 'resolved': return 'bg-rose-100 text-rose-700 border-rose-200';
             case 'Cancelled': return 'bg-slate-100 text-slate-500 border-slate-200';
             default: return 'bg-slate-100 text-slate-500 border-slate-200';
         }
@@ -167,7 +167,7 @@ const MyRequests = ({ onStartChat }) => {
                     <p className="text-sm text-slate-400 font-medium">{requests.length} total requests</p>
                 </div>
                 <button onClick={() => { setEditData(null); setShowForm(true); }}
-                    className="px-5 py-2.5 bg-teal-600 text-white font-black rounded-xl hover:bg-teal-700 transition-all shadow-lg shadow-teal-200 flex items-center gap-2">
+                    className="px-5 py-2.5 bg-red-600 text-white font-black rounded-xl hover:bg-red-700 transition-all shadow-lg shadow-red-200 flex items-center gap-2">
                     <Plus size={16} /> New Request
                 </button>
             </div>
@@ -176,7 +176,7 @@ const MyRequests = ({ onStartChat }) => {
             <div className="flex items-center gap-2 flex-wrap">
                 {['All', 'Active', 'Fulfilled', 'Cancelled'].map(f => (
                     <button key={f} onClick={() => setFilter(f)}
-                        className={`px-4 py-2 rounded-xl text-xs font-black transition-all ${filter === f ? 'bg-teal-600 text-white shadow-md' : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-50'}`}>
+                        className={`px-4 py-2 rounded-xl text-xs font-black transition-all ${filter === f ? 'bg-red-600 text-white shadow-md' : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-50'}`}>
                         {f}
                     </button>
                 ))}
@@ -184,7 +184,7 @@ const MyRequests = ({ onStartChat }) => {
 
             {/* Request Cards */}
             {loading ? (
-                <div className="flex items-center justify-center py-20"><Loader2 className="w-8 h-8 text-teal-400 animate-spin" /></div>
+                <div className="flex items-center justify-center py-20"><Loader2 className="w-8 h-8 text-red-400 animate-spin" /></div>
             ) : filtered.length === 0 ? (
                 <div className="text-center py-20 bg-white rounded-3xl border border-slate-100">
                     <AlertCircle className="w-12 h-12 text-slate-200 mx-auto mb-3" />
@@ -198,7 +198,7 @@ const MyRequests = ({ onStartChat }) => {
                             <div className="p-5">
                                 <div className="flex items-start justify-between mb-3">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-12 h-12 bg-gradient-to-br from-teal-500 to-blue-600 rounded-xl flex items-center justify-center text-white font-black text-sm shadow-md">
+                                        <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-blue-600 rounded-xl flex items-center justify-center text-white font-black text-sm shadow-md">
                                             {req.bloodGroup}
                                         </div>
                                         <div>
@@ -223,18 +223,18 @@ const MyRequests = ({ onStartChat }) => {
 
                                 {/* Fulfilled — Show donor info */}
                                 {(req.status === 'Completed' || req.status === 'resolved') && req.fulfilledBy && (
-                                    <div className="bg-emerald-50 rounded-xl p-3 mb-3 flex items-center justify-between">
+                                    <div className="bg-rose-50 rounded-xl p-3 mb-3 flex items-center justify-between">
                                         <div className="flex items-center gap-2">
-                                            <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center text-white text-xs font-black">
+                                            <div className="w-8 h-8 bg-rose-500 rounded-lg flex items-center justify-center text-white text-xs font-black">
                                                 {req.fulfilledBy.name?.charAt(0) || '?'}
                                             </div>
                                             <div>
-                                                <p className="text-xs font-black text-emerald-800">{req.fulfilledBy.name}</p>
-                                                <p className="text-[10px] text-emerald-600">{req.fulfilledBy.bloodGroup}</p>
+                                                <p className="text-xs font-black text-rose-800">{req.fulfilledBy.name}</p>
+                                                <p className="text-[10px] text-rose-600">{req.fulfilledBy.bloodGroup}</p>
                                             </div>
                                         </div>
                                         <button onClick={() => handleGratitude(req)} disabled={gratSending === req._id}
-                                            className="px-3 py-1.5 bg-emerald-600 text-white text-[10px] font-black rounded-lg hover:bg-emerald-700 transition flex items-center gap-1 disabled:opacity-50">
+                                            className="px-3 py-1.5 bg-rose-600 text-white text-[10px] font-black rounded-lg hover:bg-rose-700 transition flex items-center gap-1 disabled:opacity-50">
                                             <Heart size={10} /> {gratSending === req._id ? 'Sending...' : 'Thanks'}
                                         </button>
                                     </div>

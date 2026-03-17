@@ -6,7 +6,7 @@ const TYPES = [
     { value: 'info', label: '📢 Info', color: 'bg-blue-100 text-blue-700' },
     { value: 'warning', label: '⚠️ Warning', color: 'bg-amber-100 text-amber-700' },
     { value: 'critical', label: '🚨 Critical', color: 'bg-red-100 text-red-700' },
-    { value: 'success', label: '✅ Success', color: 'bg-emerald-100 text-emerald-700' },
+    { value: 'success', label: '✅ Success', color: 'bg-rose-100 text-rose-700' },
 ];
 
 export default function BroadcastCenter() {
@@ -101,9 +101,9 @@ export default function BroadcastCenter() {
 
             {/* Result */}
             {result && (
-                <div className={`px-5 py-4 rounded-2xl flex items-center gap-3 ${result.success ? 'bg-emerald-50 border border-emerald-200' : 'bg-red-50 border border-red-200'}`}>
-                    {result.success ? <CheckCircle size={20} className="text-emerald-600" /> : <AlertCircle size={20} className="text-red-600" />}
-                    <p className={`text-sm font-bold ${result.success ? 'text-emerald-700' : 'text-red-700'}`}>{result.msg}</p>
+                <div className={`px-5 py-4 rounded-2xl flex items-center gap-3 ${result.success ? 'bg-rose-50 border border-rose-200' : 'bg-red-50 border border-red-200'}`}>
+                    {result.success ? <CheckCircle size={20} className="text-rose-600" /> : <AlertCircle size={20} className="text-red-600" />}
+                    <p className={`text-sm font-bold ${result.success ? 'text-rose-700' : 'text-red-700'}`}>{result.msg}</p>
                 </div>
             )}
 

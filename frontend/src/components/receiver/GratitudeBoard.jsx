@@ -106,7 +106,7 @@ const GratitudeBoard = () => {
                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Donations Received</p>
                 </div>
                 <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm text-center">
-                    <p className="text-2xl font-black text-emerald-600">{sentIds.size}</p>
+                    <p className="text-2xl font-black text-rose-600">{sentIds.size}</p>
                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Thanks Sent Today</p>
                 </div>
                 <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm text-center">
@@ -160,9 +160,9 @@ const GratitudeBoard = () => {
                                     </div>
 
                                     {alreadySent ? (
-                                        <div className="flex items-center gap-2 py-3 bg-emerald-50 rounded-xl px-4">
-                                            <CheckCircle size={16} className="text-emerald-500" />
-                                            <span className="text-sm font-black text-emerald-600">Gratitude Sent! 💚</span>
+                                        <div className="flex items-center gap-2 py-3 bg-rose-50 rounded-xl px-4">
+                                            <CheckCircle size={16} className="text-rose-500" />
+                                            <span className="text-sm font-black text-rose-600">Gratitude Sent! 💚</span>
                                         </div>
                                     ) : (
                                         <button onClick={() => { setShowModal(req); setMessage(''); }}

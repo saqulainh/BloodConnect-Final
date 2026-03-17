@@ -4,14 +4,14 @@ import { getAuditLogs } from '../../services/api';
 
 const ACTION_COLORS = {
     USER_BANNED: 'bg-red-100 text-red-700',
-    USER_UNBANNED: 'bg-emerald-100 text-emerald-700',
+    USER_UNBANNED: 'bg-rose-100 text-rose-700',
     USER_DELETED: 'bg-red-100 text-red-700',
     USER_UPDATED: 'bg-blue-100 text-blue-700',
     USER_ROLE_CHANGED: 'bg-amber-100 text-amber-700',
     REQUEST_UPDATED: 'bg-blue-100 text-blue-700',
     REQUEST_DELETED: 'bg-red-100 text-red-700',
-    REQUEST_FORCE_FULFILLED: 'bg-emerald-100 text-emerald-700',
-    CAMP_CREATED: 'bg-emerald-100 text-emerald-700',
+    REQUEST_FORCE_FULFILLED: 'bg-rose-100 text-rose-700',
+    CAMP_CREATED: 'bg-rose-100 text-rose-700',
     CAMP_UPDATED: 'bg-blue-100 text-blue-700',
     CAMP_DELETED: 'bg-red-100 text-red-700',
     BROADCAST_SENT: 'bg-purple-100 text-purple-700',

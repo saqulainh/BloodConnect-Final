@@ -6,12 +6,12 @@ import {
 import { getMyReceiverRequests, getRequestTimeline } from '../../services/api';
 
 const STAGE_META = {
-    "Request Created": { icon: AlertCircle, color: "text-teal-600", bg: "bg-teal-100", ring: "ring-teal-200" },
+    "Request Created": { icon: AlertCircle, color: "text-red-600", bg: "bg-red-100", ring: "ring-red-200" },
     "Searching Donors": { icon: Search, color: "text-blue-600", bg: "bg-blue-100", ring: "ring-blue-200" },
     "Donor Matched": { icon: CheckCircle, color: "text-indigo-600", bg: "bg-indigo-100", ring: "ring-indigo-200" },
     "Blood Donated": { icon: Droplets, color: "text-red-600", bg: "bg-red-100", ring: "ring-red-200" },
     "Testing & Processing": { icon: FlaskConical, color: "text-purple-600", bg: "bg-purple-100", ring: "ring-purple-200" },
-    "Delivered": { icon: Heart, color: "text-emerald-600", bg: "bg-emerald-100", ring: "ring-emerald-200" },
+    "Delivered": { icon: Heart, color: "text-rose-600", bg: "bg-rose-100", ring: "ring-rose-200" },
 };
 
 const ReceiverTimeline = () => {
@@ -44,8 +44,8 @@ const ReceiverTimeline = () => {
 
     const getStatusColor = (status) => {
         switch (status) {
-            case 'Active': case 'active': return 'bg-teal-100 text-teal-700';
-            case 'Completed': case 'resolved': return 'bg-emerald-100 text-emerald-700';
+            case 'Active': case 'active': return 'bg-red-100 text-red-700';
+            case 'Completed': case 'resolved': return 'bg-rose-100 text-rose-700';
             case 'Cancelled': return 'bg-slate-100 text-slate-500';
             default: return 'bg-slate-100 text-slate-500';
         }
@@ -63,7 +63,7 @@ const ReceiverTimeline = () => {
                 <div className="lg:col-span-1 space-y-3">
                     <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Select a Request</p>
                     {loading ? (
-                        <div className="flex justify-center py-10"><Loader2 className="w-6 h-6 text-teal-400 animate-spin" /></div>
+                        <div className="flex justify-center py-10"><Loader2 className="w-6 h-6 text-red-400 animate-spin" /></div>
                     ) : requests.length === 0 ? (
                         <div className="text-center py-10 bg-white rounded-2xl border border-slate-100">
                             <AlertCircle className="w-10 h-10 text-slate-200 mx-auto mb-2" />
@@ -73,8 +73,8 @@ const ReceiverTimeline = () => {
                         <div className="space-y-2 max-h-[calc(100vh-300px)] overflow-y-auto">
                             {requests.map(req => (
                                 <button key={req._id} onClick={() => viewTimeline(req)}
-                                    className={`w-full text-left p-4 rounded-2xl border transition-all flex items-center gap-3 ${selectedReq?._id === req._id ? 'bg-teal-50 border-teal-200 shadow-md' : 'bg-white border-slate-100 hover:bg-slate-50'}`}>
-                                    <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-blue-600 rounded-xl flex items-center justify-center text-white font-black text-xs shadow-md shrink-0">
+                                    className={`w-full text-left p-4 rounded-2xl border transition-all flex items-center gap-3 ${selectedReq?._id === req._id ? 'bg-red-50 border-red-200 shadow-md' : 'bg-white border-slate-100 hover:bg-slate-50'}`}>
+                                    <div className="w-10 h-10 bg-gradient-to-br from-red-500 to-blue-600 rounded-xl flex items-center justify-center text-white font-black text-xs shadow-md shrink-0">
                                         {req.bloodGroup}
                                     </div>
                                     <div className="flex-1 min-w-0">
@@ -103,13 +103,13 @@ const ReceiverTimeline = () => {
                         </div>
                     ) : timelineLoading ? (
                         <div className="flex items-center justify-center py-20 bg-white rounded-3xl border border-slate-100">
-                            <Loader2 className="w-8 h-8 text-teal-400 animate-spin" />
+                            <Loader2 className="w-8 h-8 text-red-400 animate-spin" />
                         </div>
                     ) : timeline ? (
                         <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 lg:p-8">
                             {/* Request Header */}
                             <div className="flex items-center gap-4 mb-8 pb-6 border-b border-slate-100">
-                                <div className="w-14 h-14 bg-gradient-to-br from-teal-500 to-blue-600 rounded-2xl flex items-center justify-center text-white font-black text-lg shadow-lg">
+                                <div className="w-14 h-14 bg-gradient-to-br from-red-500 to-blue-600 rounded-2xl flex items-center justify-center text-white font-black text-lg shadow-lg">
                                     {timeline.request.bloodGroup}
                                 </div>
                                 <div>
@@ -140,7 +140,7 @@ const ReceiverTimeline = () => {
                                                 <div className="flex items-center gap-2 mb-1">
                                                     <span className="text-xs font-bold text-slate-400">{stage.icon}</span>
                                                     <h4 className="text-sm font-black text-slate-800">{stage.stage}</h4>
-                                                    {stage.completed && <CheckCircle size={12} className="text-emerald-500" />}
+                                                    {stage.completed && <CheckCircle size={12} className="text-rose-500" />}
                                                 </div>
                                                 <p className="text-xs text-slate-500 font-medium">{stage.message}</p>
                                                 {stage.timestamp && (
@@ -156,15 +156,15 @@ const ReceiverTimeline = () => {
 
                             {/* Donor info for fulfilled */}
                             {timeline.request.fulfilledBy && (
-                                <div className="mt-4 bg-emerald-50 rounded-2xl p-4 flex items-center gap-4 border border-emerald-100">
-                                    <div className="w-12 h-12 bg-emerald-500 rounded-xl flex items-center justify-center text-white font-black text-lg shadow-md">
+                                <div className="mt-4 bg-rose-50 rounded-2xl p-4 flex items-center gap-4 border border-rose-100">
+                                    <div className="w-12 h-12 bg-rose-500 rounded-xl flex items-center justify-center text-white font-black text-lg shadow-md">
                                         {timeline.request.fulfilledBy.name?.charAt(0) || '?'}
                                     </div>
                                     <div>
-                                        <p className="text-sm font-black text-emerald-800">Fulfilled by {timeline.request.fulfilledBy.name}</p>
-                                        <p className="text-xs text-emerald-600 font-medium">{timeline.request.fulfilledBy.bloodGroup} donor</p>
+                                        <p className="text-sm font-black text-rose-800">Fulfilled by {timeline.request.fulfilledBy.name}</p>
+                                        <p className="text-xs text-rose-600 font-medium">{timeline.request.fulfilledBy.bloodGroup} donor</p>
                                     </div>
-                                    <Heart className="ml-auto text-emerald-500" size={20} fill="currentColor" />
+                                    <Heart className="ml-auto text-rose-500" size={20} fill="currentColor" />
                                 </div>
                             )}
                         </div>

@@ -88,7 +88,7 @@ export default function UserManagement() {
         const map = {
             admin: 'bg-amber-100 text-amber-700',
             donor: 'bg-red-100 text-red-600',
-            receiver: 'bg-teal-100 text-teal-600',
+            receiver: 'bg-red-100 text-red-600',
         };
         return <span className={`text-[10px] font-black px-2 py-0.5 rounded-full uppercase ${map[role] || 'bg-slate-100 text-slate-500'}`}>{role}</span>;
     };
@@ -112,7 +112,7 @@ export default function UserManagement() {
                         } catch (err) {
                             showFeedback('Export Failed.');
                         }
-                    }} className="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-600 rounded-xl text-sm font-bold shadow-sm hover:bg-emerald-100 transition-colors border border-emerald-200">
+                    }} className="flex items-center gap-2 px-4 py-2 bg-rose-50 text-rose-600 rounded-xl text-sm font-bold shadow-sm hover:bg-rose-100 transition-colors border border-rose-200">
                         <DownloadCloud size={16} /> Export CSV
                     </button>
                     <div className="relative">
@@ -136,7 +136,7 @@ export default function UserManagement() {
 
             {/* Feedback */}
             {feedback && (
-                <div className="px-4 py-3 bg-emerald-50 border border-emerald-200 rounded-xl text-sm font-bold text-emerald-700 flex items-center gap-2">
+                <div className="px-4 py-3 bg-rose-50 border border-rose-200 rounded-xl text-sm font-bold text-rose-700 flex items-center gap-2">
                     <CheckCircle size={16} /> {feedback}
                 </div>
             )}
@@ -182,7 +182,7 @@ export default function UserManagement() {
                                             {u.isBanned ? (
                                                 <span className="text-[10px] font-black text-red-600 bg-red-100 px-2 py-0.5 rounded-full">BANNED</span>
                                             ) : u.isVerified ? (
-                                                <span className="text-[10px] font-black text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded-full">Verified</span>
+                                                <span className="text-[10px] font-black text-rose-600 bg-rose-100 px-2 py-0.5 rounded-full">Verified</span>
                                             ) : (
                                                 <span className="text-[10px] font-black text-amber-600 bg-amber-100 px-2 py-0.5 rounded-full">Unverified</span>
                                             )}
@@ -197,7 +197,7 @@ export default function UserManagement() {
                                                     <Edit size={14} />
                                                 </button>
                                                 <button onClick={() => handleBan(u._id)} disabled={actionLoading === u._id}
-                                                    className={`p-1.5 rounded-lg transition-colors ${u.isBanned ? 'hover:bg-emerald-50 text-emerald-500' : 'hover:bg-amber-50 text-amber-500'}`} title={u.isBanned ? 'Unban' : 'Ban'}>
+                                                    className={`p-1.5 rounded-lg transition-colors ${u.isBanned ? 'hover:bg-rose-50 text-rose-500' : 'hover:bg-amber-50 text-amber-500'}`} title={u.isBanned ? 'Unban' : 'Ban'}>
                                                     <Ban size={14} />
                                                 </button>
                                                 <select value={u.role} onChange={e => handlePromote(u._id, e.target.value)}

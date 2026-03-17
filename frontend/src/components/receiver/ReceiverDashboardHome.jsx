@@ -38,13 +38,13 @@ const ReceiverDashboardHome = ({ setActiveTab, user }) => {
         <div className="space-y-6 animate-in fade-in duration-500">
 
             {/* ── Greeting Banner (Teal/Blue for Receiver) ── */}
-            <div className="bg-gradient-to-br from-teal-600 to-blue-800 rounded-3xl p-6 lg:p-8 text-white shadow-xl shadow-blue-200/40 relative overflow-hidden">
+            <div className="bg-gradient-to-br from-red-600 to-blue-800 rounded-3xl p-6 lg:p-8 text-white shadow-xl shadow-blue-200/40 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/3 pointer-events-none" />
                 <div className="absolute bottom-0 left-1/2 w-48 h-48 bg-blue-900/30 rounded-full translate-y-1/2 pointer-events-none" />
                 <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
                     <div>
                         <p className="text-blue-200 text-sm font-bold uppercase tracking-widest mb-1 flex items-center gap-2">
-                            <span className="inline-block w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
+                            <span className="inline-block w-2 h-2 bg-rose-400 rounded-full animate-pulse" />
                             {greeting}
                         </p>
                         <h2 className="text-2xl lg:text-3xl font-black tracking-tight mb-2">
@@ -56,7 +56,7 @@ const ReceiverDashboardHome = ({ setActiveTab, user }) => {
                     </div>
                     <div className="flex flex-col gap-2 shrink-0">
                         <button onClick={() => setActiveTab('my-requests')}
-                            className="px-5 py-2.5 bg-white text-teal-700 text-sm font-black rounded-xl hover:bg-teal-50 transition-colors shadow-lg flex items-center gap-2 whitespace-nowrap">
+                            className="px-5 py-2.5 bg-white text-red-700 text-sm font-black rounded-xl hover:bg-red-50 transition-colors shadow-lg flex items-center gap-2 whitespace-nowrap">
                             🩸 My Requests
                         </button>
                         <button onClick={() => setActiveTab('find-donors')}
@@ -70,8 +70,8 @@ const ReceiverDashboardHome = ({ setActiveTab, user }) => {
             {/* ── Stat Cards ── */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 {[
-                    { label: 'Active Requests', value: stats.activeRequests, icon: Ticket, color: 'text-teal-600', bg: 'bg-teal-50' },
-                    { label: 'Fulfilled', value: stats.fulfilledRequests, icon: CheckCircle2, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+                    { label: 'Active Requests', value: stats.activeRequests, icon: Ticket, color: 'text-red-600', bg: 'bg-red-50' },
+                    { label: 'Fulfilled', value: stats.fulfilledRequests, icon: CheckCircle2, color: 'text-rose-600', bg: 'bg-rose-50' },
                     { label: 'Units Received', value: stats.totalUnitsFulfilled || 0, icon: Droplets, color: 'text-blue-600', bg: 'bg-blue-50' },
                     { label: 'Avg Response', value: `${stats.avgResponseHours || 0}h`, icon: Clock, color: 'text-amber-600', bg: 'bg-amber-50' },
                 ].map((stat, idx) => (
@@ -91,7 +91,7 @@ const ReceiverDashboardHome = ({ setActiveTab, user }) => {
             <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
                 <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600">
+                        <div className="w-10 h-10 bg-rose-50 rounded-xl flex items-center justify-center text-rose-600">
                             <TrendingUp size={20} />
                         </div>
                         <div>
@@ -99,11 +99,11 @@ const ReceiverDashboardHome = ({ setActiveTab, user }) => {
                             <p className="text-xs text-slate-400 font-medium">How many of your requests have been fulfilled</p>
                         </div>
                     </div>
-                    <span className="text-2xl font-black text-emerald-600">{stats.fulfillmentRate}%</span>
+                    <span className="text-2xl font-black text-rose-600">{stats.fulfillmentRate}%</span>
                 </div>
                 <div className="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
                     <div
-                        className="h-full bg-gradient-to-r from-teal-500 to-emerald-500 rounded-full transition-all duration-1000"
+                        className="h-full bg-gradient-to-r from-red-500 to-rose-500 rounded-full transition-all duration-1000"
                         style={{ width: `${stats.fulfillmentRate || 0}%` }}
                     />
                 </div>
@@ -111,9 +111,9 @@ const ReceiverDashboardHome = ({ setActiveTab, user }) => {
 
             {/* ── Support & Mission Promotion ── */}
             <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden group hover:shadow-lg transition-all duration-500">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-teal-50 rounded-full translate-x-10 -translate-y-10 group-hover:scale-110 transition-transform duration-700" />
+                <div className="absolute top-0 right-0 w-32 h-32 bg-red-50 rounded-full translate-x-10 -translate-y-10 group-hover:scale-110 transition-transform duration-700" />
                 <div className="flex items-center gap-5 relative z-10">
-                    <div className="w-14 h-14 bg-teal-50 rounded-2xl flex items-center justify-center text-teal-600 shadow-inner">
+                    <div className="w-14 h-14 bg-red-50 rounded-2xl flex items-center justify-center text-red-600 shadow-inner">
                         <HeartIcon className="animate-pulse" fill="currentColor" size={24} />
                     </div>
                     <div>
@@ -145,7 +145,7 @@ const ReceiverDashboardHome = ({ setActiveTab, user }) => {
 
                     {/* ── Quick Actions ── */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <QuickActionButton icon={Plus} label="New Request" onClick={() => setActiveTab('my-requests')} colorClass="border-teal-100 text-teal-600 bg-teal-50 hover:bg-teal-100" />
+                        <QuickActionButton icon={Plus} label="New Request" onClick={() => setActiveTab('my-requests')} colorClass="border-red-100 text-red-600 bg-red-50 hover:bg-red-100" />
                         <QuickActionButton icon={AlertCircle} label="Find Donors" onClick={() => setActiveTab('find-donors')} colorClass="border-blue-100 text-blue-600 bg-blue-50 hover:bg-blue-100" />
                         <QuickActionButton icon={HeartIcon} label="Gratitude" onClick={() => setActiveTab('gratitude')} colorClass="border-pink-100 text-pink-600 bg-pink-50 hover:bg-pink-100" />
                         <QuickActionButton icon={Bell} label="SOS Alert" onClick={() => setActiveTab('sos')} colorClass="border-amber-100 text-amber-600 bg-amber-50 hover:bg-amber-100" />
@@ -158,16 +158,16 @@ const ReceiverDashboardHome = ({ setActiveTab, user }) => {
                         <div className="flex items-center justify-between mb-6">
                             <h3 className="font-bold text-slate-800 text-lg">Recent Activity</h3>
                             {stats.recentActivity.length > 5 && (
-                                <button onClick={() => setShowAllActivity(true)} className="text-xs font-bold text-teal-600 hover:underline">View All</button>
+                                <button onClick={() => setShowAllActivity(true)} className="text-xs font-bold text-red-600 hover:underline">View All</button>
                             )}
                         </div>
                         <div className="space-y-5">
                             {stats.recentActivity.length > 0 ? (
                                 stats.recentActivity.slice(0, 5).map((item) => {
                                     const statusColor = item.status === 'Active' || item.status === 'active'
-                                        ? 'bg-teal-100 text-teal-600'
+                                        ? 'bg-red-100 text-red-600'
                                         : item.status === 'Completed' || item.status === 'resolved'
-                                            ? 'bg-emerald-100 text-emerald-600'
+                                            ? 'bg-rose-100 text-rose-600'
                                             : 'bg-slate-100 text-slate-500';
                                     return (
                                         <div key={item.id} className="flex items-start gap-3 group cursor-pointer">
@@ -175,7 +175,7 @@ const ReceiverDashboardHome = ({ setActiveTab, user }) => {
                                                 <Droplets size={14} />
                                             </div>
                                             <div className="flex-1 min-w-0">
-                                                <p className="text-sm font-bold text-slate-700 leading-tight group-hover:text-teal-600 transition-colors truncate">
+                                                <p className="text-sm font-bold text-slate-700 leading-tight group-hover:text-red-600 transition-colors truncate">
                                                     {item.message}
                                                 </p>
                                                 <p className="text-[11px] text-slate-400 font-bold mt-1">
@@ -209,7 +209,7 @@ const ReceiverDashboardHome = ({ setActiveTab, user }) => {
                         <div className="flex-1 overflow-y-auto p-6 space-y-4">
                             {stats.recentActivity.map((item) => (
                                 <div key={item.id} className="flex items-start gap-4 p-4 rounded-2xl border border-slate-50 hover:bg-slate-50 transition-colors">
-                                    <div className="mt-0.5 min-w-[40px] h-10 rounded-full flex items-center justify-center bg-teal-100 text-teal-600">
+                                    <div className="mt-0.5 min-w-[40px] h-10 rounded-full flex items-center justify-center bg-red-100 text-red-600">
                                         <Droplets size={18} />
                                     </div>
                                     <div>
