@@ -1,0 +1,830 @@
+❌ Not (solely) src/components/Navbar.jsx : Command failed: npx vite build
+[31m✗[39m Build failed in 4.31s
+[31merror during build:
+[31msrc/components/ui/NotificationBell.jsx (3:7): "default" is not exported by "src/services/api.js", imported by "src/components/ui/NotificationBell.jsx".[31m
+file: [36mC:/Users/Asus/Desktop/BloodConnect/frontend/src/components/ui/NotificationBell.jsx:3:7[31m
+[33m
+1: import React, { useState, useEffect, useRef } from 'react';
+2: import { Bell, Check, Clock, X, Info, Megaphone, Droplets, MapPin, Award } from 'lucide-react';
+3: import API from '../../services/api';
+          ^
+4: import Pusher from 'pusher-js';
+[31m
+    at getRollupError (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17022:16)
+    at Module.traceVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17478:29)
+    at ModuleScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:15141:39)
+    at FunctionScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at ReturnValueScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at BlockScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)[39m
+
+❌ Not (solely) src/components/admin/AdminHome.jsx : Command failed: npx vite build
+[31m✗[39m Build failed in 4.37s
+[31merror during build:
+[31msrc/components/ui/NotificationBell.jsx (3:7): "default" is not exported by "src/services/api.js", imported by "src/components/ui/NotificationBell.jsx".[31m
+file: [36mC:/Users/Asus/Desktop/BloodConnect/frontend/src/components/ui/NotificationBell.jsx:3:7[31m
+[33m
+1: import React, { useState, useEffect, useRef } from 'react';
+2: import { Bell, Check, Clock, X, Info, Megaphone, Droplets, MapPin, Award } from 'lucide-react';
+3: import API from '../../services/api';
+          ^
+4: import Pusher from 'pusher-js';
+[31m
+    at getRollupError (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17022:16)
+    at Module.traceVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17478:29)
+    at ModuleScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:15141:39)
+    at FunctionScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at ReturnValueScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at BlockScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)[39m
+
+❌ Not (solely) src/components/admin/AuditLogs.jsx : Command failed: npx vite build
+[31m✗[39m Build failed in 4.22s
+[31merror during build:
+[31msrc/components/ui/NotificationBell.jsx (3:7): "default" is not exported by "src/services/api.js", imported by "src/components/ui/NotificationBell.jsx".[31m
+file: [36mC:/Users/Asus/Desktop/BloodConnect/frontend/src/components/ui/NotificationBell.jsx:3:7[31m
+[33m
+1: import React, { useState, useEffect, useRef } from 'react';
+2: import { Bell, Check, Clock, X, Info, Megaphone, Droplets, MapPin, Award } from 'lucide-react';
+3: import API from '../../services/api';
+          ^
+4: import Pusher from 'pusher-js';
+[31m
+    at getRollupError (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17022:16)
+    at Module.traceVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17478:29)
+    at ModuleScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:15141:39)
+    at FunctionScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at ReturnValueScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at BlockScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)[39m
+
+❌ Not (solely) src/components/admin/BloodInventory.jsx : Command failed: npx vite build
+[31m✗[39m Build failed in 4.25s
+[31merror during build:
+[31msrc/components/ui/NotificationBell.jsx (3:7): "default" is not exported by "src/services/api.js", imported by "src/components/ui/NotificationBell.jsx".[31m
+file: [36mC:/Users/Asus/Desktop/BloodConnect/frontend/src/components/ui/NotificationBell.jsx:3:7[31m
+[33m
+1: import React, { useState, useEffect, useRef } from 'react';
+2: import { Bell, Check, Clock, X, Info, Megaphone, Droplets, MapPin, Award } from 'lucide-react';
+3: import API from '../../services/api';
+          ^
+4: import Pusher from 'pusher-js';
+[31m
+    at getRollupError (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17022:16)
+    at Module.traceVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17478:29)
+    at ModuleScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:15141:39)
+    at FunctionScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at ReturnValueScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at BlockScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)[39m
+
+❌ Not (solely) src/components/admin/BroadcastCenter.jsx : Command failed: npx vite build
+[31m✗[39m Build failed in 4.15s
+[31merror during build:
+[31msrc/components/ui/NotificationBell.jsx (3:7): "default" is not exported by "src/services/api.js", imported by "src/components/ui/NotificationBell.jsx".[31m
+file: [36mC:/Users/Asus/Desktop/BloodConnect/frontend/src/components/ui/NotificationBell.jsx:3:7[31m
+[33m
+1: import React, { useState, useEffect, useRef } from 'react';
+2: import { Bell, Check, Clock, X, Info, Megaphone, Droplets, MapPin, Award } from 'lucide-react';
+3: import API from '../../services/api';
+          ^
+4: import Pusher from 'pusher-js';
+[31m
+    at getRollupError (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17022:16)
+    at Module.traceVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17478:29)
+    at ModuleScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:15141:39)
+    at FunctionScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at ReturnValueScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at BlockScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)[39m
+
+❌ Not (solely) src/components/admin/CampAdmin.jsx : Command failed: npx vite build
+[31m✗[39m Build failed in 4.13s
+[31merror during build:
+[31msrc/components/ui/NotificationBell.jsx (3:7): "default" is not exported by "src/services/api.js", imported by "src/components/ui/NotificationBell.jsx".[31m
+file: [36mC:/Users/Asus/Desktop/BloodConnect/frontend/src/components/ui/NotificationBell.jsx:3:7[31m
+[33m
+1: import React, { useState, useEffect, useRef } from 'react';
+2: import { Bell, Check, Clock, X, Info, Megaphone, Droplets, MapPin, Award } from 'lucide-react';
+3: import API from '../../services/api';
+          ^
+4: import Pusher from 'pusher-js';
+[31m
+    at getRollupError (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17022:16)
+    at Module.traceVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17478:29)
+    at ModuleScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:15141:39)
+    at FunctionScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at ReturnValueScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at BlockScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)[39m
+
+❌ Not (solely) src/components/admin/RequestOperations.jsx : Command failed: npx vite build
+[31m✗[39m Build failed in 4.21s
+[31merror during build:
+[31msrc/components/ui/NotificationBell.jsx (3:7): "default" is not exported by "src/services/api.js", imported by "src/components/ui/NotificationBell.jsx".[31m
+file: [36mC:/Users/Asus/Desktop/BloodConnect/frontend/src/components/ui/NotificationBell.jsx:3:7[31m
+[33m
+1: import React, { useState, useEffect, useRef } from 'react';
+2: import { Bell, Check, Clock, X, Info, Megaphone, Droplets, MapPin, Award } from 'lucide-react';
+3: import API from '../../services/api';
+          ^
+4: import Pusher from 'pusher-js';
+[31m
+    at getRollupError (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17022:16)
+    at Module.traceVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17478:29)
+    at ModuleScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:15141:39)
+    at FunctionScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at ReturnValueScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at BlockScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)[39m
+
+❌ Not (solely) src/components/admin/RevenuePanel.jsx : Command failed: npx vite build
+[31m✗[39m Build failed in 4.13s
+[31merror during build:
+[31msrc/components/ui/NotificationBell.jsx (3:7): "default" is not exported by "src/services/api.js", imported by "src/components/ui/NotificationBell.jsx".[31m
+file: [36mC:/Users/Asus/Desktop/BloodConnect/frontend/src/components/ui/NotificationBell.jsx:3:7[31m
+[33m
+1: import React, { useState, useEffect, useRef } from 'react';
+2: import { Bell, Check, Clock, X, Info, Megaphone, Droplets, MapPin, Award } from 'lucide-react';
+3: import API from '../../services/api';
+          ^
+4: import Pusher from 'pusher-js';
+[31m
+    at getRollupError (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17022:16)
+    at Module.traceVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17478:29)
+    at ModuleScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:15141:39)
+    at FunctionScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at ReturnValueScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at BlockScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)[39m
+
+❌ Not (solely) src/components/admin/SystemHealth.jsx : Command failed: npx vite build
+[31m✗[39m Build failed in 4.42s
+[31merror during build:
+[31msrc/components/ui/NotificationBell.jsx (3:7): "default" is not exported by "src/services/api.js", imported by "src/components/ui/NotificationBell.jsx".[31m
+file: [36mC:/Users/Asus/Desktop/BloodConnect/frontend/src/components/ui/NotificationBell.jsx:3:7[31m
+[33m
+1: import React, { useState, useEffect, useRef } from 'react';
+2: import { Bell, Check, Clock, X, Info, Megaphone, Droplets, MapPin, Award } from 'lucide-react';
+3: import API from '../../services/api';
+          ^
+4: import Pusher from 'pusher-js';
+[31m
+    at getRollupError (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17022:16)
+    at Module.traceVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17478:29)
+    at ModuleScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:15141:39)
+    at FunctionScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at ReturnValueScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at BlockScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)[39m
+
+❌ Not (solely) src/components/admin/UserManagement.jsx : Command failed: npx vite build
+[31m✗[39m Build failed in 4.21s
+[31merror during build:
+[31msrc/components/ui/NotificationBell.jsx (3:7): "default" is not exported by "src/services/api.js", imported by "src/components/ui/NotificationBell.jsx".[31m
+file: [36mC:/Users/Asus/Desktop/BloodConnect/frontend/src/components/ui/NotificationBell.jsx:3:7[31m
+[33m
+1: import React, { useState, useEffect, useRef } from 'react';
+2: import { Bell, Check, Clock, X, Info, Megaphone, Droplets, MapPin, Award } from 'lucide-react';
+3: import API from '../../services/api';
+          ^
+4: import Pusher from 'pusher-js';
+[31m
+    at getRollupError (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17022:16)
+    at Module.traceVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17478:29)
+    at ModuleScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:15141:39)
+    at FunctionScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at ReturnValueScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at BlockScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)[39m
+
+❌ Not (solely) src/components/dashboard/DashboardHome.jsx : Command failed: npx vite build
+[31m✗[39m Build failed in 4.20s
+[31merror during build:
+[31msrc/components/ui/NotificationBell.jsx (3:7): "default" is not exported by "src/services/api.js", imported by "src/components/ui/NotificationBell.jsx".[31m
+file: [36mC:/Users/Asus/Desktop/BloodConnect/frontend/src/components/ui/NotificationBell.jsx:3:7[31m
+[33m
+1: import React, { useState, useEffect, useRef } from 'react';
+2: import { Bell, Check, Clock, X, Info, Megaphone, Droplets, MapPin, Award } from 'lucide-react';
+3: import API from '../../services/api';
+          ^
+4: import Pusher from 'pusher-js';
+[31m
+    at getRollupError (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17022:16)
+    at Module.traceVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17478:29)
+    at ModuleScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:15141:39)
+    at FunctionScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at ReturnValueScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at BlockScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)[39m
+
+❌ Not (solely) src/components/dashboard/HealthWallet.jsx : Command failed: npx vite build
+[31m✗[39m Build failed in 4.15s
+[31merror during build:
+[31msrc/components/ui/NotificationBell.jsx (3:7): "default" is not exported by "src/services/api.js", imported by "src/components/ui/NotificationBell.jsx".[31m
+file: [36mC:/Users/Asus/Desktop/BloodConnect/frontend/src/components/ui/NotificationBell.jsx:3:7[31m
+[33m
+1: import React, { useState, useEffect, useRef } from 'react';
+2: import { Bell, Check, Clock, X, Info, Megaphone, Droplets, MapPin, Award } from 'lucide-react';
+3: import API from '../../services/api';
+          ^
+4: import Pusher from 'pusher-js';
+[31m
+    at getRollupError (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17022:16)
+    at Module.traceVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17478:29)
+    at ModuleScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:15141:39)
+    at FunctionScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at ReturnValueScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at BlockScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)[39m
+
+❌ Not (solely) src/components/dashboard/LiveMap.jsx : Command failed: npx vite build
+[31m✗[39m Build failed in 3.55s
+[31merror during build:
+[31msrc/components/ui/NotificationBell.jsx (3:7): "default" is not exported by "src/services/api.js", imported by "src/components/ui/NotificationBell.jsx".[31m
+file: [36mC:/Users/Asus/Desktop/BloodConnect/frontend/src/components/ui/NotificationBell.jsx:3:7[31m
+[33m
+1: import React, { useState, useEffect, useRef } from 'react';
+2: import { Bell, Check, Clock, X, Info, Megaphone, Droplets, MapPin, Award } from 'lucide-react';
+3: import API from '../../services/api';
+          ^
+4: import Pusher from 'pusher-js';
+[31m
+    at getRollupError (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17022:16)
+    at Module.traceVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17478:29)
+    at ModuleScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:15141:39)
+    at FunctionScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at ReturnValueScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at BlockScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)[39m
+
+❌ Not (solely) src/components/dashboard/QuickActionButton.jsx : Command failed: npx vite build
+[31m✗[39m Build failed in 4.21s
+[31merror during build:
+[31msrc/components/ui/NotificationBell.jsx (3:7): "default" is not exported by "src/services/api.js", imported by "src/components/ui/NotificationBell.jsx".[31m
+file: [36mC:/Users/Asus/Desktop/BloodConnect/frontend/src/components/ui/NotificationBell.jsx:3:7[31m
+[33m
+1: import React, { useState, useEffect, useRef } from 'react';
+2: import { Bell, Check, Clock, X, Info, Megaphone, Droplets, MapPin, Award } from 'lucide-react';
+3: import API from '../../services/api';
+          ^
+4: import Pusher from 'pusher-js';
+[31m
+    at getRollupError (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17022:16)
+    at Module.traceVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17478:29)
+    at ModuleScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:15141:39)
+    at FunctionScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at ReturnValueScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at BlockScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)[39m
+
+❌ Not (solely) src/components/dashboard/Settings.jsx : Command failed: npx vite build
+[31m✗[39m Build failed in 4.47s
+[31merror during build:
+[31msrc/components/ui/NotificationBell.jsx (3:7): "default" is not exported by "src/services/api.js", imported by "src/components/ui/NotificationBell.jsx".[31m
+file: [36mC:/Users/Asus/Desktop/BloodConnect/frontend/src/components/ui/NotificationBell.jsx:3:7[31m
+[33m
+1: import React, { useState, useEffect, useRef } from 'react';
+2: import { Bell, Check, Clock, X, Info, Megaphone, Droplets, MapPin, Award } from 'lucide-react';
+3: import API from '../../services/api';
+          ^
+4: import Pusher from 'pusher-js';
+[31m
+    at getRollupError (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17022:16)
+    at Module.traceVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17478:29)
+    at ModuleScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:15141:39)
+    at FunctionScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at ReturnValueScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at BlockScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)[39m
+
+❌ Not (solely) src/components/dashboard/Sidebar.jsx : Command failed: npx vite build
+[31m✗[39m Build failed in 4.28s
+[31merror during build:
+[31msrc/components/ui/NotificationBell.jsx (3:7): "default" is not exported by "src/services/api.js", imported by "src/components/ui/NotificationBell.jsx".[31m
+file: [36mC:/Users/Asus/Desktop/BloodConnect/frontend/src/components/ui/NotificationBell.jsx:3:7[31m
+[33m
+1: import React, { useState, useEffect, useRef } from 'react';
+2: import { Bell, Check, Clock, X, Info, Megaphone, Droplets, MapPin, Award } from 'lucide-react';
+3: import API from '../../services/api';
+          ^
+4: import Pusher from 'pusher-js';
+[31m
+    at getRollupError (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17022:16)
+    at Module.traceVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17478:29)
+    at ModuleScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:15141:39)
+    at FunctionScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at ReturnValueScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at BlockScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)[39m
+
+❌ Not (solely) src/components/health/DonationTimeline.jsx : Command failed: npx vite build
+[31m✗[39m Build failed in 4.20s
+[31merror during build:
+[31msrc/components/ui/NotificationBell.jsx (3:7): "default" is not exported by "src/services/api.js", imported by "src/components/ui/NotificationBell.jsx".[31m
+file: [36mC:/Users/Asus/Desktop/BloodConnect/frontend/src/components/ui/NotificationBell.jsx:3:7[31m
+[33m
+1: import React, { useState, useEffect, useRef } from 'react';
+2: import { Bell, Check, Clock, X, Info, Megaphone, Droplets, MapPin, Award } from 'lucide-react';
+3: import API from '../../services/api';
+          ^
+4: import Pusher from 'pusher-js';
+[31m
+    at getRollupError (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17022:16)
+    at Module.traceVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17478:29)
+    at ModuleScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:15141:39)
+    at FunctionScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at ReturnValueScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at BlockScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)[39m
+
+❌ Not (solely) src/components/map/DonorMarker.jsx : Command failed: npx vite build
+[31m✗[39m Build failed in 4.13s
+[31merror during build:
+[31msrc/components/ui/NotificationBell.jsx (3:7): "default" is not exported by "src/services/api.js", imported by "src/components/ui/NotificationBell.jsx".[31m
+file: [36mC:/Users/Asus/Desktop/BloodConnect/frontend/src/components/ui/NotificationBell.jsx:3:7[31m
+[33m
+1: import React, { useState, useEffect, useRef } from 'react';
+2: import { Bell, Check, Clock, X, Info, Megaphone, Droplets, MapPin, Award } from 'lucide-react';
+3: import API from '../../services/api';
+          ^
+4: import Pusher from 'pusher-js';
+[31m
+    at getRollupError (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17022:16)
+    at Module.traceVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17478:29)
+    at ModuleScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:15141:39)
+    at FunctionScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at ReturnValueScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at BlockScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)[39m
+
+❌ Not (solely) src/components/map/EmergencyMap.jsx : Command failed: npx vite build
+[31m✗[39m Build failed in 3.61s
+[31merror during build:
+[31msrc/components/ui/NotificationBell.jsx (3:7): "default" is not exported by "src/services/api.js", imported by "src/components/ui/NotificationBell.jsx".[31m
+file: [36mC:/Users/Asus/Desktop/BloodConnect/frontend/src/components/ui/NotificationBell.jsx:3:7[31m
+[33m
+1: import React, { useState, useEffect, useRef } from 'react';
+2: import { Bell, Check, Clock, X, Info, Megaphone, Droplets, MapPin, Award } from 'lucide-react';
+3: import API from '../../services/api';
+          ^
+4: import Pusher from 'pusher-js';
+[31m
+    at getRollupError (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17022:16)
+    at Module.traceVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17478:29)
+    at ModuleScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:15141:39)
+    at FunctionScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at ReturnValueScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at BlockScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)[39m
+
+❌ Not (solely) src/components/map/FilterDrawer.jsx : Command failed: npx vite build
+[31m✗[39m Build failed in 4.19s
+[31merror during build:
+[31msrc/components/ui/NotificationBell.jsx (3:7): "default" is not exported by "src/services/api.js", imported by "src/components/ui/NotificationBell.jsx".[31m
+file: [36mC:/Users/Asus/Desktop/BloodConnect/frontend/src/components/ui/NotificationBell.jsx:3:7[31m
+[33m
+1: import React, { useState, useEffect, useRef } from 'react';
+2: import { Bell, Check, Clock, X, Info, Megaphone, Droplets, MapPin, Award } from 'lucide-react';
+3: import API from '../../services/api';
+          ^
+4: import Pusher from 'pusher-js';
+[31m
+    at getRollupError (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17022:16)
+    at Module.traceVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17478:29)
+    at ModuleScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:15141:39)
+    at FunctionScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at ReturnValueScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at BlockScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)[39m
+
+❌ Not (solely) src/components/map/HeatmapToggle.jsx : Command failed: npx vite build
+[31m✗[39m Build failed in 4.45s
+[31merror during build:
+[31msrc/components/ui/NotificationBell.jsx (3:7): "default" is not exported by "src/services/api.js", imported by "src/components/ui/NotificationBell.jsx".[31m
+file: [36mC:/Users/Asus/Desktop/BloodConnect/frontend/src/components/ui/NotificationBell.jsx:3:7[31m
+[33m
+1: import React, { useState, useEffect, useRef } from 'react';
+2: import { Bell, Check, Clock, X, Info, Megaphone, Droplets, MapPin, Award } from 'lucide-react';
+3: import API from '../../services/api';
+          ^
+4: import Pusher from 'pusher-js';
+[31m
+    at getRollupError (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17022:16)
+    at Module.traceVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17478:29)
+    at ModuleScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:15141:39)
+    at FunctionScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at ReturnValueScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at BlockScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)[39m
+
+❌ Not (solely) src/components/map/RadiusOverlay.jsx : Command failed: npx vite build
+[31m✗[39m Build failed in 4.11s
+[31merror during build:
+[31msrc/components/ui/NotificationBell.jsx (3:7): "default" is not exported by "src/services/api.js", imported by "src/components/ui/NotificationBell.jsx".[31m
+file: [36mC:/Users/Asus/Desktop/BloodConnect/frontend/src/components/ui/NotificationBell.jsx:3:7[31m
+[33m
+1: import React, { useState, useEffect, useRef } from 'react';
+2: import { Bell, Check, Clock, X, Info, Megaphone, Droplets, MapPin, Award } from 'lucide-react';
+3: import API from '../../services/api';
+          ^
+4: import Pusher from 'pusher-js';
+[31m
+    at getRollupError (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17022:16)
+    at Module.traceVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17478:29)
+    at ModuleScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:15141:39)
+    at FunctionScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at ReturnValueScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at BlockScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)[39m
+
+❌ Not (solely) src/components/map/RequestMarker.jsx : Command failed: npx vite build
+[31m✗[39m Build failed in 4.32s
+[31merror during build:
+[31msrc/components/ui/NotificationBell.jsx (3:7): "default" is not exported by "src/services/api.js", imported by "src/components/ui/NotificationBell.jsx".[31m
+file: [36mC:/Users/Asus/Desktop/BloodConnect/frontend/src/components/ui/NotificationBell.jsx:3:7[31m
+[33m
+1: import React, { useState, useEffect, useRef } from 'react';
+2: import { Bell, Check, Clock, X, Info, Megaphone, Droplets, MapPin, Award } from 'lucide-react';
+3: import API from '../../services/api';
+          ^
+4: import Pusher from 'pusher-js';
+[31m
+    at getRollupError (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17022:16)
+    at Module.traceVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17478:29)
+    at ModuleScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:15141:39)
+    at FunctionScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at ReturnValueScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at BlockScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)[39m
+
+❌ Not (solely) src/components/map/TimelineSlider.jsx : Command failed: npx vite build
+[31m✗[39m Build failed in 4.03s
+[31merror during build:
+[31msrc/components/ui/NotificationBell.jsx (3:7): "default" is not exported by "src/services/api.js", imported by "src/components/ui/NotificationBell.jsx".[31m
+file: [36mC:/Users/Asus/Desktop/BloodConnect/frontend/src/components/ui/NotificationBell.jsx:3:7[31m
+[33m
+1: import React, { useState, useEffect, useRef } from 'react';
+2: import { Bell, Check, Clock, X, Info, Megaphone, Droplets, MapPin, Award } from 'lucide-react';
+3: import API from '../../services/api';
+          ^
+4: import Pusher from 'pusher-js';
+[31m
+    at getRollupError (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17022:16)
+    at Module.traceVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17478:29)
+    at ModuleScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:15141:39)
+    at FunctionScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at ReturnValueScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at BlockScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)[39m
+
+❌ Not (solely) src/components/map/TopStatsBar.jsx : Command failed: npx vite build
+[31m✗[39m Build failed in 4.02s
+[31merror during build:
+[31msrc/components/ui/NotificationBell.jsx (3:7): "default" is not exported by "src/services/api.js", imported by "src/components/ui/NotificationBell.jsx".[31m
+file: [36mC:/Users/Asus/Desktop/BloodConnect/frontend/src/components/ui/NotificationBell.jsx:3:7[31m
+[33m
+1: import React, { useState, useEffect, useRef } from 'react';
+2: import { Bell, Check, Clock, X, Info, Megaphone, Droplets, MapPin, Award } from 'lucide-react';
+3: import API from '../../services/api';
+          ^
+4: import Pusher from 'pusher-js';
+[31m
+    at getRollupError (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17022:16)
+    at Module.traceVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17478:29)
+    at ModuleScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:15141:39)
+    at FunctionScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at ReturnValueScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at BlockScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)[39m
+
+❌ Not (solely) src/components/receiver/FindDonorsReceiver.jsx : Command failed: npx vite build
+[31m✗[39m Build failed in 4.42s
+[31merror during build:
+[31msrc/components/ui/NotificationBell.jsx (3:7): "default" is not exported by "src/services/api.js", imported by "src/components/ui/NotificationBell.jsx".[31m
+file: [36mC:/Users/Asus/Desktop/BloodConnect/frontend/src/components/ui/NotificationBell.jsx:3:7[31m
+[33m
+1: import React, { useState, useEffect, useRef } from 'react';
+2: import { Bell, Check, Clock, X, Info, Megaphone, Droplets, MapPin, Award } from 'lucide-react';
+3: import API from '../../services/api';
+          ^
+4: import Pusher from 'pusher-js';
+[31m
+    at getRollupError (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17022:16)
+    at Module.traceVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17478:29)
+    at ModuleScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:15141:39)
+    at FunctionScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at ReturnValueScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at BlockScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)[39m
+
+❌ Not (solely) src/components/receiver/GratitudeBoard.jsx : Command failed: npx vite build
+[31m✗[39m Build failed in 4.51s
+[31merror during build:
+[31msrc/components/ui/NotificationBell.jsx (3:7): "default" is not exported by "src/services/api.js", imported by "src/components/ui/NotificationBell.jsx".[31m
+file: [36mC:/Users/Asus/Desktop/BloodConnect/frontend/src/components/ui/NotificationBell.jsx:3:7[31m
+[33m
+1: import React, { useState, useEffect, useRef } from 'react';
+2: import { Bell, Check, Clock, X, Info, Megaphone, Droplets, MapPin, Award } from 'lucide-react';
+3: import API from '../../services/api';
+          ^
+4: import Pusher from 'pusher-js';
+[31m
+    at getRollupError (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17022:16)
+    at Module.traceVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17478:29)
+    at ModuleScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:15141:39)
+    at FunctionScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at ReturnValueScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at BlockScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)[39m
+
+❌ Not (solely) src/components/receiver/MyRequests.jsx : Command failed: npx vite build
+[31m✗[39m Build failed in 4.19s
+[31merror during build:
+[31msrc/components/ui/NotificationBell.jsx (3:7): "default" is not exported by "src/services/api.js", imported by "src/components/ui/NotificationBell.jsx".[31m
+file: [36mC:/Users/Asus/Desktop/BloodConnect/frontend/src/components/ui/NotificationBell.jsx:3:7[31m
+[33m
+1: import React, { useState, useEffect, useRef } from 'react';
+2: import { Bell, Check, Clock, X, Info, Megaphone, Droplets, MapPin, Award } from 'lucide-react';
+3: import API from '../../services/api';
+          ^
+4: import Pusher from 'pusher-js';
+[31m
+    at getRollupError (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17022:16)
+    at Module.traceVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17478:29)
+    at ModuleScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:15141:39)
+    at FunctionScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at ReturnValueScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at BlockScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)[39m
+
+❌ Not (solely) src/components/receiver/ReceiverAnalytics.jsx : Command failed: npx vite build
+[31m✗[39m Build failed in 4.14s
+[31merror during build:
+[31msrc/components/ui/NotificationBell.jsx (3:7): "default" is not exported by "src/services/api.js", imported by "src/components/ui/NotificationBell.jsx".[31m
+file: [36mC:/Users/Asus/Desktop/BloodConnect/frontend/src/components/ui/NotificationBell.jsx:3:7[31m
+[33m
+1: import React, { useState, useEffect, useRef } from 'react';
+2: import { Bell, Check, Clock, X, Info, Megaphone, Droplets, MapPin, Award } from 'lucide-react';
+3: import API from '../../services/api';
+          ^
+4: import Pusher from 'pusher-js';
+[31m
+    at getRollupError (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17022:16)
+    at Module.traceVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17478:29)
+    at ModuleScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:15141:39)
+    at FunctionScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at ReturnValueScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at BlockScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)[39m
+
+❌ Not (solely) src/components/receiver/ReceiverDashboardHome.jsx : Command failed: npx vite build
+[31m✗[39m Build failed in 4.23s
+[31merror during build:
+[31msrc/components/ui/NotificationBell.jsx (3:7): "default" is not exported by "src/services/api.js", imported by "src/components/ui/NotificationBell.jsx".[31m
+file: [36mC:/Users/Asus/Desktop/BloodConnect/frontend/src/components/ui/NotificationBell.jsx:3:7[31m
+[33m
+1: import React, { useState, useEffect, useRef } from 'react';
+2: import { Bell, Check, Clock, X, Info, Megaphone, Droplets, MapPin, Award } from 'lucide-react';
+3: import API from '../../services/api';
+          ^
+4: import Pusher from 'pusher-js';
+[31m
+    at getRollupError (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17022:16)
+    at Module.traceVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17478:29)
+    at ModuleScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:15141:39)
+    at FunctionScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at ReturnValueScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at BlockScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)[39m
+
+❌ Not (solely) src/components/receiver/ReceiverTimeline.jsx : Command failed: npx vite build
+[31m✗[39m Build failed in 4.21s
+[31merror during build:
+[31msrc/components/ui/NotificationBell.jsx (3:7): "default" is not exported by "src/services/api.js", imported by "src/components/ui/NotificationBell.jsx".[31m
+file: [36mC:/Users/Asus/Desktop/BloodConnect/frontend/src/components/ui/NotificationBell.jsx:3:7[31m
+[33m
+1: import React, { useState, useEffect, useRef } from 'react';
+2: import { Bell, Check, Clock, X, Info, Megaphone, Droplets, MapPin, Award } from 'lucide-react';
+3: import API from '../../services/api';
+          ^
+4: import Pusher from 'pusher-js';
+[31m
+    at getRollupError (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17022:16)
+    at Module.traceVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17478:29)
+    at ModuleScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:15141:39)
+    at FunctionScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at ReturnValueScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at BlockScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)[39m
+
+❌ Not (solely) src/components/receiver/ReceiverWallet.jsx : Command failed: npx vite build
+[31m✗[39m Build failed in 4.10s
+[31merror during build:
+[31msrc/components/ui/NotificationBell.jsx (3:7): "default" is not exported by "src/services/api.js", imported by "src/components/ui/NotificationBell.jsx".[31m
+file: [36mC:/Users/Asus/Desktop/BloodConnect/frontend/src/components/ui/NotificationBell.jsx:3:7[31m
+[33m
+1: import React, { useState, useEffect, useRef } from 'react';
+2: import { Bell, Check, Clock, X, Info, Megaphone, Droplets, MapPin, Award } from 'lucide-react';
+3: import API from '../../services/api';
+          ^
+4: import Pusher from 'pusher-js';
+[31m
+    at getRollupError (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17022:16)
+    at Module.traceVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17478:29)
+    at ModuleScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:15141:39)
+    at FunctionScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at ReturnValueScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at BlockScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)[39m
+
+❌ Not (solely) src/components/ui/NotificationBell.jsx : Command failed: npx vite build
+[31m✗[39m Build failed in 4.56s
+[31merror during build:
+[31msrc/components/admin/UserManagement.jsx (7:87): "exportAdminUsersCSV" is not exported by "src/services/api.js", imported by "src/components/admin/UserManagement.jsx".[31m
+file: [36mC:/Users/Asus/Desktop/BloodConnect/frontend/src/components/admin/UserManagement.jsx:7:87[31m
+[33m
+5: } from 'lucide-react';
+6: import {
+7:     getAdminUsers, adminUpdateUser, adminDeleteUser, adminToggleBan, adminPromoteUser, exportAdminUsersCSV
+                                                                                          ^
+8: } from '../../services/api';
+[31m
+    at getRollupError (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17022:16)
+    at Module.traceVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17478:29)
+    at ModuleScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:15141:39)
+    at FunctionScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at ReturnValueScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at BlockScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)[39m
+
+❌ Not (solely) src/context/AuthContext.jsx : Command failed: npx vite build
+[31m✗[39m Build failed in 4.04s
+[31merror during build:
+[31msrc/routes/ProtectedRoute.jsx (2:9): "useAuth" is not exported by "src/context/AuthContext.jsx", imported by "src/routes/ProtectedRoute.jsx".[31m
+file: [36mC:/Users/Asus/Desktop/BloodConnect/frontend/src/routes/ProtectedRoute.jsx:2:9[31m
+[33m
+1: import { Navigate, Outlet } from "react-router-dom";
+2: import { useAuth } from "../context/AuthContext";
+            ^
+3: 
+4: const ProtectedRoute = () => {
+[31m
+    at getRollupError (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17022:16)
+    at Module.traceVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17478:29)
+    at ModuleScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:15141:39)
+    at ReturnValueScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at Identifier.bind (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5462:40)
+    at CallExpression.bind (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:2829:23)
+    at CallExpression.bind (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:12172:15)[39m
+
+❌ Not (solely) src/pages/AdminLogin.jsx : Command failed: npx vite build
+[31m✗[39m Build failed in 4.16s
+[31merror during build:
+[31msrc/components/ui/NotificationBell.jsx (3:7): "default" is not exported by "src/services/api.js", imported by "src/components/ui/NotificationBell.jsx".[31m
+file: [36mC:/Users/Asus/Desktop/BloodConnect/frontend/src/components/ui/NotificationBell.jsx:3:7[31m
+[33m
+1: import React, { useState, useEffect, useRef } from 'react';
+2: import { Bell, Check, Clock, X, Info, Megaphone, Droplets, MapPin, Award } from 'lucide-react';
+3: import API from '../../services/api';
+          ^
+4: import Pusher from 'pusher-js';
+[31m
+    at getRollupError (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17022:16)
+    at Module.traceVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17478:29)
+    at ModuleScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:15141:39)
+    at FunctionScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at ReturnValueScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at BlockScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)[39m
+
+❌ Not (solely) src/pages/Chat.jsx : Command failed: npx vite build
+[31m✗[39m Build failed in 4.23s
+[31merror during build:
+[31msrc/components/ui/NotificationBell.jsx (3:7): "default" is not exported by "src/services/api.js", imported by "src/components/ui/NotificationBell.jsx".[31m
+file: [36mC:/Users/Asus/Desktop/BloodConnect/frontend/src/components/ui/NotificationBell.jsx:3:7[31m
+[33m
+1: import React, { useState, useEffect, useRef } from 'react';
+2: import { Bell, Check, Clock, X, Info, Megaphone, Droplets, MapPin, Award } from 'lucide-react';
+3: import API from '../../services/api';
+          ^
+4: import Pusher from 'pusher-js';
+[31m
+    at getRollupError (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17022:16)
+    at Module.traceVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17478:29)
+    at ModuleScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:15141:39)
+    at FunctionScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at ReturnValueScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at BlockScope.findVariable (file:///C:/Users/Asus/Desktop/BloodConnect/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)[39m
+
+✅ BUG IN: src/pages/Dashboard.jsx
+✅ BUG IN: src/routes/AppRouter.jsx

@@ -58,7 +58,7 @@ const refreshAccessToken = async () => {
 };
 
 // ── Core fetch wrapper (handles 401 → refresh → retry) ────────────────
-const apiFetch = async (endpoint, options = {}, retry = true) => {
+export const apiFetch = async (endpoint, options = {}, retry = true) => {
     // Before making any auth request, check if token is expired
     // Exclude login/register/refresh-token endpoints from this check
     if (!endpoint.includes("/auth/login") && !endpoint.includes("/auth/register") && !endpoint.includes("/auth/refresh-token")) {
@@ -538,6 +538,42 @@ export const adminPromoteUser = async (id, role) => {
     });
 };
 
+/** GET /admin/users/export — Export users to CSV (Client-side proxy) */
+export const exportAdminUsersCSV = async () => {
+    try {
+        const res = await apiFetch(`/admin/users?limit=1000`, { method: "GET", headers: authHeaders() });
+        if (!res.success) throw new Error("Failed to fetch users");
+        
+        const users = res.data.users;
+        const headers = ["ID", "Name", "Email", "Phone", "Blood Group", "Role", "Banned", "Created At"];
+        const csvRows = [
+            headers.join(','),
+            ...users.map(u => [
+                u._id, 
+                `"${u.name}"`, 
+                u.email, 
+                u.phone || '', 
+                u.bloodGroup || '', 
+                u.role, 
+                u.isBanned, 
+                new Date(u.createdAt).toISOString()
+            ].join(','))
+        ];
+        
+        const blob = new Blob([csvRows.join('\n')], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `bloodconnect_users_${new Date().toISOString().split('T')[0]}.csv`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+        return { success: true };
+    } catch (error) {
+        console.error("Export CSV Error:", error);
+        return { success: false, message: error.message };
+    }
+};
+
 /** GET /admin/requests — All requests */
 export const getAdminRequests = async (params = {}) => {
     const qs = new URLSearchParams(params).toString();
@@ -561,6 +597,43 @@ export const adminForceFulfill = async (id, donorId) => {
     return apiFetch(`/admin/requests/${id}/fulfill`, {
         method: "POST", headers: authHeaders(), body: JSON.stringify({ donorId }),
     });
+};
+
+/** GET /admin/requests/export — Export requests to CSV (Client-side proxy) */
+export const exportAdminRequestsCSV = async () => {
+    try {
+        const res = await apiFetch(`/admin/requests?limit=1000`, { method: "GET", headers: authHeaders() });
+        if (!res.success) throw new Error("Failed to fetch requests");
+        
+        const requests = res.data.requests;
+        const headers = ["ID", "Patient", "Blood Group", "Units", "Hospital", "City", "Urgent", "Status", "Created At"];
+        const csvRows = [
+            headers.join(','),
+            ...requests.map(r => [
+                r._id, 
+                `"${r.patientName}"`, 
+                r.bloodGroup, 
+                r.unitsRequired,
+                `"${r.hospitalName}"`,
+                `"${r.city}"`,
+                r.isUrgent,
+                r.status,
+                new Date(r.createdAt).toISOString()
+            ].join(','))
+        ];
+        
+        const blob = new Blob([csvRows.join('\n')], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `bloodconnect_requests_${new Date().toISOString().split('T')[0]}.csv`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+        return { success: true };
+    } catch (error) {
+        console.error("Export CSV Error:", error);
+        return { success: false, message: error.message };
+    }
 };
 
 /** GET /admin/camps — All camps */
@@ -605,7 +678,7 @@ export const getAdminRevenue = async (period = 30) => {
 };
 
 /** GET /admin/audit-logs — Audit trail */
-export const getSystemLogs = async (params = {}) => {
+export const getAuditLogs = async (params = {}) => {
     const qs = new URLSearchParams(params).toString();
     return apiFetch(`/admin/logs?${qs}`, { method: "GET", headers: authHeaders() });
 };

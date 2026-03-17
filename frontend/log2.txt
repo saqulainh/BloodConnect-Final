@@ -1,0 +1,15 @@
+e69370c restore active donors for test
+44a235e feat: Initialize the BloodConnect full-stack application, including backend API, frontend UI, and Dockerization, with initial admin request operations.
+0296b88 feat: Implement donation controller, request and inventory models, and new admin/dashboard UI components.
+20b9121 feat: Add dashboard page, health components, SOS route, backend validation middleware, new dependencies, and screenshots.
+34e5af0 feat: Initialize core backend Express application with API routes and implement multi-step user registration.
+50825d2 feat: Initialize backend and frontend package configurations and update project metadata.
+5a42f16 feat: Add proximity controller and install associated node modules.
+4df8545 feat: Implement payment integration, user dashboard components, and analytics backend.
+35ac7f0 feat: complete roadmap features (maps, automated alerts, camps, badges, readme)
+7aa4fa9 Final Dashboard features, fixes, and updates
+2e33d97 feat: Implement initial full-stack application structure including user authentication, chat functionality, and dashboard analytics.
+18247c0 feat: implement aadhaar verification and auth updates
+c549db3 feat: Add StatusBadge component and install project dependencies.
+3619e09 feat: Restored legacy Dashboard design, fixed registration flow, added Chat/Profile pages
+cc51dd9 Fix login page: real API call, remove Aadhaar field, React Router navigation, rememberMe session handling, add BrowserRouter to App

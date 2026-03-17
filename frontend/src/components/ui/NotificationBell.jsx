@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Bell, Check, Clock, X, Info, Megaphone, Droplets, MapPin, Award } from 'lucide-react';
-import API from '../../services/api';
+import * as API from '../../services/api';
 import Pusher from 'pusher-js';
 
 const PUSHER_KEY = import.meta.env.VITE_PUSHER_KEY;
