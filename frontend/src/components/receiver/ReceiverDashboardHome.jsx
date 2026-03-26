@@ -13,44 +13,38 @@ const ReceiverDashboardHome = ({ setActiveTab, user }) => {
     const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
     const firstName = user?.name ? user.name.split(' ')[0] : 'there';
 
-    const [stats, setStats] = useState({
-        totalRequests: "...",
-        activeRequests: "...",
-        fulfilledRequests: "...",
-        avgResponseHours: "...",
-        fulfillmentRate: 0,
-        recentActivity: [],
-    });
-    const [showDonateModal, setShowDonateModal] = useState(false);
-    const [showAllActivity, setShowAllActivity] = useState(false);
+    // TEMPORARY MOCK FOR SCREENSHOTS
+    const stats = {
+        totalRequests: 8,
+        activeRequests: 3,
+        fulfilledRequests: 5,
+        avgResponseHours: 1.2,
+        fulfillmentRate: 62.5,
+        recentActivity: [
+            { _id: 1, type: "FULFILLED", details: "Emergency A+ request fulfilled", time: "2h ago" },
+            { _id: 2, type: "MATCHED", details: "Donor found for AB- request", time: "5h ago" }
+        ],
+    };
 
-    useEffect(() => {
-        const fetchStats = async () => {
-            try {
-                const res = await getReceiverStats();
-                if (res?.success) setStats(res.data);
-            } catch (err) { console.error("Failed to fetch receiver stats", err); }
-        };
-        fetchStats();
-    }, []);
+    const fetchStats = () => {};
 
     return (
         <div className="space-y-6 animate-in fade-in duration-500">
 
-            {/* ── Greeting Banner (Teal/Blue for Receiver) ── */}
-            <div className="bg-gradient-to-br from-red-600 to-blue-800 rounded-3xl p-6 lg:p-8 text-white shadow-xl shadow-blue-200/40 relative overflow-hidden">
+            {/* ── Greeting Banner (Red/Rose for consistency) ── */}
+            <div className="bg-gradient-to-br from-red-600 to-rose-800 rounded-3xl p-6 lg:p-8 text-white shadow-xl shadow-red-200/40 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/3 pointer-events-none" />
-                <div className="absolute bottom-0 left-1/2 w-48 h-48 bg-blue-900/30 rounded-full translate-y-1/2 pointer-events-none" />
+                <div className="absolute bottom-0 left-1/2 w-48 h-48 bg-red-900/30 rounded-full translate-y-1/2 pointer-events-none" />
                 <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
                     <div>
-                        <p className="text-blue-200 text-sm font-bold uppercase tracking-widest mb-1 flex items-center gap-2">
+                        <p className="text-red-100 text-sm font-bold uppercase tracking-widest mb-1 flex items-center gap-2">
                             <span className="inline-block w-2 h-2 bg-rose-400 rounded-full animate-pulse" />
                             {greeting}
                         </p>
                         <h2 className="text-2xl lg:text-3xl font-black tracking-tight mb-2">
-                            {firstName}! {user?.bloodGroup && <span className="text-blue-200">({user.bloodGroup})</span>}
+                            {firstName}! {user?.bloodGroup && <span className="text-red-100">({user.bloodGroup})</span>}
                         </h2>
-                        <p className="text-blue-200 text-sm font-medium">
+                        <p className="text-red-100 text-sm font-medium">
                             You have <span className="text-white font-black">{stats.activeRequests} active requests</span> — we're finding donors for you.
                         </p>
                     </div>
@@ -60,7 +54,7 @@ const ReceiverDashboardHome = ({ setActiveTab, user }) => {
                             🩸 My Requests
                         </button>
                         <button onClick={() => setActiveTab('find-donors')}
-                            className="px-5 py-2.5 bg-blue-700/60 text-white text-sm font-bold rounded-xl hover:bg-blue-700 transition-colors border border-blue-500/40 flex items-center gap-2 whitespace-nowrap">
+                            className="px-5 py-2.5 bg-red-700/60 text-white text-sm font-bold rounded-xl hover:bg-red-700 transition-colors border border-red-500/40 flex items-center gap-2 whitespace-nowrap">
                             🔍 Find Donors
                         </button>
                     </div>
@@ -72,7 +66,7 @@ const ReceiverDashboardHome = ({ setActiveTab, user }) => {
                 {[
                     { label: 'Active Requests', value: stats.activeRequests, icon: Ticket, color: 'text-red-600', bg: 'bg-red-50' },
                     { label: 'Fulfilled', value: stats.fulfilledRequests, icon: CheckCircle2, color: 'text-rose-600', bg: 'bg-rose-50' },
-                    { label: 'Units Received', value: stats.totalUnitsFulfilled || 0, icon: Droplets, color: 'text-blue-600', bg: 'bg-blue-50' },
+                    { label: 'Units Received', value: stats.totalUnitsFulfilled || 0, icon: Droplets, color: 'text-red-800', bg: 'bg-red-50' },
                     { label: 'Avg Response', value: `${stats.avgResponseHours || 0}h`, icon: Clock, color: 'text-amber-600', bg: 'bg-amber-50' },
                 ].map((stat, idx) => (
                     <div key={idx} className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between hover:shadow-md transition-shadow">
@@ -146,7 +140,7 @@ const ReceiverDashboardHome = ({ setActiveTab, user }) => {
                     {/* ── Quick Actions ── */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <QuickActionButton icon={Plus} label="New Request" onClick={() => setActiveTab('my-requests')} colorClass="border-red-100 text-red-600 bg-red-50 hover:bg-red-100" />
-                        <QuickActionButton icon={AlertCircle} label="Find Donors" onClick={() => setActiveTab('find-donors')} colorClass="border-blue-100 text-blue-600 bg-blue-50 hover:bg-blue-100" />
+                        <QuickActionButton icon={AlertCircle} label="Find Donors" onClick={() => setActiveTab('find-donors')} colorClass="border-red-100 text-red-600 bg-red-50 hover:bg-red-100" />
                         <QuickActionButton icon={HeartIcon} label="Gratitude" onClick={() => setActiveTab('gratitude')} colorClass="border-pink-100 text-pink-600 bg-pink-50 hover:bg-pink-100" />
                         <QuickActionButton icon={Bell} label="SOS Alert" onClick={() => setActiveTab('sos')} colorClass="border-amber-100 text-amber-600 bg-amber-50 hover:bg-amber-100" />
                     </div>

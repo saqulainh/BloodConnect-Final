@@ -3,7 +3,7 @@ import { DollarSign, TrendingUp, Users, Loader2, AlertCircle, ArrowUpRight, Chec
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { getAdminRevenue } from '../../services/api';
 
-const COLORS = ['#10B981', '#EF4444', '#F59E0B', '#6366F1', '#EC4899'];
+const COLORS = ['#DC2626', '#EF4444', '#F87171', '#FCA5A5', '#FECACA'];
 
 const CustomTooltip = ({ active, payload, label }) => {
     if (!active || !payload?.length) return null;
@@ -37,7 +37,7 @@ export default function RevenuePanel() {
 
     if (loading) return (
         <div className="flex items-center justify-center py-32">
-            <Loader2 size={36} className="text-purple-500 animate-spin" />
+            <Loader2 size={36} className="text-red-500 animate-spin" />
         </div>
     );
 
@@ -63,7 +63,7 @@ export default function RevenuePanel() {
                 <div className="flex items-center gap-1 bg-white border border-slate-200 rounded-xl p-1">
                     {[7, 30, 90].map(p => (
                         <button key={p} onClick={() => setPeriod(p)}
-                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${period === p ? 'bg-purple-100 text-purple-700' : 'text-slate-500 hover:bg-slate-50'}`}>
+                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${period === p ? 'bg-red-100 text-red-700' : 'text-slate-500 hover:bg-slate-50'}`}>
                             {p}d
                         </button>
                     ))}
@@ -77,12 +77,13 @@ export default function RevenuePanel() {
                     <p className="text-[10px] font-black uppercase tracking-widest text-rose-200 mb-2">Total Revenue</p>
                     <p className="text-3xl font-black">{fmt(summary.totalRevenue)}</p>
                 </div>
-                <div className="bg-gradient-to-br from-blue-600 to-blue-800 text-white rounded-2xl p-5">
-                    <p className="text-[10px] font-black uppercase tracking-widest text-blue-200 mb-2">Transactions</p>
+                <div className="bg-gradient-to-br from-red-600 to-red-800 text-white rounded-2xl p-5 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-16 h-16 bg-white/5 rounded-full -translate-y-1/3 translate-x-1/3" />
+                    <p className="text-[10px] font-black uppercase tracking-widest text-red-100 mb-2">Transactions</p>
                     <p className="text-3xl font-black">{summary.totalTransactions}</p>
                 </div>
-                <div className="bg-gradient-to-br from-purple-600 to-purple-800 text-white rounded-2xl p-5">
-                    <p className="text-[10px] font-black uppercase tracking-widest text-purple-200 mb-2">Success Rate</p>
+                <div className="bg-gradient-to-br from-rose-600 to-rose-800 text-white rounded-2xl p-5">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-rose-200 mb-2">Success Rate</p>
                     <p className="text-3xl font-black">{summary.successRate}%</p>
                 </div>
             </div>
@@ -98,7 +99,7 @@ export default function RevenuePanel() {
                             <XAxis dataKey="date" tick={{ fontSize: 10, fill: '#94A3B8' }} tickFormatter={v => v.slice(5)} />
                             <YAxis tick={{ fontSize: 10, fill: '#94A3B8' }} width={40} tickFormatter={v => `₹${v}`} />
                             <Tooltip content={<CustomTooltip />} />
-                            <Bar dataKey="revenue" name="Revenue" fill="#10B981" radius={[6, 6, 0, 0]} />
+                            <Bar dataKey="revenue" name="Revenue" fill="#DC2626" radius={[6, 6, 0, 0]} />
                         </BarChart>
                     </ResponsiveContainer>
                 </div>

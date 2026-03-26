@@ -99,7 +99,7 @@ export default function UserManagement() {
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                 <div>
                     <h2 className="text-2xl font-black text-slate-800 flex items-center gap-2">
-                        <UserCog size={24} className="text-blue-600" /> User Management
+                        <UserCog size={24} className="text-red-600" /> User Management
                     </h2>
                     <p className="text-sm text-slate-400 mt-1">{pagination.total} total users on platform</p>
                 </div>
@@ -119,7 +119,7 @@ export default function UserManagement() {
                         <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                         <input value={search} onChange={e => setSearch(e.target.value)} onKeyDown={handleSearch}
                             placeholder="Search name, email..."
-                            className="pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-blue-500/20 w-64" />
+                            className="pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-red-500/20 w-64" />
                     </div>
                     <select value={roleFilter} onChange={e => setRoleFilter(e.target.value)}
                         className="px-3 py-2 bg-white border border-slate-200 rounded-xl text-sm font-bold focus:outline-none">
@@ -193,7 +193,7 @@ export default function UserManagement() {
                                         <td className="px-4 py-3 text-right">
                                             <div className="flex items-center justify-end gap-1.5">
                                                 <button onClick={() => { setEditUser(u); setEditForm({ name: u.name, email: u.email, phone: u.phone, bloodGroup: u.bloodGroup, city: u.city || '' }); }}
-                                                    className="p-1.5 hover:bg-blue-50 rounded-lg text-blue-500 transition-colors" title="Edit">
+                                                    className="p-1.5 hover:bg-red-50 rounded-lg text-red-500 transition-colors" title="Edit">
                                                     <Edit size={14} />
                                                 </button>
                                                 <button onClick={() => handleBan(u._id)} disabled={actionLoading === u._id}
@@ -249,7 +249,7 @@ export default function UserManagement() {
                                 <div key={field}>
                                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1 block">{field}</label>
                                     <input value={editForm[field] || ''} onChange={e => setEditForm({ ...editForm, [field]: e.target.value })}
-                                        className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-blue-500/20" />
+                                        className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-red-500/20" />
                                 </div>
                             ))}
                             <div>
@@ -260,7 +260,7 @@ export default function UserManagement() {
                                 </select>
                             </div>
                             <button onClick={handleEditSave} disabled={actionLoading === editUser._id}
-                                className="w-full py-3 bg-blue-600 text-white font-black rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-50">
+                                className="w-full py-3 bg-red-600 text-white font-black rounded-xl hover:bg-red-700 transition-colors disabled:opacity-50">
                                 {actionLoading === editUser._id ? 'Saving...' : 'Save Changes'}
                             </button>
                         </div>

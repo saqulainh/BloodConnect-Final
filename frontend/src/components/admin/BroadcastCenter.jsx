@@ -3,7 +3,7 @@ import { Send, Megaphone, Loader2, CheckCircle, AlertCircle, Users, Radio } from
 import { adminBroadcast } from '../../services/api';
 
 const TYPES = [
-    { value: 'info', label: '📢 Info', color: 'bg-blue-100 text-blue-700' },
+    { value: 'info', label: '📢 Info', color: 'bg-red-50 text-red-600' },
     { value: 'warning', label: '⚠️ Warning', color: 'bg-amber-100 text-amber-700' },
     { value: 'critical', label: '🚨 Critical', color: 'bg-red-100 text-red-700' },
     { value: 'success', label: '✅ Success', color: 'bg-rose-100 text-rose-700' },
@@ -42,7 +42,7 @@ export default function BroadcastCenter() {
         <div className="space-y-6 animate-in fade-in duration-500">
             <div>
                 <h2 className="text-2xl font-black text-slate-800 flex items-center gap-2">
-                    <Megaphone size={24} className="text-purple-600" /> Broadcast Center
+                    <Megaphone size={24} className="text-red-600" /> Broadcast Center
                 </h2>
                 <p className="text-sm text-slate-400 mt-1">Send announcements and alerts to users</p>
             </div>
@@ -50,7 +50,7 @@ export default function BroadcastCenter() {
             {/* Compose */}
             <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 space-y-5">
                 <div className="flex items-center gap-3 mb-2">
-                    <Radio size={18} className="text-purple-500" />
+                    <Radio size={18} className="text-red-500" />
                     <span className="text-sm font-black text-slate-800">Compose Broadcast</span>
                 </div>
 
@@ -58,14 +58,14 @@ export default function BroadcastCenter() {
                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1 block">Title</label>
                     <input value={title} onChange={e => setTitle(e.target.value)}
                         placeholder="e.g. Emergency Blood Drive — Mumbai"
-                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-purple-500/20" />
+                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-red-500/20" />
                 </div>
 
                 <div>
                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1 block">Message</label>
                     <textarea value={message} onChange={e => setMessage(e.target.value)} rows={4}
                         placeholder="Write your announcement here..."
-                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-purple-500/20 resize-none" />
+                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-red-500/20 resize-none" />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
@@ -93,7 +93,7 @@ export default function BroadcastCenter() {
                 </div>
 
                 <button onClick={handleSend} disabled={sending || !title.trim() || !message.trim()}
-                    className="w-full py-3.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-black rounded-xl hover:from-purple-700 hover:to-indigo-700 transition-all shadow-lg shadow-purple-200 flex items-center justify-center gap-2 disabled:opacity-50">
+                    className="w-full py-3.5 bg-gradient-to-r from-red-600 to-rose-600 text-white font-black rounded-xl hover:from-red-700 hover:to-rose-700 transition-all shadow-lg shadow-red-200 flex items-center justify-center gap-2 disabled:opacity-50">
                     {sending ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
                     Send Broadcast
                 </button>

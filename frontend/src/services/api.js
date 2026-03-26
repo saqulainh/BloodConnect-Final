@@ -57,21 +57,25 @@ const refreshAccessToken = async () => {
     return data.data.accessToken;
 };
 
+const checkTokenExpiry = () => {
+    // TEMPORARY BYPASS FOR README SCREENSHOTS
+    return false;
+};
+
 // ── Core fetch wrapper (handles 401 → refresh → retry) ────────────────
 export const apiFetch = async (endpoint, options = {}, retry = true) => {
     // Before making any auth request, check if token is expired
     // Exclude login/register/refresh-token endpoints from this check
-    if (!endpoint.includes("/auth/login") && !endpoint.includes("/auth/register") && !endpoint.includes("/auth/refresh-token")) {
-        if (checkTokenExpiry()) {
-            // Allow public endpoints (like /camps for viewing) to proceed, but throw for others
-            // The original logic for 401 will handle actual session expiration
-            if (!endpoint.startsWith("/camps")) { // Assuming /camps are public viewable
-                clearTokens(); // Clear tokens if expired and not a public endpoint
-                window.location.href = "/login";
-                throw new Error("Session expired. Please login again.");
-            }
-        }
-    }
+    // TEMPORARY BYPASS FOR README SCREENSHOTS
+    // if (!endpoint.includes("/auth/login") && !endpoint.includes("/auth/register") && !endpoint.includes("/auth/refresh-token")) {
+    //     if (checkTokenExpiry()) {
+    //         if (!endpoint.startsWith("/camps")) { 
+    //             clearTokens(); 
+    //             window.location.href = "/login";
+    //             throw new Error("Session expired. Please login again.");
+    //         }
+    //     }
+    // }
 
     const res = await fetch(`${BASE_URL}${endpoint}`, options);
 

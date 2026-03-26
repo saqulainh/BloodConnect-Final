@@ -1,0 +1,662 @@
+﻿diff --git a/frontend/src/components/admin/AdminHome.jsx b/frontend/src/components/admin/AdminHome.jsx
+index 86eefa5..e5564ea 100644
+--- a/frontend/src/components/admin/AdminHome.jsx
++++ b/frontend/src/components/admin/AdminHome.jsx
+@@ -53,9 +53,9 @@ export default function AdminHome({ setActiveTab }) {
+     return (
+         <div className="space-y-6 animate-in fade-in duration-500">
+             {/* Header */}
+-            <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-purple-900 rounded-3xl p-6 lg:p-8 text-white shadow-2xl relative overflow-hidden">
+-                <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/10 rounded-full -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+-                <div className="absolute bottom-0 left-1/2 w-48 h-48 bg-amber-500/5 rounded-full translate-y-1/2 pointer-events-none" />
++            <div className="bg-gradient-to-br from-red-700 via-red-800 to-red-900 rounded-3xl p-6 lg:p-8 text-white shadow-2xl relative overflow-hidden">
++                <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/3 pointer-events-none" />
++                <div className="absolute bottom-0 left-1/2 w-48 h-48 bg-red-900/30 rounded-full translate-y-1/2 pointer-events-none" />
+                 <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                     <div>
+                         <div className="flex items-center gap-2 mb-2">
+@@ -83,7 +83,7 @@ export default function AdminHome({ setActiveTab }) {
+                 <StatCard icon={DollarSign} label="Revenue" value={`Γé╣${(revenue.total || 0).toLocaleString("en-IN")}`}
+                     sub={`Γé╣${(revenue.today || 0).toLocaleString("en-IN")} today`} color="bg-gradient-to-br from-emerald-600 to-emerald-800" />
+                 <StatCard icon={TrendingUp} label="Today's Signups" value={registrations.today}
+-                    sub={`${registrations.thisWeek} this week`} color="bg-gradient-to-br from-purple-600 to-purple-800" />
++                    sub={`${registrations.thisWeek} this week`} color="bg-gradient-to-br from-amber-600 to-amber-800" />
+             </div>
+ 
+             {/* Quick Stats Row */}
+@@ -117,12 +117,12 @@ export default function AdminHome({ setActiveTab }) {
+                 <div className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm">
+                     <div className="flex items-center justify-between mb-4">
+                         <h3 className="font-black text-slate-800">Recent Admin Actions</h3>
+-                        <button onClick={() => setActiveTab('admin-audit')} className="text-xs font-bold text-purple-600 hover:underline">View All</button>
++                        <button onClick={() => setActiveTab('admin-audit')} className="text-xs font-bold text-red-600 hover:underline">View All</button>
+                     </div>
+                     <div className="space-y-3">
+                         {recentAuditLogs && recentAuditLogs.length > 0 ? recentAuditLogs.map(log => (
+                             <div key={log._id} className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100">
+-                                <div className="w-8 h-8 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center flex-shrink-0">
++                                <div className="w-8 h-8 rounded-lg bg-red-100 text-red-600 flex items-center justify-center flex-shrink-0">
+                                     <Shield size={14} />
+                                 </div>
+                                 <div className="min-w-0">
+@@ -145,7 +145,7 @@ export default function AdminHome({ setActiveTab }) {
+                     { label: "Manage Users", tab: "admin-users", icon: Users, color: "from-blue-500 to-blue-700" },
+                     { label: "Manage Requests", tab: "admin-requests", icon: Ticket, color: "from-red-500 to-red-700" },
+                     { label: "System Health", tab: "admin-health", icon: Activity, color: "from-emerald-500 to-emerald-700" },
+-                    { label: "Revenue", tab: "admin-revenue", icon: DollarSign, color: "from-purple-500 to-purple-700" },
++                    { label: "Revenue", tab: "admin-revenue", icon: DollarSign, color: "from-amber-500 to-amber-700" },
+                 ].map(item => (
+                     <button key={item.tab} onClick={() => setActiveTab(item.tab)}
+                         className={`bg-gradient-to-br ${item.color} text-white rounded-2xl p-4 flex items-center gap-3 shadow-lg hover:scale-105 transition-transform`}>
+diff --git a/frontend/src/components/admin/AuditLogs.jsx b/frontend/src/components/admin/AuditLogs.jsx
+index 3c92fba..d41d321 100644
+--- a/frontend/src/components/admin/AuditLogs.jsx
++++ b/frontend/src/components/admin/AuditLogs.jsx
+@@ -14,7 +14,7 @@ const ACTION_COLORS = {
+     CAMP_CREATED: 'bg-emerald-100 text-emerald-700',
+     CAMP_UPDATED: 'bg-blue-100 text-blue-700',
+     CAMP_DELETED: 'bg-red-100 text-red-700',
+-    BROADCAST_SENT: 'bg-purple-100 text-purple-700',
++    BROADCAST_SENT: 'bg-red-100 text-red-700',
+ };
+ 
+ const TARGET_FILTERS = ["User", "Request", "Camp", "Payment", "System", "Broadcast"];
+diff --git a/frontend/src/components/admin/BroadcastCenter.jsx b/frontend/src/components/admin/BroadcastCenter.jsx
+index 629d577..c545d2b 100644
+--- a/frontend/src/components/admin/BroadcastCenter.jsx
++++ b/frontend/src/components/admin/BroadcastCenter.jsx
+@@ -42,7 +42,7 @@ export default function BroadcastCenter() {
+         <div className="space-y-6 animate-in fade-in duration-500">
+             <div>
+                 <h2 className="text-2xl font-black text-slate-800 flex items-center gap-2">
+-                    <Megaphone size={24} className="text-purple-600" /> Broadcast Center
++                    <Megaphone size={24} className="text-red-600" /> Broadcast Center
+                 </h2>
+                 <p className="text-sm text-slate-400 mt-1">Send announcements and alerts to users</p>
+             </div>
+@@ -50,7 +50,7 @@ export default function BroadcastCenter() {
+             {/* Compose */}
+             <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 space-y-5">
+                 <div className="flex items-center gap-3 mb-2">
+-                    <Radio size={18} className="text-purple-500" />
++                    <Radio size={18} className="text-red-500" />
+                     <span className="text-sm font-black text-slate-800">Compose Broadcast</span>
+                 </div>
+ 
+@@ -58,14 +58,14 @@ export default function BroadcastCenter() {
+                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1 block">Title</label>
+                     <input value={title} onChange={e => setTitle(e.target.value)}
+                         placeholder="e.g. Emergency Blood Drive ΓÇö Mumbai"
+-                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-purple-500/20" />
++                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-red-500/20" />
+                 </div>
+ 
+                 <div>
+                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1 block">Message</label>
+                     <textarea value={message} onChange={e => setMessage(e.target.value)} rows={4}
+                         placeholder="Write your announcement here..."
+-                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-purple-500/20 resize-none" />
++                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-red-500/20 resize-none" />
+                 </div>
+ 
+                 <div className="grid grid-cols-2 gap-4">
+@@ -93,7 +93,7 @@ export default function BroadcastCenter() {
+                 </div>
+ 
+                 <button onClick={handleSend} disabled={sending || !title.trim() || !message.trim()}
+-                    className="w-full py-3.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-black rounded-xl hover:from-purple-700 hover:to-indigo-700 transition-all shadow-lg shadow-purple-200 flex items-center justify-center gap-2 disabled:opacity-50">
++                    className="w-full py-3.5 bg-gradient-to-r from-red-600 to-red-700 text-white font-black rounded-xl hover:from-red-700 hover:to-red-800 transition-all shadow-lg shadow-red-200 flex items-center justify-center gap-2 disabled:opacity-50">
+                     {sending ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
+                     Send Broadcast
+                 </button>
+diff --git a/frontend/src/components/admin/RevenuePanel.jsx b/frontend/src/components/admin/RevenuePanel.jsx
+index a525360..058ad85 100644
+--- a/frontend/src/components/admin/RevenuePanel.jsx
++++ b/frontend/src/components/admin/RevenuePanel.jsx
+@@ -37,7 +37,7 @@ export default function RevenuePanel() {
+ 
+     if (loading) return (
+         <div className="flex items-center justify-center py-32">
+-            <Loader2 size={36} className="text-purple-500 animate-spin" />
++            <Loader2 size={36} className="text-red-500 animate-spin" />
+         </div>
+     );
+ 
+@@ -63,7 +63,7 @@ export default function RevenuePanel() {
+                 <div className="flex items-center gap-1 bg-white border border-slate-200 rounded-xl p-1">
+                     {[7, 30, 90].map(p => (
+                         <button key={p} onClick={() => setPeriod(p)}
+-                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${period === p ? 'bg-purple-100 text-purple-700' : 'text-slate-500 hover:bg-slate-50'}`}>
++                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${period === p ? 'bg-red-100 text-red-700' : 'text-slate-500 hover:bg-slate-50'}`}>
+                             {p}d
+                         </button>
+                     ))}
+@@ -81,8 +81,8 @@ export default function RevenuePanel() {
+                     <p className="text-[10px] font-black uppercase tracking-widest text-blue-200 mb-2">Transactions</p>
+                     <p className="text-3xl font-black">{summary.totalTransactions}</p>
+                 </div>
+-                <div className="bg-gradient-to-br from-purple-600 to-purple-800 text-white rounded-2xl p-5">
+-                    <p className="text-[10px] font-black uppercase tracking-widest text-purple-200 mb-2">Success Rate</p>
++                <div className="bg-gradient-to-br from-red-600 to-red-800 text-white rounded-2xl p-5">
++                    <p className="text-[10px] font-black uppercase tracking-widest text-red-200 mb-2">Success Rate</p>
+                     <p className="text-3xl font-black">{summary.successRate}%</p>
+                 </div>
+             </div>
+diff --git a/frontend/src/components/admin/SystemHealth.jsx b/frontend/src/components/admin/SystemHealth.jsx
+index c6ac5bb..e0dfb7f 100644
+--- a/frontend/src/components/admin/SystemHealth.jsx
++++ b/frontend/src/components/admin/SystemHealth.jsx
+@@ -88,7 +88,7 @@ export default function SystemHealth() {
+                 {/* Memory */}
+                 <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+                     <h3 className="font-black text-slate-800 flex items-center gap-2 mb-5">
+-                        <Cpu size={18} className="text-purple-600" /> Memory
++                        <Cpu size={18} className="text-red-600" /> Memory
+                     </h3>
+                     <div className="space-y-3">
+                         {[
+diff --git a/frontend/src/components/dashboard/Sidebar.jsx b/frontend/src/components/dashboard/Sidebar.jsx
+index 854dcd6..4755cd7 100644
+--- a/frontend/src/components/dashboard/Sidebar.jsx
++++ b/frontend/src/components/dashboard/Sidebar.jsx
+@@ -53,13 +53,11 @@ const ADMIN_ITEMS = [
+     { id: "admin-analytics", icon: ShieldAlert, label: "Mission Intel" },
+ ];
+ 
+-const NavItem = ({ id, icon: Icon, label, badge, activeTab, setActiveTab, setIsSidebarOpen, isReceiver }) => {
++const NavItem = ({ id, icon: Icon, label, badge, activeTab, setActiveTab, setIsSidebarOpen }) => {
+     const active = activeTab === id;
+-    const accentClass = isReceiver
+-        ? (active ? 'bg-teal-600 text-white shadow-lg shadow-teal-200/50' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800')
+-        : (active ? 'bg-red-600 text-white shadow-lg shadow-red-200/50' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800');
+-    const barColor = isReceiver ? 'bg-teal-900' : 'bg-red-900';
+-    const badgeInactive = isReceiver ? 'bg-teal-100 text-teal-600' : 'bg-red-100 text-red-600';
++    const accentClass = active ? 'bg-red-600 text-white shadow-lg shadow-red-200/50' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800';
++    const barColor = 'bg-red-900';
++    const badgeInactive = 'bg-red-100 text-red-600';
+ 
+     return (
+         <button
+@@ -91,13 +89,13 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen, activeTab, se
+     const navItems = isReceiver ? RECEIVER_NAV_ITEMS : DONOR_NAV_ITEMS;
+     const mgmtItems = isReceiver ? RECEIVER_MGMT_ITEMS : DONOR_MGMT_ITEMS;
+ 
+-    const brandGradient = isReceiver ? 'from-teal-500 to-teal-700' : 'from-red-500 to-red-700';
+-    const brandShadow = isReceiver ? 'shadow-teal-200' : 'shadow-red-200';
+-    const brandAccent = isReceiver ? 'text-teal-600' : 'text-red-600';
+-    const avatarGradient = isReceiver ? 'from-teal-500 to-teal-700' : 'from-red-500 to-red-700';
+-    const avatarShadow = isReceiver ? 'shadow-teal-200' : 'shadow-red-200';
+-    const roleBg = isReceiver ? 'bg-teal-50' : 'bg-red-50';
+-    const roleText = isReceiver ? 'text-teal-600' : 'text-red-600';
++    const brandGradient = 'from-red-500 to-red-700';
++    const brandShadow = 'shadow-red-200';
++    const brandAccent = 'text-red-600';
++    const avatarGradient = 'from-red-500 to-red-700';
++    const avatarShadow = 'shadow-red-200';
++    const roleBg = 'bg-red-50';
++    const roleText = 'text-red-600';
+ 
+     return (
+         <aside className={`
+@@ -133,7 +131,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen, activeTab, se
+                             </div>
+                         )}
+                         {bloodGroup && (
+-                            <div className={`absolute -bottom-1 -right-1 w-5 h-5 bg-white border-2 ${isReceiver ? 'border-teal-100' : 'border-red-100'} rounded-full flex items-center justify-center text-[7px] font-black ${roleText}`}>
++                            <div className={`absolute -bottom-1 -right-1 w-5 h-5 bg-white border-2 border-red-100 rounded-full flex items-center justify-center text-[7px] font-black ${roleText}`}>
+                                 {bloodGroup}
+                             </div>
+                         )}
+@@ -153,14 +151,14 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen, activeTab, se
+             <div className="flex-1 overflow-y-auto px-3 py-4 space-y-0.5">
+                 <p className="px-4 text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2">Main Menu</p>
+                 {navItems.map(item => (
+-                    <NavItem key={item.id} {...item} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} isReceiver={isReceiver} />
++                    <NavItem key={item.id} {...item} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />
+                 ))}
+ 
+                 <p className="px-4 text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 mt-6">
+                     {isReceiver ? 'My Hub' : 'Management'}
+                 </p>
+                 {mgmtItems.map(item => (
+-                    <NavItem key={item.id} {...item} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} isReceiver={isReceiver} />
++                    <NavItem key={item.id} {...item} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />
+                 ))}
+ 
+                 {/* Admin-only section */}
+@@ -168,7 +166,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen, activeTab, se
+                     <>
+                         <p className="px-4 text-[9px] font-black text-amber-500 uppercase tracking-widest mb-2 mt-6">≡ƒ¢í∩╕Å Admin Control</p>
+                         {ADMIN_ITEMS.map(item => (
+-                            <NavItem key={item.id} {...item} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} isReceiver={false} />
++                            <NavItem key={item.id} {...item} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />
+                         ))}
+                     </>
+                 )}
+@@ -182,7 +180,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen, activeTab, se
+                 <input
+                     type="text"
+                     placeholder="Command Center..."
+-                    className={`w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-100 rounded-xl text-[11px] font-bold text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 ${isReceiver ? 'focus:ring-teal-500/10 focus:border-teal-200' : 'focus:ring-red-500/10 focus:border-red-200'} focus:bg-white transition-all shadow-inner`}
++                    className={`w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-100 rounded-xl text-[11px] font-bold text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-red-500/10 focus:border-red-200 focus:bg-white transition-all shadow-inner`}
+                     onKeyDown={(e) => {
+                         if (e.key === 'Enter' && e.target.value.trim()) {
+                             const val = e.target.value.toLowerCase();
+diff --git a/frontend/src/components/receiver/FindDonorsReceiver.jsx b/frontend/src/components/receiver/FindDonorsReceiver.jsx
+index 1b36bb0..9629525 100644
+--- a/frontend/src/components/receiver/FindDonorsReceiver.jsx
++++ b/frontend/src/components/receiver/FindDonorsReceiver.jsx
+@@ -6,9 +6,9 @@ import ProximityFinder from '../dashboard/ProximityFinder';
+ const FindDonorsReceiver = ({ onStartChat }) => {
+     return (
+         <div className="space-y-4 animate-in fade-in duration-500">
+-            <div className="bg-gradient-to-r from-teal-50 to-blue-50 rounded-2xl p-5 border border-teal-100">
+-                <h3 className="text-lg font-black text-teal-800 mb-1">≡ƒöì AI-Powered Donor Search</h3>
+-                <p className="text-sm text-teal-600 font-medium">Find compatible blood donors near you using our intelligent proximity matching system.</p>
++            <div className="bg-gradient-to-r from-red-50 to-rose-50 rounded-2xl p-5 border border-red-100">
++                <h3 className="text-lg font-black text-red-800 mb-1">≡ƒöì AI-Powered Donor Search</h3>
++                <p className="text-sm text-red-600 font-medium">Find compatible blood donors near you using our intelligent proximity matching system.</p>
+             </div>
+             <ProximityFinder onStartChat={onStartChat} />
+         </div>
+diff --git a/frontend/src/components/receiver/MyRequests.jsx b/frontend/src/components/receiver/MyRequests.jsx
+index b32f035..37efc9a 100644
+--- a/frontend/src/components/receiver/MyRequests.jsx
++++ b/frontend/src/components/receiver/MyRequests.jsx
+@@ -50,14 +50,14 @@ const RequestForm = ({ onClose, initialData = null }) => {
+                     <div>
+                         <label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block">Patient Name</label>
+                         <input type="text" required value={form.patientName} onChange={e => setForm(f => ({ ...f, patientName: e.target.value }))}
+-                            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-400" placeholder="Enter patient name" />
++                            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-red-500/30 focus:border-red-400" placeholder="Enter patient name" />
+                     </div>
+                     <div>
+                         <label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block">Blood Group</label>
+                         <div className="grid grid-cols-4 gap-2">
+                             {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map(bg => (
+                                 <button key={bg} type="button" onClick={() => setForm(f => ({ ...f, bloodGroup: bg }))}
+-                                    className={`py-2.5 rounded-xl text-sm font-black transition-all ${form.bloodGroup === bg ? 'bg-teal-600 text-white shadow-lg shadow-teal-200' : 'bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200'}`}>
++                                    className={`py-2.5 rounded-xl text-sm font-black transition-all ${form.bloodGroup === bg ? 'bg-red-600 text-white shadow-lg shadow-red-200' : 'bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200'}`}>
+                                     {bg}
+                                 </button>
+                             ))}
+@@ -66,13 +66,13 @@ const RequestForm = ({ onClose, initialData = null }) => {
+                     <div>
+                         <label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block">Hospital</label>
+                         <input type="text" required value={form.hospital} onChange={e => setForm(f => ({ ...f, hospital: e.target.value }))}
+-                            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-400" placeholder="Hospital name" />
++                            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-red-500/30 focus:border-red-400" placeholder="Hospital name" />
+                     </div>
+                     <div className="grid grid-cols-2 gap-4">
+                         <div>
+                             <label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block">Urgency</label>
+                             <select value={form.urgency} onChange={e => setForm(f => ({ ...f, urgency: e.target.value }))}
+-                                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-teal-500/30">
++                                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-red-500/30">
+                                 <option>Normal</option>
+                                 <option>Urgent</option>
+                                 <option>Critical</option>
+@@ -81,12 +81,12 @@ const RequestForm = ({ onClose, initialData = null }) => {
+                         <div>
+                             <label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block">Units</label>
+                             <input type="number" min="1" max="10" value={form.units} onChange={e => setForm(f => ({ ...f, units: parseInt(e.target.value) || 1 }))}
+-                                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-teal-500/30" />
++                                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-red-500/30" />
+                         </div>
+                     </div>
+                     {error && <p className="text-xs text-red-500 font-bold bg-red-50 p-3 rounded-xl">{error}</p>}
+                     <button type="submit" disabled={loading || !form.bloodGroup}
+-                        className="w-full py-3.5 bg-teal-600 text-white font-black rounded-xl hover:bg-teal-700 transition-all disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg shadow-teal-200">
++                        className="w-full py-3.5 bg-red-600 text-white font-black rounded-xl hover:bg-red-700 transition-all disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg shadow-red-200">
+                         {loading ? <Loader2 size={18} className="animate-spin" /> : null}
+                         {initialData ? 'Update Request' : 'Submit Request'}
+                     </button>
+@@ -143,7 +143,7 @@ const MyRequests = ({ onStartChat }) => {
+ 
+     const getStatusStyle = (status) => {
+         switch (status) {
+-            case 'Active': case 'active': return 'bg-teal-100 text-teal-700 border-teal-200';
++            case 'Active': case 'active': return 'bg-red-100 text-red-700 border-red-200';
+             case 'Completed': case 'resolved': return 'bg-emerald-100 text-emerald-700 border-emerald-200';
+             case 'Cancelled': return 'bg-slate-100 text-slate-500 border-slate-200';
+             default: return 'bg-slate-100 text-slate-500 border-slate-200';
+@@ -167,7 +167,7 @@ const MyRequests = ({ onStartChat }) => {
+                     <p className="text-sm text-slate-400 font-medium">{requests.length} total requests</p>
+                 </div>
+                 <button onClick={() => { setEditData(null); setShowForm(true); }}
+-                    className="px-5 py-2.5 bg-teal-600 text-white font-black rounded-xl hover:bg-teal-700 transition-all shadow-lg shadow-teal-200 flex items-center gap-2">
++                    className="px-5 py-2.5 bg-red-600 text-white font-black rounded-xl hover:bg-red-700 transition-all shadow-lg shadow-red-200 flex items-center gap-2">
+                     <Plus size={16} /> New Request
+                 </button>
+             </div>
+@@ -176,7 +176,7 @@ const MyRequests = ({ onStartChat }) => {
+             <div className="flex items-center gap-2 flex-wrap">
+                 {['All', 'Active', 'Fulfilled', 'Cancelled'].map(f => (
+                     <button key={f} onClick={() => setFilter(f)}
+-                        className={`px-4 py-2 rounded-xl text-xs font-black transition-all ${filter === f ? 'bg-teal-600 text-white shadow-md' : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-50'}`}>
++                        className={`px-4 py-2 rounded-xl text-xs font-black transition-all ${filter === f ? 'bg-red-600 text-white shadow-md' : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-50'}`}>
+                         {f}
+                     </button>
+                 ))}
+@@ -184,7 +184,7 @@ const MyRequests = ({ onStartChat }) => {
+ 
+             {/* Request Cards */}
+             {loading ? (
+-                <div className="flex items-center justify-center py-20"><Loader2 className="w-8 h-8 text-teal-400 animate-spin" /></div>
++                <div className="flex items-center justify-center py-20"><Loader2 className="w-8 h-8 text-red-400 animate-spin" /></div>
+             ) : filtered.length === 0 ? (
+                 <div className="text-center py-20 bg-white rounded-3xl border border-slate-100">
+                     <AlertCircle className="w-12 h-12 text-slate-200 mx-auto mb-3" />
+@@ -198,7 +198,7 @@ const MyRequests = ({ onStartChat }) => {
+                             <div className="p-5">
+                                 <div className="flex items-start justify-between mb-3">
+                                     <div className="flex items-center gap-3">
+-                                        <div className="w-12 h-12 bg-gradient-to-br from-teal-500 to-blue-600 rounded-xl flex items-center justify-center text-white font-black text-sm shadow-md">
++                                        <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-red-700 rounded-xl flex items-center justify-center text-white font-black text-sm shadow-md">
+                                             {req.bloodGroup}
+                                         </div>
+                                         <div>
+diff --git a/frontend/src/components/receiver/ReceiverAnalytics.jsx b/frontend/src/components/receiver/ReceiverAnalytics.jsx
+index 3152668..23c36f9 100644
+--- a/frontend/src/components/receiver/ReceiverAnalytics.jsx
++++ b/frontend/src/components/receiver/ReceiverAnalytics.jsx
+@@ -10,7 +10,7 @@ import {
+ } from 'recharts';
+ import { getReceiverAnalytics } from '../../services/api';
+ 
+-const COLORS = ['#0d9488', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#10b981', '#6366f1'];
++const COLORS = ['#dc2626', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#10b981', '#6366f1'];
+ 
+ const ReceiverAnalytics = () => {
+     const [data, setData] = useState(null);
+@@ -29,7 +29,7 @@ const ReceiverAnalytics = () => {
+ 
+     if (loading) return (
+         <div className="flex items-center justify-center py-32">
+-            <div className="w-12 h-12 border-4 border-teal-200 border-t-teal-600 rounded-full animate-spin" />
++            <div className="w-12 h-12 border-4 border-red-200 border-t-red-600 rounded-full animate-spin" />
+         </div>
+     );
+ 
+@@ -51,7 +51,7 @@ const ReceiverAnalytics = () => {
+             {/* ΓöÇΓöÇ Key Metrics ΓöÇΓöÇ */}
+             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                 {[
+-                    { label: "Total Requests", value: data.totalRequests, icon: Droplets, color: "text-teal-600", bg: "bg-teal-50" },
++                    { label: "Total Requests", value: data.totalRequests, icon: Droplets, color: "text-red-600", bg: "bg-red-50" },
+                     { label: "Fulfilled", value: data.totalFulfilled, icon: CheckCircle2, color: "text-emerald-600", bg: "bg-emerald-50" },
+                     { label: "Fulfillment Rate", value: `${data.fulfillmentRate}%`, icon: TrendingUp, color: "text-blue-600", bg: "bg-blue-50" },
+                     { label: "Unique Donors", value: data.uniqueDonors, icon: Users, color: "text-purple-600", bg: "bg-purple-50" },
+@@ -92,8 +92,8 @@ const ReceiverAnalytics = () => {
+                                 <AreaChart data={data.monthlyTrend} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                                     <defs>
+                                         <linearGradient id="colorReqR" x1="0" y1="0" x2="0" y2="1">
+-                                            <stop offset="5%" stopColor="#0d9488" stopOpacity={0.15} />
+-                                            <stop offset="95%" stopColor="#0d9488" stopOpacity={0} />
++                                            <stop offset="5%" stopColor="#dc2626" stopOpacity={0.15} />
++                                            <stop offset="95%" stopColor="#dc2626" stopOpacity={0} />
+                                         </linearGradient>
+                                         <linearGradient id="colorFulR" x1="0" y1="0" x2="0" y2="1">
+                                             <stop offset="5%" stopColor="#10b981" stopOpacity={0.15} />
+@@ -104,7 +104,7 @@ const ReceiverAnalytics = () => {
+                                     <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11, fontWeight: 600 }} dy={10} />
+                                     <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11, fontWeight: 600 }} />
+                                     <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)' }} />
+-                                    <Area type="monotone" dataKey="requests" stroke="#0d9488" strokeWidth={3} fillOpacity={1} fill="url(#colorReqR)" name="Requests" />
++                                    <Area type="monotone" dataKey="requests" stroke="#dc2626" strokeWidth={3} fillOpacity={1} fill="url(#colorReqR)" name="Requests" />
+                                     <Area type="monotone" dataKey="fulfilled" stroke="#10b981" strokeWidth={3} fillOpacity={1} fill="url(#colorFulR)" name="Fulfilled" />
+                                 </AreaChart>
+                             </ResponsiveContainer>
+@@ -127,7 +127,7 @@ const ReceiverAnalytics = () => {
+                                     <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11, fontWeight: 600 }} />
+                                     <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11, fontWeight: 600 }} />
+                                     <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)' }} />
+-                                    <Bar dataKey="value" fill="#0d9488" radius={[8, 8, 0, 0]} name="Requests" />
++                                    <Bar dataKey="value" fill="#dc2626" radius={[8, 8, 0, 0]} name="Requests" />
+                                 </BarChart>
+                             </ResponsiveContainer>
+                         ) : (
+@@ -187,10 +187,10 @@ const ReceiverAnalytics = () => {
+                         <div className="pt-4 border-t border-slate-100">
+                             <div className="flex items-center justify-between mb-2">
+                                 <span className="text-sm font-bold text-slate-500">Rate</span>
+-                                <span className="text-2xl font-black text-teal-600">{data.fulfillmentRate}%</span>
++                                <span className="text-2xl font-black text-red-600">{data.fulfillmentRate}%</span>
+                             </div>
+                             <div className="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
+-                                <div className="h-full bg-gradient-to-r from-teal-500 to-emerald-500 rounded-full transition-all duration-1000"
++                                <div className="h-full bg-gradient-to-r from-red-500 to-red-600 rounded-full transition-all duration-1000"
+                                     style={{ width: `${data.fulfillmentRate}%` }} />
+                             </div>
+                         </div>
+diff --git a/frontend/src/components/receiver/ReceiverDashboardHome.jsx b/frontend/src/components/receiver/ReceiverDashboardHome.jsx
+index 574790e..b578476 100644
+--- a/frontend/src/components/receiver/ReceiverDashboardHome.jsx
++++ b/frontend/src/components/receiver/ReceiverDashboardHome.jsx
+@@ -38,29 +38,29 @@ const ReceiverDashboardHome = ({ setActiveTab, user }) => {
+         <div className="space-y-6 animate-in fade-in duration-500">
+ 
+             {/* ΓöÇΓöÇ Greeting Banner (Teal/Blue for Receiver) ΓöÇΓöÇ */}
+-            <div className="bg-gradient-to-br from-teal-600 to-blue-800 rounded-3xl p-6 lg:p-8 text-white shadow-xl shadow-blue-200/40 relative overflow-hidden">
++            <div className="bg-gradient-to-br from-red-600 to-red-800 rounded-3xl p-6 lg:p-8 text-white shadow-xl shadow-red-200/40 relative overflow-hidden">
+                 <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+-                <div className="absolute bottom-0 left-1/2 w-48 h-48 bg-blue-900/30 rounded-full translate-y-1/2 pointer-events-none" />
++                <div className="absolute bottom-0 left-1/2 w-48 h-48 bg-red-900/30 rounded-full translate-y-1/2 pointer-events-none" />
+                 <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
+                     <div>
+-                        <p className="text-blue-200 text-sm font-bold uppercase tracking-widest mb-1 flex items-center gap-2">
++                        <p className="text-red-200 text-sm font-bold uppercase tracking-widest mb-1 flex items-center gap-2">
+                             <span className="inline-block w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
+                             {greeting}
+                         </p>
+                         <h2 className="text-2xl lg:text-3xl font-black tracking-tight mb-2">
+-                            {firstName}! {user?.bloodGroup && <span className="text-blue-200">({user.bloodGroup})</span>}
++                            {firstName}! {user?.bloodGroup && <span className="text-red-200">({user.bloodGroup})</span>}
+                         </h2>
+-                        <p className="text-blue-200 text-sm font-medium">
++                        <p className="text-red-200 text-sm font-medium">
+                             You have <span className="text-white font-black">{stats.activeRequests} active requests</span> ΓÇö we're finding donors for you.
+                         </p>
+                     </div>
+                     <div className="flex flex-col gap-2 shrink-0">
+                         <button onClick={() => setActiveTab('my-requests')}
+-                            className="px-5 py-2.5 bg-white text-teal-700 text-sm font-black rounded-xl hover:bg-teal-50 transition-colors shadow-lg flex items-center gap-2 whitespace-nowrap">
++                            className="px-5 py-2.5 bg-white text-red-700 text-sm font-black rounded-xl hover:bg-red-50 transition-colors shadow-lg flex items-center gap-2 whitespace-nowrap">
+                             ≡ƒ⌐╕ My Requests
+                         </button>
+                         <button onClick={() => setActiveTab('find-donors')}
+-                            className="px-5 py-2.5 bg-blue-700/60 text-white text-sm font-bold rounded-xl hover:bg-blue-700 transition-colors border border-blue-500/40 flex items-center gap-2 whitespace-nowrap">
++                            className="px-5 py-2.5 bg-red-700/60 text-white text-sm font-bold rounded-xl hover:bg-red-700 transition-colors border border-red-500/40 flex items-center gap-2 whitespace-nowrap">
+                             ≡ƒöì Find Donors
+                         </button>
+                     </div>
+@@ -70,9 +70,9 @@ const ReceiverDashboardHome = ({ setActiveTab, user }) => {
+             {/* ΓöÇΓöÇ Stat Cards ΓöÇΓöÇ */}
+             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                 {[
+-                    { label: 'Active Requests', value: stats.activeRequests, icon: Ticket, color: 'text-teal-600', bg: 'bg-teal-50' },
++                    { label: 'Active Requests', value: stats.activeRequests, icon: Ticket, color: 'text-red-600', bg: 'bg-red-50' },
+                     { label: 'Fulfilled', value: stats.fulfilledRequests, icon: CheckCircle2, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+-                    { label: 'Units Received', value: stats.totalUnitsFulfilled || 0, icon: Droplets, color: 'text-blue-600', bg: 'bg-blue-50' },
++                    { label: 'Units Received', value: stats.totalUnitsFulfilled || 0, icon: Droplets, color: 'text-red-600', bg: 'bg-red-50' },
+                     { label: 'Avg Response', value: `${stats.avgResponseHours || 0}h`, icon: Clock, color: 'text-amber-600', bg: 'bg-amber-50' },
+                 ].map((stat, idx) => (
+                     <div key={idx} className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between hover:shadow-md transition-shadow">
+@@ -103,7 +103,7 @@ const ReceiverDashboardHome = ({ setActiveTab, user }) => {
+                 </div>
+                 <div className="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
+                     <div
+-                        className="h-full bg-gradient-to-r from-teal-500 to-emerald-500 rounded-full transition-all duration-1000"
++                        className="h-full bg-gradient-to-r from-red-500 to-red-600 rounded-full transition-all duration-1000"
+                         style={{ width: `${stats.fulfillmentRate || 0}%` }}
+                     />
+                 </div>
+@@ -111,9 +111,9 @@ const ReceiverDashboardHome = ({ setActiveTab, user }) => {
+ 
+             {/* ΓöÇΓöÇ Support & Mission Promotion ΓöÇΓöÇ */}
+             <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden group hover:shadow-lg transition-all duration-500">
+-                <div className="absolute top-0 right-0 w-32 h-32 bg-teal-50 rounded-full translate-x-10 -translate-y-10 group-hover:scale-110 transition-transform duration-700" />
++                <div className="absolute top-0 right-0 w-32 h-32 bg-red-50 rounded-full translate-x-10 -translate-y-10 group-hover:scale-110 transition-transform duration-700" />
+                 <div className="flex items-center gap-5 relative z-10">
+-                    <div className="w-14 h-14 bg-teal-50 rounded-2xl flex items-center justify-center text-teal-600 shadow-inner">
++                    <div className="w-14 h-14 bg-red-50 rounded-2xl flex items-center justify-center text-red-600 shadow-inner">
+                         <HeartIcon className="animate-pulse" fill="currentColor" size={24} />
+                     </div>
+                     <div>
+@@ -145,8 +145,8 @@ const ReceiverDashboardHome = ({ setActiveTab, user }) => {
+ 
+                     {/* ΓöÇΓöÇ Quick Actions ΓöÇΓöÇ */}
+                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+-                        <QuickActionButton icon={Plus} label="New Request" onClick={() => setActiveTab('my-requests')} colorClass="border-teal-100 text-teal-600 bg-teal-50 hover:bg-teal-100" />
+-                        <QuickActionButton icon={AlertCircle} label="Find Donors" onClick={() => setActiveTab('find-donors')} colorClass="border-blue-100 text-blue-600 bg-blue-50 hover:bg-blue-100" />
++                        <QuickActionButton icon={Plus} label="New Request" onClick={() => setActiveTab('my-requests')} colorClass="border-red-100 text-red-600 bg-red-50 hover:bg-red-100" />
++                        <QuickActionButton icon={AlertCircle} label="Find Donors" onClick={() => setActiveTab('find-donors')} colorClass="border-red-100 text-red-600 bg-red-50 hover:bg-red-100" />
+                         <QuickActionButton icon={HeartIcon} label="Gratitude" onClick={() => setActiveTab('gratitude')} colorClass="border-pink-100 text-pink-600 bg-pink-50 hover:bg-pink-100" />
+                         <QuickActionButton icon={Bell} label="SOS Alert" onClick={() => setActiveTab('sos')} colorClass="border-amber-100 text-amber-600 bg-amber-50 hover:bg-amber-100" />
+                     </div>
+@@ -158,14 +158,14 @@ const ReceiverDashboardHome = ({ setActiveTab, user }) => {
+                         <div className="flex items-center justify-between mb-6">
+                             <h3 className="font-bold text-slate-800 text-lg">Recent Activity</h3>
+                             {stats.recentActivity.length > 5 && (
+-                                <button onClick={() => setShowAllActivity(true)} className="text-xs font-bold text-teal-600 hover:underline">View All</button>
++                                <button onClick={() => setShowAllActivity(true)} className="text-xs font-bold text-red-600 hover:underline">View All</button>
+                             )}
+                         </div>
+                         <div className="space-y-5">
+                             {stats.recentActivity.length > 0 ? (
+                                 stats.recentActivity.slice(0, 5).map((item) => {
+                                     const statusColor = item.status === 'Active' || item.status === 'active'
+-                                        ? 'bg-teal-100 text-teal-600'
++                                        ? 'bg-red-100 text-red-600'
+                                         : item.status === 'Completed' || item.status === 'resolved'
+                                             ? 'bg-emerald-100 text-emerald-600'
+                                             : 'bg-slate-100 text-slate-500';
+@@ -175,7 +175,7 @@ const ReceiverDashboardHome = ({ setActiveTab, user }) => {
+                                                 <Droplets size={14} />
+                                             </div>
+                                             <div className="flex-1 min-w-0">
+-                                                <p className="text-sm font-bold text-slate-700 leading-tight group-hover:text-teal-600 transition-colors truncate">
++                                                <p className="text-sm font-bold text-slate-700 leading-tight group-hover:text-red-600 transition-colors truncate">
+                                                     {item.message}
+                                                 </p>
+                                                 <p className="text-[11px] text-slate-400 font-bold mt-1">
+@@ -209,7 +209,7 @@ const ReceiverDashboardHome = ({ setActiveTab, user }) => {
+                         <div className="flex-1 overflow-y-auto p-6 space-y-4">
+                             {stats.recentActivity.map((item) => (
+                                 <div key={item.id} className="flex items-start gap-4 p-4 rounded-2xl border border-slate-50 hover:bg-slate-50 transition-colors">
+-                                    <div className="mt-0.5 min-w-[40px] h-10 rounded-full flex items-center justify-center bg-teal-100 text-teal-600">
++                                    <div className="mt-0.5 min-w-[40px] h-10 rounded-full flex items-center justify-center bg-red-100 text-red-600">
+                                         <Droplets size={18} />
+                                     </div>
+                                     <div>
+diff --git a/frontend/src/components/receiver/ReceiverTimeline.jsx b/frontend/src/components/receiver/ReceiverTimeline.jsx
+index ac8465a..a7a0761 100644
+--- a/frontend/src/components/receiver/ReceiverTimeline.jsx
++++ b/frontend/src/components/receiver/ReceiverTimeline.jsx
+@@ -6,7 +6,7 @@ import {
+ import { getMyReceiverRequests, getRequestTimeline } from '../../services/api';
+ 
+ const STAGE_META = {
+-    "Request Created": { icon: AlertCircle, color: "text-teal-600", bg: "bg-teal-100", ring: "ring-teal-200" },
++    "Request Created": { icon: AlertCircle, color: "text-red-600", bg: "bg-red-100", ring: "ring-red-200" },
+     "Searching Donors": { icon: Search, color: "text-blue-600", bg: "bg-blue-100", ring: "ring-blue-200" },
+     "Donor Matched": { icon: CheckCircle, color: "text-indigo-600", bg: "bg-indigo-100", ring: "ring-indigo-200" },
+     "Blood Donated": { icon: Droplets, color: "text-red-600", bg: "bg-red-100", ring: "ring-red-200" },
+@@ -44,7 +44,7 @@ const ReceiverTimeline = () => {
+ 
+     const getStatusColor = (status) => {
+         switch (status) {
+-            case 'Active': case 'active': return 'bg-teal-100 text-teal-700';
++            case 'Active': case 'active': return 'bg-red-100 text-red-700';
+             case 'Completed': case 'resolved': return 'bg-emerald-100 text-emerald-700';
+             case 'Cancelled': return 'bg-slate-100 text-slate-500';
+             default: return 'bg-slate-100 text-slate-500';
+@@ -63,7 +63,7 @@ const ReceiverTimeline = () => {
+                 <div className="lg:col-span-1 space-y-3">
+                     <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Select a Request</p>
+                     {loading ? (
+-                        <div className="flex justify-center py-10"><Loader2 className="w-6 h-6 text-teal-400 animate-spin" /></div>
++                        <div className="flex justify-center py-10"><Loader2 className="w-6 h-6 text-red-400 animate-spin" /></div>
+                     ) : requests.length === 0 ? (
+                         <div className="text-center py-10 bg-white rounded-2xl border border-slate-100">
+                             <AlertCircle className="w-10 h-10 text-slate-200 mx-auto mb-2" />
+@@ -73,8 +73,8 @@ const ReceiverTimeline = () => {
+                         <div className="space-y-2 max-h-[calc(100vh-300px)] overflow-y-auto">
+                             {requests.map(req => (
+                                 <button key={req._id} onClick={() => viewTimeline(req)}
+-                                    className={`w-full text-left p-4 rounded-2xl border transition-all flex items-center gap-3 ${selectedReq?._id === req._id ? 'bg-teal-50 border-teal-200 shadow-md' : 'bg-white border-slate-100 hover:bg-slate-50'}`}>
+-                                    <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-blue-600 rounded-xl flex items-center justify-center text-white font-black text-xs shadow-md shrink-0">
++                                    className={`w-full text-left p-4 rounded-2xl border transition-all flex items-center gap-3 ${selectedReq?._id === req._id ? 'bg-red-50 border-red-200 shadow-md' : 'bg-white border-slate-100 hover:bg-slate-50'}`}>
++                                    <div className="w-10 h-10 bg-gradient-to-br from-red-500 to-red-700 rounded-xl flex items-center justify-center text-white font-black text-xs shadow-md shrink-0">
+                                         {req.bloodGroup}
+                                     </div>
+                                     <div className="flex-1 min-w-0">
+@@ -103,13 +103,13 @@ const ReceiverTimeline = () => {
+                         </div>
+                     ) : timelineLoading ? (
+                         <div className="flex items-center justify-center py-20 bg-white rounded-3xl border border-slate-100">
+-                            <Loader2 className="w-8 h-8 text-teal-400 animate-spin" />
++                            <Loader2 className="w-8 h-8 text-red-400 animate-spin" />
+                         </div>
+                     ) : timeline ? (
+                         <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 lg:p-8">
+                             {/* Request Header */}
+                             <div className="flex items-center gap-4 mb-8 pb-6 border-b border-slate-100">
+-                                <div className="w-14 h-14 bg-gradient-to-br from-teal-500 to-blue-600 rounded-2xl flex items-center justify-center text-white font-black text-lg shadow-lg">
++                                <div className="w-14 h-14 bg-gradient-to-br from-red-500 to-red-700 rounded-2xl flex items-center justify-center text-white font-black text-lg shadow-lg">
+                                     {timeline.request.bloodGroup}
+                                 </div>
+                                 <div>
+@@ -129,7 +129,7 @@ const ReceiverTimeline = () => {
+                                             {/* Vertical line */}
+                                             {!isLast && (
+                                                 <div className="absolute left-[22px] top-[44px] bottom-0 w-0.5"
+-                                                    style={{ backgroundColor: stage.completed ? '#0d9488' : '#e2e8f0' }} />
++                                                    style={{ backgroundColor: stage.completed ? '#dc2626' : '#e2e8f0' }} />
+                                             )}
+                                             {/* Icon */}
+                                             <div className={`relative z-10 w-11 h-11 rounded-xl flex items-center justify-center shrink-0 transition-all duration-500 ${stage.completed ? `${meta.bg} ${meta.color} ring-2 ${meta.ring} shadow-md` : 'bg-slate-100 text-slate-300'}`}>
+diff --git a/frontend/src/components/receiver/ReceiverWallet.jsx b/frontend/src/components/receiver/ReceiverWallet.jsx
+index 3aec917..15a8898 100644
+--- a/frontend/src/components/receiver/ReceiverWallet.jsx
++++ b/frontend/src/components/receiver/ReceiverWallet.jsx
+@@ -30,7 +30,7 @@ const ReceiverWallet = () => {
+ 
+     if (loading) return (
+         <div className="flex items-center justify-center py-32">
+-            <div className="w-12 h-12 border-4 border-teal-200 border-t-teal-600 rounded-full animate-spin" />
++            <div className="w-12 h-12 border-4 border-red-200 border-t-red-600 rounded-full animate-spin" />
+         </div>
+     );
+ 
+@@ -78,7 +78,7 @@ const ReceiverWallet = () => {
+             {/* ΓöÇΓöÇ Stats Grid ΓöÇΓöÇ */}
+             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                 {[
+-                    { label: "Units Received", value: wallet.totalUnitsReceived, icon: Droplets, color: "text-teal-600", bg: "bg-teal-50" },
++                    { label: "Units Received", value: wallet.totalUnitsReceived, icon: Droplets, color: "text-red-600", bg: "bg-red-50" },
+                     { label: "Requests Made", value: wallet.totalRequestsMade, icon: CheckCircle2, color: "text-blue-600", bg: "bg-blue-50" },
+                     { label: "Lives Impacted", value: wallet.livesImpacted, icon: Heart, color: "text-pink-600", bg: "bg-pink-50" },
+                     { label: "Donors Helped You", value: wallet.uniqueDonors, icon: Users, color: "text-purple-600", bg: "bg-purple-50" },
+@@ -151,7 +151,7 @@ const ReceiverWallet = () => {
+                                     </div>
+                                     <span className={`text-[9px] font-black uppercase tracking-wider ${isActive ? c.text : 'text-slate-400'}`}>{name}</span>
+                                 </div>
+-                                {idx < 4 && <div className={`w-8 h-0.5 ${isPast ? 'bg-teal-300' : 'bg-slate-200'} rounded-full shrink-0`} />}
++                                {idx < 4 && <div className={`w-8 h-0.5 ${isPast ? 'bg-red-300' : 'bg-slate-200'} rounded-full shrink-0`} />}
+                             </div>
+                         );
+                     })}
+diff --git a/frontend/src/pages/Dashboard.jsx b/frontend/src/pages/Dashboard.jsx
+index 25deddc..3cde303 100644
+--- a/frontend/src/pages/Dashboard.jsx
++++ b/frontend/src/pages/Dashboard.jsx
+@@ -336,8 +336,5 @@ export default function Dashboard() {
+                 />
+             )}
+         </div>
+-    )
+-}
+-        </div >
+     );
+ }

@@ -268,6 +268,20 @@ Here is a visual tour of all the key features currently live and working in the 
 
 ---
 
+### 📥 Receiver Dashboard
+> Specialized hub for blood requesters to track their active needs, check recovery timelines, and view live fulfillment rates.
+
+![Receiver Dashboard](screenshots/10_receiver_dashboard.png)
+
+---
+
+### 🛡️ Admin Powerhouse Panel
+> Full oversight for platform administrators: manage users, monitor inventory thresholds, and view national-level analytics.
+
+![Admin Dashboard](screenshots/09_admin_dashboard.png)
+
+---
+
 ## 🛠️ Technology Stack
 
 | Layer | Technologies |

@@ -53,13 +53,11 @@ const ADMIN_ITEMS = [
     { id: "admin-analytics", icon: ShieldAlert, label: "Mission Intel" },
 ];
 
-const NavItem = ({ id, icon: Icon, label, badge, activeTab, setActiveTab, setIsSidebarOpen, isReceiver }) => {
+const NavItem = ({ id, icon: Icon, label, badge, activeTab, setActiveTab, setIsSidebarOpen }) => {
     const active = activeTab === id;
-    const accentClass = isReceiver
-        ? (active ? 'bg-teal-600 text-white shadow-lg shadow-teal-200/50' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800')
-        : (active ? 'bg-red-600 text-white shadow-lg shadow-red-200/50' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800');
-    const barColor = isReceiver ? 'bg-teal-900' : 'bg-red-900';
-    const badgeInactive = isReceiver ? 'bg-teal-100 text-teal-600' : 'bg-red-100 text-red-600';
+    const accentClass = (active ? 'bg-red-600 text-white shadow-lg shadow-red-200/50' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800');
+    const barColor = 'bg-red-900';
+    const badgeInactive = 'bg-red-100 text-red-600';
 
     return (
         <button
@@ -91,13 +89,13 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen, activeTab, se
     const navItems = isReceiver ? RECEIVER_NAV_ITEMS : DONOR_NAV_ITEMS;
     const mgmtItems = isReceiver ? RECEIVER_MGMT_ITEMS : DONOR_MGMT_ITEMS;
 
-    const brandGradient = isReceiver ? 'from-teal-500 to-teal-700' : 'from-red-500 to-red-700';
-    const brandShadow = isReceiver ? 'shadow-teal-200' : 'shadow-red-200';
-    const brandAccent = isReceiver ? 'text-teal-600' : 'text-red-600';
-    const avatarGradient = isReceiver ? 'from-teal-500 to-teal-700' : 'from-red-500 to-red-700';
-    const avatarShadow = isReceiver ? 'shadow-teal-200' : 'shadow-red-200';
-    const roleBg = isReceiver ? 'bg-teal-50' : 'bg-red-50';
-    const roleText = isReceiver ? 'text-teal-600' : 'text-red-600';
+    const brandGradient = 'from-red-500 to-red-700';
+    const brandShadow = 'shadow-red-200';
+    const brandAccent = 'text-red-600';
+    const avatarGradient = 'from-red-500 to-red-700';
+    const avatarShadow = 'shadow-red-200';
+    const roleBg = 'bg-red-50';
+    const roleText = 'text-red-600';
 
     return (
         <aside className={`
@@ -133,7 +131,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen, activeTab, se
                             </div>
                         )}
                         {bloodGroup && (
-                            <div className={`absolute -bottom-1 -right-1 w-5 h-5 bg-white border-2 ${isReceiver ? 'border-teal-100' : 'border-red-100'} rounded-full flex items-center justify-center text-[7px] font-black ${roleText}`}>
+                            <div className={`absolute -bottom-1 -right-1 w-5 h-5 bg-white border-2 border-red-100 rounded-full flex items-center justify-center text-[7px] font-black ${roleText}`}>
                                 {bloodGroup}
                             </div>
                         )}
@@ -153,14 +151,14 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen, activeTab, se
             <div className="flex-1 overflow-y-auto px-3 py-4 space-y-0.5">
                 <p className="px-4 text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2">Main Menu</p>
                 {navItems.map(item => (
-                    <NavItem key={item.id} {...item} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} isReceiver={isReceiver} />
+                    <NavItem key={item.id} {...item} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />
                 ))}
 
                 <p className="px-4 text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 mt-6">
                     {isReceiver ? 'My Hub' : 'Management'}
                 </p>
                 {mgmtItems.map(item => (
-                    <NavItem key={item.id} {...item} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} isReceiver={isReceiver} />
+                    <NavItem key={item.id} {...item} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />
                 ))}
 
                 {/* Admin-only section */}
@@ -168,7 +166,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen, activeTab, se
                     <>
                         <p className="px-4 text-[9px] font-black text-amber-500 uppercase tracking-widest mb-2 mt-6">🛡️ Admin Control</p>
                         {ADMIN_ITEMS.map(item => (
-                            <NavItem key={item.id} {...item} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} isReceiver={false} />
+                            <NavItem key={item.id} {...item} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />
                         ))}
                     </>
                 )}
@@ -182,7 +180,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen, activeTab, se
                 <input
                     type="text"
                     placeholder="Command Center..."
-                    className={`w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-100 rounded-xl text-[11px] font-bold text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 ${isReceiver ? 'focus:ring-teal-500/10 focus:border-teal-200' : 'focus:ring-red-500/10 focus:border-red-200'} focus:bg-white transition-all shadow-inner`}
+                    className="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-100 rounded-xl text-[11px] font-bold text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-red-500/10 focus:border-red-200 focus:bg-white transition-all shadow-inner"
                     onKeyDown={(e) => {
                         if (e.key === 'Enter' && e.target.value.trim()) {
                             const val = e.target.value.toLowerCase();

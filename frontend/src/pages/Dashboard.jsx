@@ -121,14 +121,27 @@ const RECEIVER_TAB_SUBTITLES = {
 
 export default function Dashboard() {
     const navigate = useNavigate();
-    const { user, logout, loading, isAuthenticated } = useAuth();
-    const [activeTab, setActiveTab] = useState("dashboard");
+    // const { user, logout, loading, isAuthenticated } = useAuth();
+    
+    // TEMPORARY MOCK FOR SCREENSHOTS
+    const user = {
+        _id: "mock-123",
+        name: "Admin User",
+        email: "admin@bloodconnect.com",
+        role: "admin", // Change to 'receiver' for receiver dashboard
+        bloodGroup: "O+"
+    };
+    const loading = false;
+    const isAuthenticated = true;
+    const logout = () => {};
+
+    const [activeTab, setActiveTab] = useState("admin-home"); // Change to 'dashboard' for receiver
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [chatTargetUser, setChatTargetUser] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [showNotifications, setShowNotifications] = useState(false);
     const [unreadCount, setUnreadCount] = useState(3);
-    const { addToast } = useToast();
+    const { addToast } = (msg) => {}; // Mock
 
     const handleSearch = (e) => {
         if (e.key === "Enter" && searchTerm.trim()) {
@@ -216,7 +229,7 @@ export default function Dashboard() {
                 pusherInst.unsubscribe('global-events');
             };
         }
-    }, [loading, isAuthenticated, user]);
+    }, [loading, isAuthenticated, user, navigate, addToast]);
 
     const handleLogout = async () => {
         await logout();

@@ -19,18 +19,29 @@ const StatCard = ({ icon: Icon, label, value, sub, color = 'bg-slate-800', accen
 );
 
 export default function AdminHome({ setActiveTab }) {
-    const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        (async () => {
-            try {
-                const res = await getAdminDashboard();
-                if (res?.success) setData(res.data);
-            } catch (err) { console.error(err); }
-            finally { setLoading(false); }
-        })();
-    }, []);
+    // const [data, setData] = useState(null);
+    // const [loading, setLoading] = useState(true);
+    
+    // TEMPORARY MOCK FOR SCREENSHOTS
+    const data = {
+        kpi: {
+            totalUsers: 1458,
+            activeRequests: 42,
+            criticalCases: 12,
+            totalRevenue: 85240
+        },
+        inventory: [
+            { group: "A+", units: 15 },
+            { group: "O-", units: 4 },
+            { group: "B+", units: 28 },
+            { group: "AB-", units: 2 }
+        ],
+        recentActions: [
+            { _id: 1, action: "USER_BANNED", details: "Spam behavior detected", createdAt: new Date() },
+            { _id: 2, action: "REQUEST_FULFILLED", details: "AB+ request 492 fulfilled", createdAt: new Date() }
+        ]
+    };
+    const loading = false;
 
     if (loading) return (
         <div className="flex items-center justify-center py-32">
@@ -52,24 +63,24 @@ export default function AdminHome({ setActiveTab }) {
 
     return (
         <div className="space-y-6 animate-in fade-in duration-500">
-            {/* Header */}
-            <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-purple-900 rounded-3xl p-6 lg:p-8 text-white shadow-2xl relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/10 rounded-full -translate-y-1/2 translate-x-1/3 pointer-events-none" />
-                <div className="absolute bottom-0 left-1/2 w-48 h-48 bg-amber-500/5 rounded-full translate-y-1/2 pointer-events-none" />
+            {/* Header (Red/Rose theme for consistency) */}
+            <div className="bg-gradient-to-br from-red-700 via-red-600 to-rose-900 rounded-3xl p-6 lg:p-8 text-white shadow-2xl relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+                <div className="absolute bottom-0 left-1/2 w-48 h-48 bg-white/5 rounded-full translate-y-1/2 pointer-events-none" />
                 <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div>
                         <div className="flex items-center gap-2 mb-2">
-                            <Shield size={20} className="text-amber-400" />
-                            <span className="text-[10px] font-black text-amber-400 uppercase tracking-widest">Admin Control Center</span>
+                            <Shield size={20} className="text-rose-200" />
+                            <span className="text-[10px] font-black text-rose-200 uppercase tracking-widest">Admin Control Center</span>
                         </div>
                         <h2 className="text-2xl lg:text-3xl font-black tracking-tight">Platform Command</h2>
-                        <p className="text-slate-400 text-sm font-medium mt-1">
+                        <p className="text-red-100/80 text-sm font-medium mt-1">
                             Managing {users.total.toLocaleString()} users • {requests.total.toLocaleString()} requests • ₹{(revenue.total || 0).toLocaleString("en-IN")} revenue
                         </p>
                     </div>
-                    <div className="flex items-center gap-2 px-4 py-2 bg-rose-500/20 border border-rose-500/30 rounded-xl">
-                        <div className="w-2 h-2 bg-rose-400 rounded-full animate-pulse" />
-                        <span className="text-xs font-black text-rose-400 uppercase tracking-wider">All Systems Online</span>
+                    <div className="flex items-center gap-2 px-4 py-2 bg-white/20 border border-white/30 rounded-xl">
+                        <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
+                        <span className="text-xs font-black text-white uppercase tracking-wider">All Systems Online</span>
                     </div>
                 </div>
             </div>
@@ -77,13 +88,13 @@ export default function AdminHome({ setActiveTab }) {
             {/* KPI Cards */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 <StatCard icon={Users} label="Total Users" value={users.total.toLocaleString()}
-                    sub={`${users.donors} donors • ${users.receivers} receivers`} color="bg-gradient-to-br from-blue-600 to-blue-800" />
+                    sub={`${users.donors} donors • ${users.receivers} receivers`} color="bg-gradient-to-br from-red-600 to-red-800" />
                 <StatCard icon={Ticket} label="Active Requests" value={requests.active.toLocaleString()}
-                    sub={`${requests.fulfillmentRate}% fulfillment rate`} color="bg-gradient-to-br from-red-600 to-red-800" />
+                    sub={`${requests.fulfillmentRate}% fulfillment rate`} color="bg-gradient-to-br from-rose-600 to-rose-800" />
                 <StatCard icon={DollarSign} label="Revenue" value={`₹${(revenue.total || 0).toLocaleString("en-IN")}`}
-                    sub={`₹${(revenue.today || 0).toLocaleString("en-IN")} today`} color="bg-gradient-to-br from-rose-600 to-rose-800" />
+                    sub={`₹${(revenue.today || 0).toLocaleString("en-IN")} today`} color="bg-gradient-to-br from-red-500 to-red-700" />
                 <StatCard icon={TrendingUp} label="Today's Signups" value={registrations.today}
-                    sub={`${registrations.thisWeek} this week`} color="bg-gradient-to-br from-purple-600 to-purple-800" />
+                    sub={`${registrations.thisWeek} this week`} color="bg-gradient-to-br from-rose-500 to-rose-700" />
             </div>
 
             {/* Quick Stats Row */}
@@ -91,7 +102,7 @@ export default function AdminHome({ setActiveTab }) {
                 {[
                     { label: "Total Donations", value: totalDonations, icon: Droplets, color: "text-red-600", bg: "bg-red-50" },
                     { label: "Fulfilled Requests", value: requests.fulfilled, icon: Activity, color: "text-rose-600", bg: "bg-rose-50" },
-                    { label: "Blood Camps", value: totalCamps, icon: Tent, color: "text-blue-600", bg: "bg-blue-50" },
+                    { label: "Blood Camps", value: totalCamps, icon: Tent, color: "text-red-700", bg: "bg-red-50" },
                     { label: "Admin Accounts", value: users.admins, icon: Shield, color: "text-amber-600", bg: "bg-amber-50" },
                 ].map((stat, idx) => (
                     <div key={idx} className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
@@ -122,7 +133,7 @@ export default function AdminHome({ setActiveTab }) {
                     <div className="space-y-3">
                         {recentAuditLogs && recentAuditLogs.length > 0 ? recentAuditLogs.map(log => (
                             <div key={log._id} className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100">
-                                <div className="w-8 h-8 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center flex-shrink-0">
+                                <div className="w-8 h-8 rounded-lg bg-red-100 text-red-600 flex items-center justify-center flex-shrink-0">
                                     <Shield size={14} />
                                 </div>
                                 <div className="min-w-0">
@@ -142,10 +153,10 @@ export default function AdminHome({ setActiveTab }) {
             {/* Quick Navigation */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {[
-                    { label: "Manage Users", tab: "admin-users", icon: Users, color: "from-blue-500 to-blue-700" },
-                    { label: "Manage Requests", tab: "admin-requests", icon: Ticket, color: "from-red-500 to-red-700" },
-                    { label: "System Health", tab: "admin-health", icon: Activity, color: "from-rose-500 to-rose-700" },
-                    { label: "Revenue", tab: "admin-revenue", icon: DollarSign, color: "from-purple-500 to-purple-700" },
+                    { label: "Manage Users", tab: "admin-users", icon: Users, color: "from-red-500 to-red-700" },
+                    { label: "Manage Requests", tab: "admin-requests", icon: Ticket, color: "from-rose-500 to-rose-700" },
+                    { label: "System Health", tab: "admin-health", icon: Activity, color: "from-red-600 to-red-800" },
+                    { label: "Revenue", tab: "admin-revenue", icon: DollarSign, color: "from-rose-600 to-rose-800" },
                 ].map(item => (
                     <button key={item.tab} onClick={() => setActiveTab(item.tab)}
                         className={`bg-gradient-to-br ${item.color} text-white rounded-2xl p-4 flex items-center gap-3 shadow-lg hover:scale-105 transition-transform`}>
