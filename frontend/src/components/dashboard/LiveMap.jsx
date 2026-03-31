@@ -6,7 +6,7 @@ const EmergencyMap = lazy(() => import('../map/EmergencyMap'));
 export default function LiveMap({ setActiveTab }) {
     return (
         <div className="w-full h-full rounded-3xl overflow-hidden shadow-2xl relative z-0">
-            <Suspense fallback={<div className="w-full h-full flex items-center justify-center bg-slate-900 text-slate-400 font-bold">Initializing EIMS Command Center...</div>}>
+            <Suspense fallback={<div className="w-full h-full flex items-center justify-center bg-white text-slate-400 font-bold">Initializing EIMS Command Center...</div>}>
                 <EmergencyMap />
             </Suspense>
         </div>

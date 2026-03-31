@@ -1,0 +1,6 @@
+﻿PAGE LOG: [vite] connecting...
+PAGE LOG: [vite] connected.
+PAGE LOG: %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+PAGE LOG: ≡ƒîÉ i18next is maintained with support from Locize ΓÇö consider powering your project with managed localization (AI, CDN, integrations): https://locize.com ≡ƒÆÖ
+PAGE LOG: [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o
+--- LOCAL_STORAGE_TOKEN --- eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTk5ZTE1ZTAyNmEwOGE0N2Q1ZTJkYzIiLCJpYXQiOjE3NzQ5ODg2OTYsImV4cCI6MTc3NzU4MDY5Nn0.-LJbqAw_A4Njy_r0mQknYeijbH21xNFKuKfIwapPD5s

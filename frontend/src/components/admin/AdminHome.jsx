@@ -19,29 +19,22 @@ const StatCard = ({ icon: Icon, label, value, sub, color = 'bg-slate-800', accen
 );
 
 export default function AdminHome({ setActiveTab }) {
-    // const [data, setData] = useState(null);
-    // const [loading, setLoading] = useState(true);
-    
-    // TEMPORARY MOCK FOR SCREENSHOTS
-    const data = {
-        kpi: {
-            totalUsers: 1458,
-            activeRequests: 42,
-            criticalCases: 12,
-            totalRevenue: 85240
-        },
-        inventory: [
-            { group: "A+", units: 15 },
-            { group: "O-", units: 4 },
-            { group: "B+", units: 28 },
-            { group: "AB-", units: 2 }
-        ],
-        recentActions: [
-            { _id: 1, action: "USER_BANNED", details: "Spam behavior detected", createdAt: new Date() },
-            { _id: 2, action: "REQUEST_FULFILLED", details: "AB+ request 492 fulfilled", createdAt: new Date() }
-        ]
-    };
-    const loading = false;
+    const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await getAdminDashboard();
+                if (res?.success) setData(res.data);
+            } catch (err) {
+                console.error('Failed to load admin dashboard', err);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
+    }, []);
 
     if (loading) return (
         <div className="flex items-center justify-center py-32">
@@ -103,7 +96,7 @@ export default function AdminHome({ setActiveTab }) {
                     { label: "Total Donations", value: totalDonations, icon: Droplets, color: "text-red-600", bg: "bg-red-50" },
                     { label: "Fulfilled Requests", value: requests.fulfilled, icon: Activity, color: "text-rose-600", bg: "bg-rose-50" },
                     { label: "Blood Camps", value: totalCamps, icon: Tent, color: "text-red-700", bg: "bg-red-50" },
-                    { label: "Admin Accounts", value: users.admins, icon: Shield, color: "text-amber-600", bg: "bg-amber-50" },
+                    { label: "Admin Accounts", value: users.admins, icon: Shield, color: "text-rose-600", bg: "bg-rose-50" },
                 ].map((stat, idx) => (
                     <div key={idx} className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
                         <div className={`w-10 h-10 rounded-xl ${stat.bg} flex items-center justify-center ${stat.color}`}>
@@ -128,7 +121,7 @@ export default function AdminHome({ setActiveTab }) {
                 <div className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm">
                     <div className="flex items-center justify-between mb-4">
                         <h3 className="font-black text-slate-800">Recent Admin Actions</h3>
-                        <button onClick={() => setActiveTab('admin-audit')} className="text-xs font-bold text-purple-600 hover:underline">View All</button>
+                        <button onClick={() => setActiveTab('admin-audit')} className="text-xs font-bold text-red-600 hover:underline">View All</button>
                     </div>
                     <div className="space-y-3">
                         {recentAuditLogs && recentAuditLogs.length > 0 ? recentAuditLogs.map(log => (

@@ -133,7 +133,7 @@ export default function CampAdmin() {
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-1">
-                                    <button onClick={() => openEdit(c)} className="p-1.5 hover:bg-blue-50 rounded-lg text-blue-500"><Edit size={14} /></button>
+                                    <button onClick={() => openEdit(c)} className="p-1.5 hover:bg-red-50 rounded-lg text-red-500"><Edit size={14} /></button>
                                     <button onClick={() => handleDelete(c._id)} className="p-1.5 hover:bg-red-50 rounded-lg text-red-400"><Trash2 size={14} /></button>
                                 </div>
                             </div>

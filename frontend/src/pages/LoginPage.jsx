@@ -82,10 +82,21 @@ export default function LoginPage() {
         setError("");
         setLoading(true);
         try {
-            await login({ email: form.email, password: form.password, aadhaarLast4: useAadhaar ? aadhaarLast4 : undefined });
+            const data = await login({ email: form.email, password: form.password, aadhaarLast4: useAadhaar ? aadhaarLast4 : undefined });
             navigate("/dashboard");
         } catch (err) {
             console.error("Login caught error:", err);
+            
+            // Check if account needs verification
+            if (err.requiresOtp || err.response?.data?.requiresOtp) {
+                const emailToVerify = err.email || err.response?.data?.email || form.email;
+                setError("Account not verified. Redirecting to OTP verification...");
+                setTimeout(() => {
+                    navigate(`/verify-otp?email=${encodeURIComponent(emailToVerify)}`);
+                }, 1500);
+                return;
+            }
+
             setError(err.message || err.response?.data?.message || err.toString() || "Invalid email or password. Please try again.");
         } finally {
             setLoading(false);

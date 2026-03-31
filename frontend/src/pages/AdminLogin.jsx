@@ -28,8 +28,8 @@ export default function AdminLogin() {
         setLoading(true);
         try {
             const res = await adminLoginAPI({ email, password, adminKey });
-            if (res?.success || res?.data) {
-                const userData = res.data || res;
+            if (res?.success) {
+                setUser(res.data);
                 navigate("/dashboard");
             }
         } catch (err) {

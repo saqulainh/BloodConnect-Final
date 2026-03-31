@@ -74,8 +74,8 @@ export default function FitnessCard() {
     return (
         <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm">
             <div className="flex items-center gap-2 mb-5">
-                <div className="w-8 h-8 bg-blue-50 rounded-xl flex items-center justify-center">
-                    <ShieldCheck size={16} className="text-blue-600" />
+                <div className="w-8 h-8 bg-red-50 rounded-xl flex items-center justify-center">
+                    <ShieldCheck size={16} className="text-red-600" />
                 </div>
                 <div>
                     <h3 className="text-sm font-black text-slate-800">Health Readiness Check</h3>
@@ -92,7 +92,7 @@ export default function FitnessCard() {
                         <input
                             type="number" step="0.1" min="5" max="25"
                             placeholder="e.g. 13.5"
-                            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-300"
+                            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-red-500/30 focus:border-red-300"
                             value={form.hemoglobin}
                             onChange={e => setForm({ ...form, hemoglobin: e.target.value })}
                         />
@@ -105,7 +105,7 @@ export default function FitnessCard() {
                         <input
                             type="number" step="0.5" min="30" max="200"
                             placeholder="e.g. 65"
-                            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-300"
+                            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-red-500/30 focus:border-red-300"
                             value={form.weight}
                             onChange={e => setForm({ ...form, weight: e.target.value })}
                         />
@@ -118,7 +118,7 @@ export default function FitnessCard() {
                         <input
                             type="number" step="0.5" min="0" max="24"
                             placeholder="e.g. 2"
-                            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-300"
+                            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-red-500/30 focus:border-red-300"
                             value={form.lastMealHoursAgo}
                             onChange={e => setForm({ ...form, lastMealHoursAgo: e.target.value })}
                         />
@@ -129,7 +129,7 @@ export default function FitnessCard() {
                 <button
                     type="submit"
                     disabled={loading}
-                    className="w-full py-3 bg-blue-600 text-white font-black rounded-xl hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200 disabled:opacity-50"
+                    className="w-full py-3.5 bg-red-600 text-white font-black rounded-xl hover:bg-red-700 transition-colors shadow-lg shadow-red-200 disabled:opacity-50"
                 >
                     {loading ? (
                         <span className="flex items-center justify-center gap-2">

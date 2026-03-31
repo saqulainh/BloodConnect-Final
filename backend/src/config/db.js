@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 import dns from "node:dns";
-
-// Force Google DNS to bypass ISP blocking of MongoDB SRV records
-dns.setServers(["8.8.8.8", "8.8.4.4"]);
+// Set DNS servers to a broad list to avoid SRV record issues with some ISPs
+// Includes Cloudflare (1.1.1.1) and Google (8.8.8.8)
+dns.setServers(["1.1.1.1", "1.0.0.1", "8.8.8.8", "8.8.4.4"]);
 
 // ── Connection Pool Settings (for 10,000+ users) ─────────────────────
 const DB_OPTIONS = {
@@ -17,7 +17,12 @@ const DB_OPTIONS = {
 
 export const connectDB = async () => {
     try {
-        const conn = await mongoose.connect(process.env.MONGODB_URI, DB_OPTIONS);
+        const conn = await mongoose.connect(process.env.MONGODB_URI, {
+            serverSelectionTimeoutMS: 20000, // 20 seconds wait for server
+            connectTimeoutMS: 20000,         // 20 seconds for initial connection
+            socketTimeoutMS: 45000,          // 45 seconds for idle socket
+            maxPoolSize: 10,
+        });
         console.log(`MongoDB Connected: ${conn.connection.host} (Pool: ${DB_OPTIONS.maxPoolSize})`);
     } catch (error) {
         console.error(`Error connecting to Cloud DB: ${error.message}`);

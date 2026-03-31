@@ -6,8 +6,8 @@ const BADGE_VISUALS = {
     "Bronze Lifesaver": { bg: "from-orange-300 to-amber-500", text: "text-white", ring: "ring-4 ring-orange-300/50", glow: "" },
     "Silver Lifesaver": { bg: "from-slate-300 to-slate-500", text: "text-white", ring: "ring-4 ring-slate-300/60", glow: "" },
     "Gold Lifesaver": { bg: "from-yellow-300 to-amber-500", text: "text-white", ring: "ring-4 ring-yellow-300/60", glow: "shadow-yellow-300/50 shadow-2xl" },
-    "Platinum Lifesaver": { bg: "from-cyan-400 to-blue-600", text: "text-white", ring: "ring-4 ring-cyan-400/60", glow: "shadow-cyan-400/40 shadow-2xl" },
-    "Hero of Humanity": { bg: "from-red-400 via-purple-500 to-blue-500", text: "text-white", ring: "ring-4 ring-purple-400/70", glow: "shadow-purple-400/50 shadow-2xl" },
+    "Platinum Lifesaver": { bg: "from-slate-200 to-slate-400", text: "text-slate-700", ring: "ring-4 ring-slate-200/60", glow: "shadow-slate-300/40 shadow-2xl" },
+    "Hero of Humanity": { bg: "from-red-500 via-rose-600 to-red-800", text: "text-white", ring: "ring-4 ring-red-400/70", glow: "shadow-red-400/50 shadow-2xl" },
 };
 
 export default function BadgeCard({ badge, totalDonations, totalUnits }) {
@@ -27,7 +27,7 @@ export default function BadgeCard({ badge, totalDonations, totalUnits }) {
             {isHero && (
                 <div
                     className="absolute inset-0 rounded-3xl opacity-30 pointer-events-none"
-                    style={{ background: "linear-gradient(135deg, #f00 0%, #6a0dad 50%, #00f 100%)", animation: "spin 4s linear infinite" }}
+                    style={{ background: "linear-gradient(135deg, #f00 0%, #e11d48 50%, #900 100%)", animation: "spin 4s linear infinite" }}
                 />
             )}
 

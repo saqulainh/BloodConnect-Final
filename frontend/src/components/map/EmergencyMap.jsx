@@ -27,10 +27,10 @@ const EmergencyMap = () => {
     useEffect(() => {
         const fetchMapData = async () => {
             try {
-                const reqRes = await api.get('/map/active-requests');
-                if (reqRes.data?.success) setRequests(reqRes.data.data);
-                const donorRes = await api.get('/map/nearby-donors?lat=20.5937&lng=78.9629&radiusKm=3000');
-                if (donorRes.data?.success) setDonors(donorRes.data.data);
+                const reqRes = await api.apiFetch('/map/active-requests');
+                if (reqRes?.success) setRequests(reqRes.data);
+                const donorRes = await api.apiFetch('/map/nearby-donors?lat=20.5937&lng=78.9629&radiusKm=3000');
+                if (donorRes?.success) setDonors(donorRes.data);
             } catch (error) { console.error("EIMS Fetch Error", error); }
         };
         fetchMapData();
@@ -53,9 +53,9 @@ const EmergencyMap = () => {
     useEffect(() => {
         if (typeof window !== 'undefined') {
             Promise.all([
-                import(/* @vite-ignore */ 'react-leaflet'),
-                import(/* @vite-ignore */ 'leaflet'),
-                import(/* @vite-ignore */ 'leaflet/dist/leaflet.css')
+                import('react-leaflet'),
+                import('leaflet'),
+                import('leaflet/dist/leaflet.css')
             ]).then(([RL, Lmod]) => {
                 setLeafletComps({
                     MapContainer: RL.MapContainer,
@@ -89,27 +89,27 @@ const EmergencyMap = () => {
         const fetchRadius = async () => {
             try {
                 const [lng, lat] = req.location.coordinates;
-                const res = await api.get(`/map/nearby-donors?lat=${lat}&lng=${lng}&radiusKm=10`);
-                if (res.data?.success) setRadiusStats({ donorsFound: res.data.count });
+                const res = await api.apiFetch(`/map/nearby-donors?lat=${lat}&lng=${lng}&radiusKm=10`);
+                if (res?.success) setRadiusStats({ donorsFound: res.count || res.data?.length || 0 });
             } catch (err) { console.error("Radius fetch error", err); }
         };
         fetchRadius();
     }, []);
 
     if (!LeafletComps) {
-        return <div className="w-full h-full bg-slate-900 flex items-center justify-center text-slate-500 font-bold">Booting EIMS Intelligence...</div>;
+        return <div className="w-full h-full bg-white flex items-center justify-center text-slate-400 font-bold">Booting EIMS Intelligence...</div>;
     }
 
     const { MapContainer, TileLayer } = LeafletComps;
 
     return (
-        <div className="relative w-full h-[calc(100vh-64px)] bg-slate-900 overflow-hidden">
+        <div className="relative w-full h-[calc(100vh-64px)] bg-white overflow-hidden">
             <TopStatsBar stats={stats} />
             <FilterDrawer onFilterChange={(f) => console.log('Filters:', f)} />
 
             <MapContainer center={DEFAULT_CENTER} zoom={DEFAULT_ZOOM} className="w-full h-full z-0" zoomControl={false}>
                 <TileLayer
-                    url="https://{s}.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}.png"
+                    url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager_all/{z}/{x}/{y}.png"
                     attribution='&copy; <a href="https://carto.com/">Carto</a>'
                 />
 

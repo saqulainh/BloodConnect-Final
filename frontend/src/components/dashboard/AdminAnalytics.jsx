@@ -118,7 +118,7 @@ export default function AdminAnalytics() {
                     label="Total Donors"
                     value={summary.totalDonors.toLocaleString()}
                     sub={`+${summary.newUsersThisWeek} this week`}
-                    color="blue"
+                    color="red"
                 />
                 <StatCard
                     icon={Droplets}
@@ -132,7 +132,7 @@ export default function AdminAnalytics() {
                     label="Platform Users"
                     value={summary.totalUsers.toLocaleString()}
                     sub="All registered users"
-                    color="amber"
+                    color="red"
                 />
             </div>
 

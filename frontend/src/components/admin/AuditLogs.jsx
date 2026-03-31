@@ -49,7 +49,7 @@ export default function AuditLogs() {
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                 <div>
                     <h2 className="text-2xl font-black text-slate-800 flex items-center gap-2">
-                        <FileText size={24} className="text-slate-600" /> Audit Logs
+                        <FileText size={24} className="text-red-600" /> Audit Logs
                     </h2>
                     <p className="text-sm text-slate-400 mt-1">{pagination.total} total admin actions recorded</p>
                 </div>

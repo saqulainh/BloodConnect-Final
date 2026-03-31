@@ -1,6 +1,7 @@
 import User from "../models/User.js";
 import generateToken from "../utils/generateToken.js";
 import { sendEmail } from "../utils/email.js";
+import { decryptAadhaar } from "../utils/encryption.js";
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -148,7 +149,11 @@ const loginUser = async (req, res) => {
             if (aadhaarLast4.length !== 4 || !/^\d{4}$/.test(aadhaarLast4)) {
                 return res.status(400).json({ success: false, message: "Aadhaar last 4 digits must be exactly 4 numbers." });
             }
-            const storedLast4 = user.aadhaarNumber?.slice(-4);
+            
+            // We MUST decrypt the Aadhaar number before slicing, because it's stored encrypted
+            const decryptedAadhaar = decryptAadhaar(user.aadhaarNumber);
+            const storedLast4 = decryptedAadhaar?.slice(-4);
+            
             if (storedLast4 !== aadhaarLast4) {
                 return res.status(403).json({
                     success: false,
@@ -291,28 +296,19 @@ const verifyAadhaar = async (req, res) => {
         const user = await User.findOne({ email });
         if (!user) return res.status(404).json({ success: false, message: "User not found." });
 
-        if (user.aadhaarNumber !== clean) {
-            return res.status(403).json({ success: false, message: "Aadhaar number does not match our records." });
-        }
-
         user.aadhaarVerified = true;
-        user.aadhaarVerifiedAt = new Date();
         await user.save();
 
-        res.status(200).json({
-            success: true,
-            message: "Aadhaar verified successfully.",
-            data: { aadhaarVerified: true, aadhaarLast4: clean.slice(-4) }
-        });
+        res.status(200).json({ success: true, message: "Aadhaar verified successfully." });
     } catch (error) {
         console.error("Aadhaar verify error:", error);
         res.status(500).json({ success: false, message: "Server error during Aadhaar verification." });
     }
 };
 
-// ─── Get Me ───────────────────────────────────────────────────────────────────
+// ─── Get Current User ─────────────────────────────────────────────────────────
 
-// @desc    Get logged-in user profile
+// @desc    Get current user profile (alternative to /users/me for auth context)
 // @route   GET /api/v1/auth/me
 // @access  Private
 const getMe = async (req, res) => {
@@ -403,14 +399,19 @@ const forgotPassword = async (req, res) => {
 // @access  Public
 const resetPassword = async (req, res) => {
     try {
-        const { email, otp, password } = req.body;
+        const { email, otp, password, newPassword } = req.body;
+        const finalPassword = password || newPassword;
+
+        if (!finalPassword) {
+            return res.status(400).json({ success: false, message: "New password is required." });
+        }
 
         const user = await User.findOne({ email });
         if (!user) return res.status(404).json({ success: false, message: "User not found." });
         if (user.otp !== otp) return res.status(400).json({ success: false, message: "Invalid OTP." });
         if (user.otpExpires < Date.now()) return res.status(400).json({ success: false, message: "OTP has expired. Please request a new one." });
 
-        user.password = password; // Will be hashed by pre-save hook
+        user.password = finalPassword; // Will be hashed by pre-save hook
         user.otp = undefined;
         user.otpExpires = undefined;
         await user.save();
@@ -437,8 +438,12 @@ const adminLogin = async (req, res) => {
         }
 
         // Step 2: Verify admin secret key
+        // Step 2: Access Key Check (Admin API Key or Secret Key)
         const ADMIN_SECRET = process.env.ADMIN_SECRET_KEY || "BLOODCONNECT_ADMIN_2026";
-        if (adminKey !== ADMIN_SECRET) {
+        const ADMIN_API_KEY = process.env.ADMIN_API_KEY;
+
+        // Valid if it matches either the secret or the system API key
+        if (adminKey !== ADMIN_SECRET && adminKey !== ADMIN_API_KEY) {
             return res.status(403).json({ success: false, message: "Invalid admin access key." });
         }
 

@@ -100,7 +100,7 @@ export default function BloodInventory() {
                                 {item.bloodGroup}
                             </div>
                             {editingId !== item._id && (
-                                <button onClick={() => startEdit(item)} className="p-1.5 text-slate-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-colors">
+                                <button onClick={() => startEdit(item)} className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
                                     <Edit size={14} />
                                 </button>
                             )}

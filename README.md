@@ -210,75 +210,139 @@ Ye features hum next phase mein build karenge. Abhi architecture ready hai, bas 
 
 ## 📸 Screenshots
 
-Here is a visual tour of all the key features currently live and working in the application:
+Here is a comprehensive visual tour of all the key features currently live and working in the application, specifically detailing the customized experiences for Donors, Receivers, and Admins.
 
-### 🏠 Landing / Home Page
+### 🌟 Public Pages
+
+#### 🏠 Landing / Home Page
 > Beautiful hero section with live stats, CTA, and step-by-step explainer.
 
 ![Home Page](screenshots/01_home.png)
 
 ---
 
-### 🔐 User Registration (Multi-Step Form)
+#### 🔐 User Registration (Multi-Step Form)
 > Secure multi-step sign-up flow with Aadhaar verification and blood group selection.
 
 ![Register Page](screenshots/02_register.png)
 
 ---
 
-### 🔑 Login
+#### 🔑 Login
 > Clean, minimal login interface with secure JWT-based authentication.
 
 ![Login Page](screenshots/03_login.png)
 
 ---
 
-### 📊 Dashboard – Analytics Home
-> Real-time stats, live heatmap, area charts for donation vs request trends, and quick actions.
+### 🩸 Donor Features
 
-![Dashboard Home](screenshots/04_dashboard_home.png)
+#### 📊 Donor Dashboard
+> Real-time stats, live heatmap, area charts for donation trends, and quick actions tailored for donors.
 
----
-
-### 🚨 Blood Requests Management
-> Create, view, filter, and manage urgent blood requests with urgency levels (Normal / High / Critical).
-
-![Blood Requests](screenshots/05_blood_requests.png)
+![Donor Dashboard](screenshots/04_donor_dashboard.png)
 
 ---
 
-### 👥 Donor Directory
-> Browse and search verified donors by blood group, distance, and availability status.
+#### 🚨 Active Blood Requests
+> Browse and fulfill urgent blood requests in real-time. The system clearly tags critical vs. normal requests.
 
-![Donors](screenshots/06_donors.png)
-
----
-
-### 🏕️ Blood Donation Camps
-> Discover and register for upcoming blood donation camps in your area.
-
-![Blood Camps](screenshots/07_blood_camps.png)
+![Donor Requests](screenshots/05_donor_requests.png)
 
 ---
 
-### 💬 Real-Time Secure Chat
-> Connect directly with donors or requesters via Pusher-powered live messaging.
+#### 👥 Proximity Matcher (Nearby Donors)
+> Browse and search verified donors by blood group, distance, and availability status using map-based intelligence.
+
+![Nearby Donors](screenshots/06_donor_donors.png)
+
+---
+
+#### 🏕️ Blood Donation Camps
+> Discover and register for upcoming blood donation camps in your area to maximize your impact.
+
+![Blood Camps](screenshots/07_donor_camps.png)
+
+---
+
+#### 💬 Secure Chat
+> Connect directly and securely with donors or requesters via Pusher-powered real-time messaging.
 
 ![Secure Chat](screenshots/08_chat.png)
 
 ---
 
-### 📥 Receiver Dashboard
-> Specialized hub for blood requesters to track their active needs, check recovery timelines, and view live fulfillment rates.
+### 📥 Receiver Features
 
-![Receiver Dashboard](screenshots/10_receiver_dashboard.png)
+#### 📈 Receiver Dashboard
+> Specialized hub for blood requesters to track their active needs, check recovery timelines, and view live hospital fulfillment rates.
+
+![Receiver Dashboard](screenshots/09_receiver_dashboard.png)
 
 ---
 
-### 🛡️ Admin Powerhouse Panel
-> Full oversight for platform administrators: manage users, monitor inventory thresholds, and view national-level analytics.
+#### 📝 My Requests Management
+> A detailed console enabling receivers to easily monitor the status, update urgency, or resolve their life-saving blood requests.
 
-![Admin Dashboard](screenshots/09_admin_dashboard.png)
+![Receiver Requests](screenshots/10_receiver_requests.png)
+
+---
+
+#### 🔍 AI Donor Finder
+> Instantly identify matching donors within a specified radius, leveraging geo-spatial indexes for critical emergency speed.
+
+![Receiver Find Donors](screenshots/11_receiver_donors.png)
+
+---
+
+#### 💳 Health Wallet & Impact Log
+> Unique digital wallet showing impact scores, earned badges, request history, and health readiness tracking.
+
+![Receiver Wallet](screenshots/12_receiver_wallet.png)
+
+---
+
+#### 📊 Personal Analytics
+> Receiver-specific data insights showing response times, fulfillment patterns, and community support metrics.
+
+![Receiver Analytics](screenshots/13_receiver_analytics.png)
+
+---
+
+### 🛡️ Admin Powerhouse Settings
+
+#### 🖥️ Admin Command Dashboard
+> Centralized command center providing full oversight. Monitor inventory thresholds, high-level metrics, and daily engagement.
+
+![Admin Dashboard](screenshots/14_admin_dashboard.png)
+
+---
+
+#### 👤 User Management Panel
+> A complete interface to view, ban, promote, or remove accounts across the application, complete with quick CSV export abilities.
+
+![Admin User Management](screenshots/15_admin_users.png)
+
+---
+
+#### 🩸 Unified Blood Inventory
+> Precise monitoring of the blood bank. Instantly track A, B, AB, and O group supplies across critical states.
+
+![Admin Blood Inventory](screenshots/16_admin_inventory.png)
+
+---
+
+#### 💻 System Health & Infrastructure
+> Real-time monitoring of backend performance, server load averages, uptime, cache statistics, and API latency.
+
+![System Health](screenshots/17_admin_health.png)
+
+---
+
+#### 💸 Revenue & Donations Tracker
+> Dedicated financial dashboard detailing gateway collections, monthly recurring revenue, and top individual contributors.
+
+![Admin Revenue](screenshots/18_admin_revenue.png)
 
 ---
 

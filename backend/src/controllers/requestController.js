@@ -9,7 +9,7 @@ import { triggerNotification } from "../services/notificationService.js";
 // @access  Private
 const createRequest = async (req, res) => {
     try {
-        const { patientName, bloodGroup, hospital, urgency, units, lat, lng } = req.body;
+        const { patientName, bloodGroup, hospital, urgency, units, lat, lng, description, contactPhone, city } = req.body;
 
         const request = new Request({
             requester: req.user._id,
@@ -18,10 +18,13 @@ const createRequest = async (req, res) => {
             hospital,
             urgency,
             units,
-            location: {
+            description:  description  || "",
+            contactPhone: contactPhone || "",
+            city:         city         || "",
+            location: lat && lng ? {
                 type: "Point",
                 coordinates: [parseFloat(lng), parseFloat(lat)]
-            }
+            } : undefined,
         });
 
         // EIMS: Calculate AI Urgency Score and Level

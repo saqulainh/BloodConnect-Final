@@ -11,9 +11,11 @@ const BASE_URL =
 export const getAccessToken = () => localStorage.getItem("accessToken");
 export const getRefreshToken = () => localStorage.getItem("refreshToken");
 
-export const saveTokens = ({ accessToken, refreshToken }) => {
+export const saveTokens = ({ accessToken, refreshToken } = {}) => {
     if (accessToken) localStorage.setItem("accessToken", accessToken);
-    if (refreshToken) localStorage.setItem("refreshToken", refreshToken);
+    if (refreshToken && refreshToken !== "undefined") {
+        localStorage.setItem("refreshToken", refreshToken);
+    }
 };
 
 export const clearTokens = () => {
@@ -36,10 +38,14 @@ export const getUser = () => {
 export const isLoggedIn = () => !!getAccessToken();
 
 // ── Auth headers ───────────────────────────────────────────────────────
-const authHeaders = () => ({
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${getAccessToken()}`,
-});
+const authHeaders = () => {
+    const token = getAccessToken();
+    console.log("[api.js] authHeaders called! token:", token);
+    return {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+    };
+};
 
 // ── Token refresh ──────────────────────────────────────────────────────
 const refreshAccessToken = async () => {
@@ -94,22 +100,31 @@ export const apiFetch = async (endpoint, options = {}, retry = true) => {
         }
     }
 
-    // Safely parse JSON — server may return empty body or non-JSON on some responses
-    let data;
+    // Parse body if it exists
+    let data = { success: false, message: "No response from server" };
     const contentType = res.headers.get("content-type") || "";
     const text = await res.text();
 
     if (text && contentType.includes("application/json")) {
-        try { data = JSON.parse(text); } catch { throw new Error("Server returned invalid JSON. Please try again."); }
+        try {
+            data = JSON.parse(text);
+        } catch (e) {
+            console.error("JSON parse error:", e);
+            throw new Error("Invalid response format from server.");
+        }
     } else if (res.ok) {
-        // 2xx but no JSON body — treat as success
-        return { success: true, data: {}, message: text || "OK" };
+        // Success but no JSON (e.g. 204 No Content or plain text)
+        return { success: true, message: text || "Request successful" };
     } else {
-        // Non-2xx, non-JSON — use text as error message
-        throw new Error(text || `Request failed (${res.status})`);
+        // Error with no JSON body
+        throw new Error(text || `Error: ${res.status} ${res.statusText}`);
     }
 
-    if (!data.success) throw new Error(data.message || "Something went wrong");
+    if (!data.success) {
+        const error = new Error(data.message || "Something went wrong");
+        error.response = { data }; // Attach data for consumer access (e.g. requiresOtp)
+        throw error;
+    }
     return data;
 };
 
@@ -169,30 +184,40 @@ export const verifyOtp = async ({ email, otp }) => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, otp }),
-    });
-    return apiFetch("/auth/verify-otp", {
-        method: "POST", body: JSON.stringify({ email, otp }),
     }, false); // no retry
+    
+    // CRITICAL: Save tokens so the user stays logged in after verification
+    if (data.success && data.data?.accessToken) {
+        saveTokens(data.data);
+        saveUser(data.data);
+    }
+    return data;
 };
 
 /** POST /auth/resend-otp — { email } */
 export const resendOtp = async ({ email }) => {
     return apiFetch("/auth/resend-otp", {
-        method: "POST", body: JSON.stringify({ email }),
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
     }, false); // no retry
 };
 
 /** POST /auth/forgot-password — { email } */
 export const forgotPassword = async ({ email }) => {
     return apiFetch("/auth/forgot-password", {
-        method: "POST", body: JSON.stringify({ email }),
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
     }, false); // no retry
 };
 
 /** POST /auth/reset-password — { email, otp, password } */
 export const resetPassword = async ({ email, otp, newPassword }) => {
     return apiFetch("/auth/reset-password", {
-        method: "POST", body: JSON.stringify({ email, otp, newPassword }),
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, otp, newPassword }),
     }, false); // no retry
 };
 
@@ -474,9 +499,32 @@ export const getReceiverStats = async () => {
     return apiFetch("/receiver/stats", { method: "GET", headers: authHeaders() });
 };
 
-/** GET /receiver/my-requests — All requests created by this receiver */
-export const getMyReceiverRequests = async () => {
-    return apiFetch("/receiver/my-requests", { method: "GET", headers: authHeaders() });
+/** GET /receiver/my-requests — All requests created by this receiver (with filters) */
+export const getMyReceiverRequests = async ({ status, urgency, bloodGroup, sort } = {}) => {
+    const params = new URLSearchParams();
+    if (status && status !== 'All') params.append('status', status);
+    if (urgency)    params.append('urgency', urgency);
+    if (bloodGroup) params.append('bloodGroup', bloodGroup);
+    if (sort)       params.append('sort', sort);
+    const qs = params.toString();
+    return apiFetch(`/receiver/my-requests${qs ? `?${qs}` : ''}`, { method: "GET", headers: authHeaders() });
+};
+
+/** PATCH /receiver/:id/cancel — Cancel a blood request with optional reason */
+export const cancelBloodRequest = async (id, reason = '') => {
+    return apiFetch(`/receiver/${id}/cancel`, {
+        method: "PATCH",
+        headers: authHeaders(),
+        body: JSON.stringify({ reason }),
+    });
+};
+
+/** GET /receiver/nearby-urgent — Nearby urgent requests for the dashboard alert banner */
+export const getNearbyUrgent = async (lat, lng, radius = 50) => {
+    return apiFetch(`/receiver/nearby-urgent?lat=${lat}&lng=${lng}&radius=${radius}`, {
+        method: "GET",
+        headers: authHeaders(),
+    });
 };
 
 /** GET /receiver/wallet — Receiver wallet (badges, impact, gratitude) */

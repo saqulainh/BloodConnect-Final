@@ -164,7 +164,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen, activeTab, se
                 {/* Admin-only section */}
                 {user?.role === "admin" && (
                     <>
-                        <p className="px-4 text-[9px] font-black text-amber-500 uppercase tracking-widest mb-2 mt-6">🛡️ Admin Control</p>
+                        <p className="px-4 text-[9px] font-black text-red-500 uppercase tracking-widest mb-2 mt-6">🛡️ Admin Control</p>
                         {ADMIN_ITEMS.map(item => (
                             <NavItem key={item.id} {...item} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />
                         ))}

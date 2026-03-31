@@ -54,7 +54,7 @@ const DashboardHome = ({ setActiveTab, user }) => {
         const fetchAnalytics = async () => {
             try {
                 const res = await getAnalytics(timeframe);
-                if (res && res.success) {
+                if (res && res.success && res.data) {
                     setAnalytics(res.data);
                 }
             } catch (err) {
@@ -99,10 +99,10 @@ const DashboardHome = ({ setActiveTab, user }) => {
 
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 {[
-                    { label: 'Total Donors', value: analytics.totalDonors, icon: Users, color: 'text-blue-600', bg: 'bg-blue-50' },
+                    { label: 'Total Donors', value: analytics.totalDonors, icon: Users, color: 'text-rose-600', bg: 'bg-rose-50' },
                     { label: 'Active Requests', value: analytics.totalRequests, icon: AlertCircle, color: 'text-red-600', bg: 'bg-red-50' },
-                    { label: 'Urgent Pendings', value: analytics.urgentRequests, icon: Clock, color: 'text-amber-600', bg: 'bg-amber-50' },
-                    { label: 'Upcoming Camps', value: '03', icon: Tent, color: 'text-green-600', bg: 'bg-green-50' },
+                    { label: 'Urgent Pendings', value: analytics.urgentRequests, icon: Clock, color: 'text-red-700', bg: 'bg-red-50' },
+                    { label: 'Upcoming Camps', value: '03', icon: Tent, color: 'text-rose-500', bg: 'bg-rose-50' },
                 ].map((stat, idx) => (
                     <div key={idx} className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between hover:shadow-md transition-shadow">
                         <div>
@@ -184,8 +184,8 @@ const DashboardHome = ({ setActiveTab, user }) => {
                                                 <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
                                             </linearGradient>
                                             <linearGradient id="colorDon" x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.1} />
-                                                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                                                <stop offset="5%" stopColor="#f43f5e" stopOpacity={0.1} />
+                                                <stop offset="95%" stopColor="#f43f5e" stopOpacity={0} />
                                             </linearGradient>
                                         </defs>
                                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
@@ -197,7 +197,7 @@ const DashboardHome = ({ setActiveTab, user }) => {
                                             labelStyle={{ fontSize: '12px', color: '#64748b', marginBottom: '8px' }}
                                         />
                                         <Area type="monotone" dataKey="requests" stroke="#ef4444" strokeWidth={3} fillOpacity={1} fill="url(#colorReq)" />
-                                        <Area type="monotone" dataKey="donations" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorDon)" />
+                                        <Area type="monotone" dataKey="donations" stroke="#f43f5e" strokeWidth={3} fillOpacity={1} fill="url(#colorDon)" />
                                     </AreaChart>
                                 </ResponsiveContainer>
                             ) : (
@@ -211,10 +211,10 @@ const DashboardHome = ({ setActiveTab, user }) => {
 
                     {/* Quick Actions - matching styles */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <QuickActionButton icon={Plus} label="Add Donor" onClick={() => setActiveTab('donors')} colorClass="border-blue-100 text-blue-600 bg-blue-50 hover:bg-blue-100" />
-                        <QuickActionButton icon={AlertCircle} label="Create Request" onClick={() => setActiveTab('requests')} colorClass="border-red-100 text-red-600 bg-red-50 hover:bg-red-100" />
-                        <QuickActionButton icon={Tent} label="Create Camp" onClick={() => setActiveTab('camps')} colorClass="border-green-100 text-green-600 bg-green-50 hover:bg-green-100" />
-                        <QuickActionButton icon={Bell} label="Send Alert" onClick={() => setActiveTab('sos')} colorClass="border-amber-100 text-amber-600 bg-amber-50 hover:bg-amber-100" />
+                        <QuickActionButton icon={Plus} label="Add Donor" onClick={() => setActiveTab('donors')} colorClass="border-red-100 text-red-600 bg-red-50 hover:bg-red-100" />
+                        <QuickActionButton icon={AlertCircle} label="Create Request" onClick={() => setActiveTab('requests')} colorClass="border-rose-100 text-rose-600 bg-rose-50 hover:bg-rose-100" />
+                        <QuickActionButton icon={Tent} label="Create Camp" onClick={() => setActiveTab('camps')} colorClass="border-red-50 text-red-700 bg-red-50 hover:bg-red-100" />
+                        <QuickActionButton icon={Bell} label="Send Alert" onClick={() => setActiveTab('sos')} colorClass="border-rose-50 text-rose-700 bg-red-50 hover:bg-rose-100" />
                     </div>
                 </div>
 
@@ -259,7 +259,7 @@ const DashboardHome = ({ setActiveTab, user }) => {
                             <h3 className="font-bold text-slate-800 text-lg">Recent Activity</h3>
                             <button
                                 onClick={() => setShowAllActivity(true)}
-                                className="text-xs font-bold text-blue-600 hover:text-blue-700 hover:underline transition-colors"
+                                className="text-xs font-bold text-red-600 hover:text-red-700 hover:underline transition-colors"
                             >
                                 View All
                             </button>

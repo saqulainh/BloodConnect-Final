@@ -73,7 +73,7 @@ export default function RequestOperations() {
     };
 
     const statusBadge = (status) => {
-        const map = { Active: 'bg-blue-100 text-blue-700', active: 'bg-blue-100 text-blue-700', Completed: 'bg-rose-100 text-rose-700', resolved: 'bg-rose-100 text-rose-700', Cancelled: 'bg-slate-100 text-slate-500' };
+        const map = { Active: 'bg-red-100 text-red-700', active: 'bg-red-100 text-red-700', Completed: 'bg-rose-100 text-rose-700', resolved: 'bg-rose-100 text-rose-700', Cancelled: 'bg-slate-100 text-slate-500' };
         return <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${map[status] || 'bg-slate-100 text-slate-500'}`}>{status}</span>;
     };
 
@@ -154,7 +154,7 @@ export default function RequestOperations() {
                                                     </button>
                                                 )}
                                                 <button onClick={() => { setEditReq(r); setEditForm({ status: r.status, urgency: r.urgency, hospital: r.hospital, units: r.units }); }}
-                                                    className="p-1.5 hover:bg-blue-50 rounded-lg text-blue-500 transition-colors" title="Edit">
+                                                    className="p-1.5 hover:bg-red-50 rounded-lg text-red-500 transition-colors" title="Edit">
                                                     <Edit size={14} />
                                                 </button>
                                                 <button onClick={() => handleDelete(r._id)} disabled={actionLoading === r._id}

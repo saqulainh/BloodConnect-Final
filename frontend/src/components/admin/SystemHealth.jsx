@@ -68,7 +68,7 @@ export default function SystemHealth() {
                 {/* Server Info */}
                 <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
                     <h3 className="font-black text-slate-800 flex items-center gap-2 mb-5">
-                        <Server size={18} className="text-blue-600" /> Server
+                        <Server size={18} className="text-red-600" /> Server
                     </h3>
                     <div className="space-y-3">
                         {[
@@ -88,7 +88,7 @@ export default function SystemHealth() {
                 {/* Memory */}
                 <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
                     <h3 className="font-black text-slate-800 flex items-center gap-2 mb-5">
-                        <Cpu size={18} className="text-purple-600" /> Memory
+                        <Cpu size={18} className="text-rose-600" /> Memory
                     </h3>
                     <div className="space-y-3">
                         {[
@@ -134,7 +134,7 @@ export default function SystemHealth() {
                 {/* Collections */}
                 <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
                     <h3 className="font-black text-slate-800 flex items-center gap-2 mb-5">
-                        <HardDrive size={18} className="text-amber-600" /> Collections
+                        <HardDrive size={18} className="text-rose-600" /> Collections
                     </h3>
                     <div className="space-y-3">
                         {Object.entries(database.collections || {}).map(([name, count]) => (

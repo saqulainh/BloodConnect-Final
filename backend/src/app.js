@@ -52,16 +52,22 @@ const allowedOrigins = [
     process.env.CLIENT_URL || "http://localhost:3000",
     "http://localhost:3000",
     "http://localhost:3001",
-    "http://localhost:5173"
+    "http://localhost:5173",
+    "http://localhost:5174",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:3001",
+    "http://127.0.0.1:5173",
+    "http://127.0.0.1:5174",
 ];
 
 // CORS
 app.use(cors({
     origin: function (origin, callback) {
-        if (!origin || allowedOrigins.includes(origin) || origin.startsWith("http://localhost:")) {
+        if (!origin || allowedOrigins.includes(origin) || origin.startsWith("http://localhost:") || origin.startsWith("http://127.0.0.1:")) {
             callback(null, true);
         } else {
-            callback(new Error('Not allowed by CORS'));
+            console.error(`Blocked by CORS: origin="${origin}"`);
+            callback(new Error(`Not allowed by CORS: origin="${origin}"`));
         }
     },
     credentials: true

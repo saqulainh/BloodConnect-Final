@@ -56,8 +56,8 @@ const RequestMarker = ({ request, onClick, components }) => {
             eventHandlers={{ click: (e) => onClick && onClick(request, e) }}
         >
             <Popup className="eims-popup min-w-[240px] rounded-2xl border-0 shadow-2xl overflow-hidden">
-                <div className="bg-slate-900 text-white rounded-xl overflow-hidden flex flex-col w-full m-0 p-0 shadow-2xl">
-                    <div className={`px-4 py-3 flex justify-between items-center ${request.urgencyLevel === 'critical' ? 'bg-rose-700' :
+                <div className="bg-white text-slate-800 rounded-xl overflow-hidden flex flex-col w-full m-0 p-0 shadow-2xl border border-slate-100">
+                    <div className={`px-4 py-3 flex justify-between items-center text-white ${request.urgencyLevel === 'critical' ? 'bg-rose-700' :
                         request.urgencyLevel === 'high' ? 'bg-red-500' : 'bg-orange-500'
                         }`}>
                         <div className="flex items-center gap-2 font-bold text-xs uppercase tracking-widest">
@@ -75,8 +75,8 @@ const RequestMarker = ({ request, onClick, components }) => {
                             <div className="flex items-center gap-2"><User size={12} className="text-slate-500" /> {request.patientName}</div>
                             <p className="text-xs text-slate-500 truncate">{request.hospital}</p>
                         </div>
-                        <div className="mt-2 pt-3 border-t border-slate-800 flex justify-between items-center">
-                            <span className="text-[10px] text-slate-500 font-bold uppercase">{timeAgo}</span>
+                        <div className="mt-2 pt-3 border-t border-slate-100 flex justify-between items-center">
+                            <span className="text-[10px] text-slate-400 font-bold uppercase">{timeAgo}</span>
                             <button className="bg-red-600 hover:bg-red-700 text-white px-4 py-1.5 rounded-lg text-xs font-black uppercase transition-colors">Rescue</button>
                         </div>
                     </div>

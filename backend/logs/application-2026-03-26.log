@@ -1,0 +1,9 @@
+{"level":"warn","message":"SLOW API: POST /api/v1/auth/login - 401 [1580ms]","service":"bloodconnect-api","timestamp":"2026-03-26 00:24:22"}
+{"level":"warn","message":"SLOW API: POST /api/v1/auth/register - 201 [7988ms]","service":"bloodconnect-api","timestamp":"2026-03-26 00:44:11"}
+{"level":"warn","message":"SLOW API: POST /api/v1/auth/register - 201 [5579ms]","service":"bloodconnect-api","timestamp":"2026-03-26 00:47:08"}
+{"level":"warn","message":"SLOW API: POST /api/v1/auth/login - 200 [767ms]","service":"bloodconnect-api","timestamp":"2026-03-26 01:01:49"}
+{"level":"warn","message":"SLOW API: POST /api/v1/auth/login - 200 [620ms]","service":"bloodconnect-api","timestamp":"2026-03-26 01:06:34"}
+{"level":"warn","message":"SLOW API: POST /api/v1/auth/login - 200 [550ms]","service":"bloodconnect-api","timestamp":"2026-03-26 01:08:19"}
+{"level":"warn","message":"SLOW API: POST /api/v1/auth/login - 200 [611ms]","service":"bloodconnect-api","timestamp":"2026-03-26 01:16:38"}
+{"level":"warn","message":"SLOW API: GET /api/v1/auth/me - 304 [8117ms]","service":"bloodconnect-api","timestamp":"2026-03-26 01:26:45"}
+{"level":"warn","message":"SLOW API: POST /api/v1/auth/login - 200 [803ms]","service":"bloodconnect-api","timestamp":"2026-03-26 01:27:42"}

@@ -121,27 +121,24 @@ const RECEIVER_TAB_SUBTITLES = {
 
 export default function Dashboard() {
     const navigate = useNavigate();
-    // const { user, logout, loading, isAuthenticated } = useAuth();
-    
-    // TEMPORARY MOCK FOR SCREENSHOTS
-    const user = {
-        _id: "mock-123",
-        name: "Admin User",
-        email: "admin@bloodconnect.com",
-        role: "admin", // Change to 'receiver' for receiver dashboard
-        bloodGroup: "O+"
-    };
-    const loading = false;
-    const isAuthenticated = true;
-    const logout = () => {};
+    const { user, logout, loading, isAuthenticated } = useAuth();
 
-    const [activeTab, setActiveTab] = useState("admin-home"); // Change to 'dashboard' for receiver
+    const [activeTab, setActiveTab] = useState("dashboard");
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [chatTargetUser, setChatTargetUser] = useState(null);
+    const [timelineRequestId, setTimelineRequestId] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [showNotifications, setShowNotifications] = useState(false);
     const [unreadCount, setUnreadCount] = useState(3);
-    const { addToast } = (msg) => {}; // Mock
+    const { toast } = useToast();
+    const addToast = React.useCallback((content, variant = 'info', duration = 4000) => {
+        toast({ variant, title: content, duration });
+    }, [toast]);
+
+    const handleViewTimeline = (req) => {
+        setTimelineRequestId(req._id);
+        setActiveTab('request-timeline');
+    };
 
     const handleSearch = (e) => {
         if (e.key === "Enter" && searchTerm.trim()) {
@@ -245,15 +242,15 @@ export default function Dashboard() {
         if (isReceiver) {
             switch (activeTab) {
                 case "dashboard": return <ReceiverDashboardHome setActiveTab={setActiveTab} user={user} />;
-                case "my-requests": return <MyRequests onStartChat={handleStartChat} />;
+                case "my-requests": return <MyRequests onStartChat={handleStartChat} onViewTimeline={handleViewTimeline} />;
                 case "find-donors": return <FindDonorsReceiver onStartChat={handleStartChat} />;
                 case "live-map": return <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-4 lg:p-6"><h3 className="text-xl font-black text-slate-800 mb-4">EIMS Live Map</h3><LiveMap setActiveTab={setActiveTab} /></div>;
                 case "camps": return <BloodCamps />;
                 case "chat": return <Chat preselectedUser={chatTargetUser} />;
                 case "receiver-wallet": return <ReceiverWallet />;
-                case "request-timeline": return <ReceiverTimeline />;
+                case "request-timeline": return <ReceiverTimeline initialRequestId={timelineRequestId} />;
                 case "receiver-analytics": return <ReceiverAnalytics />;
-                case "gratitude": return <GratitudeBoard />;
+                case "gratitude": return <GratitudeBoard onStartChat={handleStartChat} />;
                 case "sos": return <SOSBroadcast />;
                 case "settings": return <SettingsPanel />;
                 // Admin tabs accessible from receiver role if admin

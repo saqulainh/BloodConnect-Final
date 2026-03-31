@@ -1,0 +1,8 @@
+Starting Chrome...
+Navigating for Receiver Dashboard...
+Error capturing screenshots: Error: net::ERR_CONNECTION_REFUSED at http://localhost:3000
+    at navigate (C:\Users\Asus\Desktop\BloodConnect\node_modules\puppeteer-core\lib\cjs\puppeteer\cdp\Frame.js:184:27)
+    at async Deferred.race (C:\Users\Asus\Desktop\BloodConnect\node_modules\puppeteer-core\lib\cjs\puppeteer\util\Deferred.js:36:20)
+    at async CdpFrame.goto (C:\Users\Asus\Desktop\BloodConnect\node_modules\puppeteer-core\lib\cjs\puppeteer\cdp\Frame.js:150:25)
+    at async CdpPage.goto (C:\Users\Asus\Desktop\BloodConnect\node_modules\puppeteer-core\lib\cjs\puppeteer\api\Page.js:580:20)
+    at async C:\Users\Asus\Desktop\BloodConnect\screenshot_runner.js:57:9

@@ -4,10 +4,10 @@ import User from "../models/User.js";
 const protect = async (req, res, next) => {
     let token;
 
-    if (req.cookies.jwt) {
-        token = req.cookies.jwt;
-    } else if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
+    if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
         token = req.headers.authorization.split(" ")[1];
+    } else if (req.cookies.jwt) {
+        token = req.cookies.jwt;
     }
 
     if (token) {
@@ -17,6 +17,7 @@ const protect = async (req, res, next) => {
 
             // 🔒 User no longer exists (deleted by admin)
             if (!user) {
+                require('fs').appendFileSync('auth_debug.log', "User not found for ID: " + decoded.userId + "\n");
                 return res.status(401).json({ success: false, message: "Account no longer exists." });
             }
 
@@ -28,9 +29,11 @@ const protect = async (req, res, next) => {
             req.user = user;
             next();
         } catch (error) {
+            require('fs').appendFileSync('auth_debug.log', "jwt.verify failed: " + error.message + " Token=" + token + "\n");
             res.status(401).json({ success: false, message: "Not authorized, token failed." });
         }
     } else {
+        require('fs').appendFileSync('auth_debug.log', "No token provided in headers or cookies. Headers: " + JSON.stringify(req.headers) + "\n");
         res.status(401).json({ success: false, message: "Not authorized, no token." });
     }
 };

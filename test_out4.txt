@@ -1,0 +1,24 @@
+﻿PAGE LOG: [vite] connecting...
+PAGE LOG: [vite] connected.
+PAGE LOG: %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+PAGE LOG: ≡ƒîÉ i18next is maintained with support from Locize ΓÇö consider powering your project with managed localization (AI, CDN, integrations): https://locize.com ≡ƒÆÖ
+PAGE LOG: [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o
+PAGE LOG: The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+PAGE LOG: The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+PAGE LOG: Failed to load resource: net::ERR_CONNECTION_RESET
+PAGE LOG: Failed to fetch notifications: TypeError: Failed to fetch
+PAGE LOG: Failed to load resource: net::ERR_CONNECTION_RESET
+PAGE LOG: Failed to fetch dashboard stats TypeError: Failed to fetch
+PAGE LOG: Failed to load resource: net::ERR_CONNECTION_RESET
+PAGE LOG: Failed to fetch notifications: TypeError: Failed to fetch
+PAGE LOG: EIMS Fetch Error TypeError: api.get is not a function
+PAGE LOG: EIMS Fetch Error TypeError: api.get is not a function
+PAGE LOG: SyntaxError: The requested module '/node_modules/leaflet/dist/leaflet-src.js?v=f1c8a94c' does not provide an export named 'DomUtil'
+PAGE LOG: SyntaxError: The requested module '/node_modules/leaflet/dist/leaflet-src.js?v=f1c8a94c' does not provide an export named 'DomUtil'
+--- LOCAL_STORAGE_TOKEN --- eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTk5ZTE1ZTAyNmEwOGE0N2Q1ZTJkYzIiLCJpYXQiOjE3NzQ5ODgxMjMsImV4cCI6MTc3NzU4MDEyM30.Qgw81vllupcMrxYpbcPi3a1gMQuUMBN8EIv79eV59vM
