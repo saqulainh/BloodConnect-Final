@@ -28,9 +28,9 @@ const calculateReceiverBadge = (fulfilledCount) => {
 };
 
 // ─── Helper: categorise requests ─────────────────────────────────────────────
-const isFulfilled  = r => r.status === "Completed" || r.status === "resolved";
+const isFulfilled  = r => r.status === "Completed";
 const isCancelled  = r => r.status === "Cancelled";
-const isActive     = r => r.status === "Active"    || r.status === "active";
+const isActive     = r => r.status === "Active";
 
 // ─── GET /api/v1/receiver/stats ──────────────────────────────────────────────
 export const getReceiverStats = async (req, res) => {
@@ -102,7 +102,7 @@ export const getMyRequests = async (req, res) => {
 
         const filter = { requester: req.user._id };
         if (status && status !== "All") {
-            if (status === "Fulfilled") filter.status = { $in: ["Completed", "resolved"] };
+            if (status === "Fulfilled") filter.status = "Completed";
             else filter.status = status;
         }
         if (urgency)    filter.urgency    = urgency;

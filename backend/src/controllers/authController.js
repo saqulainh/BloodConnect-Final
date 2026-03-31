@@ -166,6 +166,9 @@ const loginUser = async (req, res) => {
 
         const token = generateToken(res, user._id);
 
+        // Decrypt Aadhaar to extract real last-4 digits for the response
+        const decryptedAadhaarForResponse = decryptAadhaar(user.aadhaarNumber);
+
         res.json({
             success: true,
             data: {
@@ -175,7 +178,7 @@ const loginUser = async (req, res) => {
                 role: user.role,
                 bloodGroup: user.bloodGroup || null,
                 aadhaarVerified: user.aadhaarVerified,
-                aadhaarLast4: user.aadhaarNumber?.slice(-4) || null,
+                aadhaarLast4: decryptedAadhaarForResponse?.slice(-4) || null,
                 accessToken: token
             }
         });
@@ -328,7 +331,7 @@ const getMe = async (req, res) => {
                 address: user.address,
                 isVerified: user.isVerified,
                 aadhaarVerified: user.aadhaarVerified,
-                aadhaarLast4: user.aadhaarNumber?.slice(-4) || null,
+                aadhaarLast4: decryptAadhaar(user.aadhaarNumber)?.slice(-4) || null,
                 availability: user.availability,
                 profilePicture: user.profilePicture || null,
             }
@@ -437,10 +440,14 @@ const adminLogin = async (req, res) => {
             return res.status(400).json({ success: false, message: "Email, password, and admin key are required." });
         }
 
-        // Step 2: Verify admin secret key
-        // Step 2: Access Key Check (Admin API Key or Secret Key)
-        const ADMIN_SECRET = process.env.ADMIN_SECRET_KEY || "BLOODCONNECT_ADMIN_2026";
+        // Step 2: Verify admin secret key — MUST be configured in env
+        const ADMIN_SECRET = process.env.ADMIN_SECRET_KEY;
         const ADMIN_API_KEY = process.env.ADMIN_API_KEY;
+
+        if (!ADMIN_SECRET && !ADMIN_API_KEY) {
+            console.error("[SECURITY] Neither ADMIN_SECRET_KEY nor ADMIN_API_KEY is configured.");
+            return res.status(503).json({ success: false, message: "Admin service is not configured. Contact the system administrator." });
+        }
 
         // Valid if it matches either the secret or the system API key
         if (adminKey !== ADMIN_SECRET && adminKey !== ADMIN_API_KEY) {
@@ -497,8 +504,22 @@ const changePassword = async (req, res) => {
             return res.status(400).json({ success: false, message: "Please provide both current and new passwords" });
         }
 
-        if (newPassword.length < 6) {
-            return res.status(400).json({ success: false, message: "New password must be at least 6 characters" });
+        if (newPassword.length < 8) {
+            return res.status(400).json({ success: false, message: "New password must be at least 8 characters" });
+        }
+
+        // Enforce same complexity rules as registration
+        if (!/[A-Z]/.test(newPassword)) {
+            return res.status(400).json({ success: false, message: "Password must contain at least one uppercase letter." });
+        }
+        if (!/[a-z]/.test(newPassword)) {
+            return res.status(400).json({ success: false, message: "Password must contain at least one lowercase letter." });
+        }
+        if (!/\d/.test(newPassword)) {
+            return res.status(400).json({ success: false, message: "Password must contain at least one number." });
+        }
+        if (!/[!@#$%^&*(),.?":{}|<>]/.test(newPassword)) {
+            return res.status(400).json({ success: false, message: "Password must contain at least one special character." });
         }
 
         // Must explicitly select password since it's default null

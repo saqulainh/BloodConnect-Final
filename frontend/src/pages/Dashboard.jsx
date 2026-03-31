@@ -103,6 +103,17 @@ const RECEIVER_TAB_TITLES = {
     gratitude: "Gratitude Board",
     sos: "SOS Broadcast",
     settings: "Settings",
+    // Admin tabs (accessible if user is also admin)
+    "admin-analytics": "Mission Intel",
+    "admin-home": "Admin Dashboard",
+    "admin-users": "User Management",
+    "admin-requests": "Request Operations",
+    "admin-camps": "Camp Management",
+    "admin-inventory": "Blood Inventory",
+    "admin-health": "System Health",
+    "admin-broadcast": "Broadcast Center",
+    "admin-revenue": "Revenue & Donations",
+    "admin-audit": "Audit Logs",
 };
 const RECEIVER_TAB_SUBTITLES = {
     dashboard: "Welcome back! Track your blood requests in real-time.",
@@ -117,6 +128,17 @@ const RECEIVER_TAB_SUBTITLES = {
     gratitude: "Thank the heroes who donated blood for you.",
     sos: "Broadcast critical requests to nearby donors instantly.",
     settings: "Configure your account preferences.",
+    // Admin tabs (accessible if user is also admin)
+    "admin-analytics": "Platform intelligence — revenue, growth, and impact metrics.",
+    "admin-home": "Full control center — users, requests, revenue, system.",
+    "admin-users": "View, edit, ban/unban, promote, and delete users.",
+    "admin-requests": "Manage all blood requests — force-fulfill, edit, delete.",
+    "admin-camps": "Create, edit, and manage blood donation camps.",
+    "admin-inventory": "Manage blood inventory across all blood groups.",
+    "admin-health": "Server, database, and system health monitoring.",
+    "admin-broadcast": "Send announcements and alerts to all users.",
+    "admin-revenue": "Financial overview — revenue trends, top donors, payments.",
+    "admin-audit": "Track all admin actions for accountability.",
 };
 
 export default function Dashboard() {

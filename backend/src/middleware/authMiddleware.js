@@ -17,7 +17,7 @@ const protect = async (req, res, next) => {
 
             // 🔒 User no longer exists (deleted by admin)
             if (!user) {
-                require('fs').appendFileSync('auth_debug.log', "User not found for ID: " + decoded.userId + "\n");
+                console.warn("[Auth] User not found for decoded token userId");
                 return res.status(401).json({ success: false, message: "Account no longer exists." });
             }
 
@@ -29,11 +29,11 @@ const protect = async (req, res, next) => {
             req.user = user;
             next();
         } catch (error) {
-            require('fs').appendFileSync('auth_debug.log', "jwt.verify failed: " + error.message + " Token=" + token + "\n");
+            console.warn("[Auth] Token verification failed:", error.message);
             res.status(401).json({ success: false, message: "Not authorized, token failed." });
         }
     } else {
-        require('fs').appendFileSync('auth_debug.log', "No token provided in headers or cookies. Headers: " + JSON.stringify(req.headers) + "\n");
+        console.warn("[Auth] No token provided in headers or cookies");
         res.status(401).json({ success: false, message: "Not authorized, no token." });
     }
 };

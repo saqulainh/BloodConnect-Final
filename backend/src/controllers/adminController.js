@@ -49,8 +49,8 @@ export const getAdminDashboard = async (req, res) => {
             User.countDocuments({ role: "receiver" }),
             User.countDocuments({ role: "admin" }),
             Request.countDocuments(),
-            Request.countDocuments({ status: { $in: ["Active", "active"] } }),
-            Request.countDocuments({ status: { $in: ["Completed", "resolved"] } }),
+            Request.countDocuments({ status: "Active" }),
+            Request.countDocuments({ status: "Completed" }),
             User.countDocuments({ createdAt: { $gte: todayStart } }),
             User.countDocuments({ createdAt: { $gte: sevenDaysAgo } }),
             Payment.aggregate([
@@ -156,10 +156,11 @@ export const updateUser = async (req, res) => {
         const { id } = req.params;
         const updates = req.body;
 
-        // Prevent modifying passwords via this endpoint
+        // Prevent modifying sensitive fields via this endpoint
         delete updates.password;
         delete updates.otp;
         delete updates.otpExpires;
+        delete updates.aadhaarNumber;  // Must go through pre-save hook for encryption
 
         const user = await User.findByIdAndUpdate(id, updates, { new: true })
             .select("-password -otp -otpExpires");

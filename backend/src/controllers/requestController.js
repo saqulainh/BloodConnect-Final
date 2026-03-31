@@ -37,14 +37,15 @@ const createRequest = async (req, res) => {
         res.status(201).json({ success: true, data: createdRequest });
 
         // ── AUTOMATED URGENT NOTIFICATIONS (Async Fire-and-Forget) ──
-        if (urgency === "Critical" || urgency === "High" || urgency === "Normal") {
+        if (urgency === "Critical" || urgency === "Urgent") {
             try {
                 // Find available donors with the same blood group, except the requester
+                // Cap at 100 to prevent mass email spam
                 const potentialDonors = await User.find({
                     bloodGroup: bloodGroup,
                     availability: true,
                     _id: { $ne: req.user._id }
-                }).select("email name _id");
+                }).select("email name _id").limit(100);
 
                 if (potentialDonors.length > 0) {
                     // 1. Send In-App Notifications
@@ -57,8 +58,8 @@ const createRequest = async (req, res) => {
                         });
                     });
 
-                    // 2. Send Emails
-                    const emails = potentialDonors.map(donor => donor.email).join(",");
+                    // 2. Send Emails (array format for nodemailer compatibility)
+                    const emailRecipients = potentialDonors.map(donor => donor.email);
                     const subject = `URGENT: ${bloodGroup} Blood Needed at ${hospital}`;
                     const html = `
                         <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
@@ -79,7 +80,7 @@ const createRequest = async (req, res) => {
                         </div>
                     `;
 
-                    sendEmail(emails, subject, `Urgent: ${bloodGroup} needed at ${hospital}`, html)
+                    sendEmail(emailRecipients, subject, `Urgent: ${bloodGroup} needed at ${hospital}`, html)
                         .then(() => console.log(`Alert emails sent to ${potentialDonors.length} donors.`))
                         .catch(err => console.error("Failed to send urgent emails", err));
                 }

@@ -110,7 +110,7 @@ export default function LoginPage() {
             <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
             {/* ── LEFT PANEL ── */}
-            <div ref={leftRef} style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between", padding: "60px 64px", background: "#fff", borderRight: "1px solid #f5f5f5", position: "relative", overflow: "hidden" }}>
+            <div ref={leftRef} data-left="true" style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between", padding: "60px 64px", background: "#fff", borderRight: "1px solid #f5f5f5", position: "relative", overflow: "hidden" }}>
 
                 {/* Background Decorations */}
                 <div style={{ position: "absolute", top: -100, right: -100, width: 400, height: 400, background: "radial-gradient(circle, rgba(229,57,53,0.08) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
@@ -185,7 +185,7 @@ export default function LoginPage() {
             </div>
 
             {/* ── RIGHT PANEL: Login Card ── */}
-            <div style={{ width: 460, display: "flex", alignItems: "center", justifyContent: "center", padding: "80px 40px", background: "#fafafa" }}>
+            <div data-right="true" style={{ width: 460, display: "flex", alignItems: "center", justifyContent: "center", padding: "80px 40px", background: "#fafafa" }}>
                 <div ref={cardRef} style={{ width: "100%", background: "#fff", borderRadius: 24, boxShadow: "0 8px 40px rgba(0,0,0,0.08)", padding: "40px 36px" }}>
 
                     {/* Card Header */}
@@ -350,6 +350,7 @@ export default function LoginPage() {
                 @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
                 @media (max-width: 768px) {
                     [data-left] { display: none !important; }
+                    [data-right] { width: 100% !important; padding: 40px 20px !important; }
                 }
             `}</style>
         </div>

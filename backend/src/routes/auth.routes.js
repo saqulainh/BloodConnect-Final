@@ -13,7 +13,6 @@ import {
     changePassword,
 } from "../controllers/authController.js";
 import { protect } from "../middleware/authMiddleware.js";
-import User from "../models/User.js";
 import { upload } from "../utils/cloudinary.js";
 import { authLimiter, adminLoginLimiter, otpLimiter, userFingerprintLimiter } from "../middleware/rateLimiter.js";
 import { validateRegister, validateLogin, validateForgotPassword, validateResetPassword } from "../middleware/validate.js";

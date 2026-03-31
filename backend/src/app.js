@@ -91,7 +91,7 @@ app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/requests", requestRoutes);
 app.use("/api/v1/chat", chatRoutes);
 app.use("/api/v1/analytics", analyticsRoutes);
-app.use("/api/v1/admin", adminAnalyticsRoutes);
+app.use("/api/v1/admin/analytics", adminAnalyticsRoutes);
 app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/camps", campRoutes);
 app.use("/api/v1/donations", donationRoutes);

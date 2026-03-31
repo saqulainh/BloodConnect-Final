@@ -5,3 +5,4 @@
 {"level":"warn","message":"SLOW API: POST /api/v1/auth/register - 201 [4368ms]","service":"bloodconnect-api","timestamp":"2026-04-01 01:33:02"}
 {"level":"warn","message":"SLOW API: GET /api/v1/analytics - 200 [2220ms]","service":"bloodconnect-api","timestamp":"2026-04-01 01:41:04"}
 {"level":"warn","message":"SLOW API: GET /api/v1/analytics?timeframe=week - 200 [1536ms]","service":"bloodconnect-api","timestamp":"2026-04-01 01:45:25"}
+{"level":"warn","message":"SLOW API: POST /api/v1/auth/admin-login - 401 [618ms]","service":"bloodconnect-api","timestamp":"2026-04-01 02:55:27"}

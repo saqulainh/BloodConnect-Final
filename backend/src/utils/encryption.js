@@ -4,7 +4,11 @@ import "dotenv/config";
 // We need a 32-byte key for aes-256-cbc. 
 // If AADHAAR_ENCRYPTION_KEY is not set or not 32 bytes, we hash it to ensure it's exactly 32 bytes.
 const getEncryptionKey = () => {
-    const rawKey = process.env.AADHAAR_ENCRYPTION_KEY || "SuperSecretBloodConnectKey2026!";
+    const rawKey = process.env.AADHAAR_ENCRYPTION_KEY;
+    if (!rawKey) {
+        console.error("FATAL: AADHAAR_ENCRYPTION_KEY is not set in environment variables.");
+        process.exit(1);
+    }
     return crypto.createHash("sha256").update(String(rawKey)).digest("base64").substring(0, 32);
 };
 

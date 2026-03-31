@@ -17,12 +17,7 @@ const DB_OPTIONS = {
 
 export const connectDB = async () => {
     try {
-        const conn = await mongoose.connect(process.env.MONGODB_URI, {
-            serverSelectionTimeoutMS: 20000, // 20 seconds wait for server
-            connectTimeoutMS: 20000,         // 20 seconds for initial connection
-            socketTimeoutMS: 45000,          // 45 seconds for idle socket
-            maxPoolSize: 10,
-        });
+        const conn = await mongoose.connect(process.env.MONGODB_URI, DB_OPTIONS);
         console.log(`MongoDB Connected: ${conn.connection.host} (Pool: ${DB_OPTIONS.maxPoolSize})`);
     } catch (error) {
         console.error(`Error connecting to Cloud DB: ${error.message}`);

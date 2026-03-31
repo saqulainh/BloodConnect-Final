@@ -40,7 +40,6 @@ export const isLoggedIn = () => !!getAccessToken();
 // ── Auth headers ───────────────────────────────────────────────────────
 const authHeaders = () => {
     const token = getAccessToken();
-    console.log("[api.js] authHeaders called! token:", token);
     return {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -64,28 +63,38 @@ const refreshAccessToken = async () => {
 };
 
 const checkTokenExpiry = () => {
-    // TEMPORARY BYPASS FOR README SCREENSHOTS
-    return false;
+    const token = getAccessToken();
+    if (!token) return true;
+    try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        // Expired if less than 60 seconds remain
+        return payload.exp * 1000 < Date.now() + 60000;
+    } catch {
+        return false;
+    }
 };
 
 // ── Core fetch wrapper (handles 401 → refresh → retry) ────────────────
 export const apiFetch = async (endpoint, options = {}, retry = true) => {
     // Before making any auth request, check if token is expired
-    // Exclude login/register/refresh-token endpoints from this check
-    // TEMPORARY BYPASS FOR README SCREENSHOTS
-    // if (!endpoint.includes("/auth/login") && !endpoint.includes("/auth/register") && !endpoint.includes("/auth/refresh-token")) {
-    //     if (checkTokenExpiry()) {
-    //         if (!endpoint.startsWith("/camps")) { 
-    //             clearTokens(); 
-    //             window.location.href = "/login";
-    //             throw new Error("Session expired. Please login again.");
-    //         }
-    //     }
-    // }
+    if (
+        !endpoint.includes("/auth/login") &&
+        !endpoint.includes("/auth/register") &&
+        !endpoint.includes("/auth/refresh-token") &&
+        !endpoint.includes("/auth/admin-login")
+    ) {
+        if (checkTokenExpiry()) {
+            if (!endpoint.startsWith("/camps")) {
+                clearTokens();
+                window.location.href = "/login";
+                throw new Error("Session expired. Please login again.");
+            }
+        }
+    }
 
     const res = await fetch(`${BASE_URL}${endpoint}`, options);
 
-    if (res.status === 401 && retry && !endpoint.includes("/auth/login") && !endpoint.includes("/auth/register")) {
+    if (res.status === 401 && retry && !endpoint.includes("/auth/login") && !endpoint.includes("/auth/register") && !endpoint.includes("/auth/admin-login")) {
         try {
             const newToken = await refreshAccessToken();
             const retryOptions = {
@@ -456,9 +465,9 @@ export const verifyPayment = async (paymentData) => {
 // ADMIN ANALYTICS ENDPOINTS
 // ─────────────────────────────────────────────────────────────────────
 
-/** GET /admin/mission-stats — Admin-only platform intelligence */
+/** GET /admin/analytics/mission-stats — Admin-only platform intelligence */
 export const getAdminMissionStats = async () => {
-    return apiFetch("/admin/mission-stats", { method: "GET", headers: authHeaders() });
+    return apiFetch("/admin/analytics/mission-stats", { method: "GET", headers: authHeaders() });
 };
 
 // ─────────────────────────────────────────────────────────────────────
@@ -590,6 +599,19 @@ export const adminPromoteUser = async (id, role) => {
     });
 };
 
+// ── CSV Sanitization Helper ─────────────────────────────────────────
+// Prevents CSV injection (formula injection) and handles special characters
+const sanitizeCSVField = (value) => {
+    if (value === null || value === undefined) return '';
+    const str = String(value);
+    // Escape double quotes by doubling them
+    const escaped = str.replace(/"/g, '""');
+    // Prefix formula-starting characters to prevent CSV injection in Excel
+    const formulaChars = ['=', '+', '-', '@', '\t', '\r', '\n'];
+    const needsPrefix = formulaChars.some(c => escaped.startsWith(c));
+    return `"${needsPrefix ? "'" + escaped : escaped}"`;
+};
+
 /** GET /admin/users/export — Export users to CSV (Client-side proxy) */
 export const exportAdminUsersCSV = async () => {
     try {
@@ -601,14 +623,14 @@ export const exportAdminUsersCSV = async () => {
         const csvRows = [
             headers.join(','),
             ...users.map(u => [
-                u._id, 
-                `"${u.name}"`, 
-                u.email, 
-                u.phone || '', 
-                u.bloodGroup || '', 
-                u.role, 
-                u.isBanned, 
-                new Date(u.createdAt).toISOString()
+                sanitizeCSVField(u._id), 
+                sanitizeCSVField(u.name), 
+                sanitizeCSVField(u.email), 
+                sanitizeCSVField(u.phone), 
+                sanitizeCSVField(u.bloodGroup), 
+                sanitizeCSVField(u.role), 
+                sanitizeCSVField(u.isBanned), 
+                sanitizeCSVField(new Date(u.createdAt).toISOString())
             ].join(','))
         ];
         
@@ -662,15 +684,15 @@ export const exportAdminRequestsCSV = async () => {
         const csvRows = [
             headers.join(','),
             ...requests.map(r => [
-                r._id, 
-                `"${r.patientName}"`, 
-                r.bloodGroup, 
-                r.unitsRequired,
-                `"${r.hospitalName}"`,
-                `"${r.city}"`,
-                r.isUrgent,
-                r.status,
-                new Date(r.createdAt).toISOString()
+                sanitizeCSVField(r._id), 
+                sanitizeCSVField(r.patientName), 
+                sanitizeCSVField(r.bloodGroup), 
+                sanitizeCSVField(r.unitsRequired),
+                sanitizeCSVField(r.hospitalName),
+                sanitizeCSVField(r.city),
+                sanitizeCSVField(r.isUrgent),
+                sanitizeCSVField(r.status),
+                sanitizeCSVField(new Date(r.createdAt).toISOString())
             ].join(','))
         ];
         

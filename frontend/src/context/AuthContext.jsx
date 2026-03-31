@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
                     const { data } = await getMe();
                     setUser(data.user || data);
                 } catch {
-                    logoutUser();
+                    await logoutUser();
                 }
             }
             setLoading(false);
@@ -28,8 +28,8 @@ export const AuthProvider = ({ children }) => {
         return data;
     };
 
-    const logout = () => {
-        logoutUser();
+    const logout = async () => {
+        await logoutUser();
         setUser(null);
     };
 
