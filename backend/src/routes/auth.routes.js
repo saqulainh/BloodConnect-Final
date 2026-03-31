@@ -3,6 +3,7 @@ import {
     registerUser,
     loginUser,
     logoutUser,
+    refreshAccessToken,
     verifyOtp,
     resendOtp,
     verifyAadhaar,
@@ -27,6 +28,7 @@ router.post("/register", authLimiter, upload.fields([
 
 router.post("/login", authLimiter, validateLogin, loginUser);
 router.post("/logout", logoutUser);
+router.post("/refresh-token", refreshAccessToken);
 // OTP endpoints: must be rate-limited — brute forcing a 6-digit OTP
 // without limits would take seconds across 1M combinations
 router.post("/verify-otp", otpLimiter, verifyOtp);

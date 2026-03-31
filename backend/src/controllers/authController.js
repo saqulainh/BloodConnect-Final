@@ -2,6 +2,7 @@ import User from "../models/User.js";
 import generateToken from "../utils/generateToken.js";
 import { sendEmail } from "../utils/email.js";
 import { decryptAadhaar } from "../utils/encryption.js";
+import jwt from "jsonwebtoken";
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -12,6 +13,14 @@ const isValidAadhaar = (num) => {
 };
 
 const generateOtp = () => Math.floor(100000 + Math.random() * 900000).toString();
+
+const signRefreshToken = (userId) => {
+    return jwt.sign(
+        { userId },
+        process.env.JWT_REFRESH_SECRET || process.env.JWT_ACCESS_SECRET,
+        { expiresIn: "30d" }
+    );
+};
 
 // ─── Register ────────────────────────────────────────────────────────────────
 
@@ -196,6 +205,41 @@ const loginUser = async (req, res) => {
 const logoutUser = (req, res) => {
     res.cookie("jwt", "", { httpOnly: true, expires: new Date(0) });
     res.status(200).json({ success: true, message: "Logged out successfully." });
+};
+
+// @desc    Refresh access token
+// @route   POST /api/v1/auth/refresh-token
+// @access  Public
+const refreshAccessToken = async (req, res) => {
+    try {
+        const { refreshToken } = req.body;
+
+        if (!refreshToken) {
+            return res.status(400).json({ success: false, message: "Refresh token is required." });
+        }
+
+        const decoded = jwt.verify(
+            refreshToken,
+            process.env.JWT_REFRESH_SECRET || process.env.JWT_ACCESS_SECRET
+        );
+
+        const user = await User.findById(decoded.userId);
+        if (!user || user.isBanned) {
+            return res.status(401).json({ success: false, message: "Invalid refresh token." });
+        }
+
+        const accessToken = generateToken(res, user._id);
+
+        return res.status(200).json({
+            success: true,
+            data: {
+                accessToken,
+                refreshToken,
+            },
+        });
+    } catch (error) {
+        return res.status(401).json({ success: false, message: "Invalid or expired refresh token." });
+    }
 };
 
 // ─── OTP Verify ───────────────────────────────────────────────────────────────
@@ -470,8 +514,9 @@ const adminLogin = async (req, res) => {
             return res.status(403).json({ success: false, message: "Account suspended." });
         }
 
-        // Step 6: Generate token
+        // Step 6: Generate tokens
         const token = generateToken(res, user._id);
+        const refreshToken = signRefreshToken(user._id);
 
         res.json({
             success: true,
@@ -482,7 +527,8 @@ const adminLogin = async (req, res) => {
                 role: user.role,
                 bloodGroup: user.bloodGroup || null,
                 aadhaarVerified: user.aadhaarVerified,
-                accessToken: token
+                accessToken: token,
+                refreshToken
             }
         });
     } catch (error) {
@@ -544,4 +590,4 @@ const changePassword = async (req, res) => {
     }
 }
 
-export { registerUser, loginUser, logoutUser, verifyOtp, resendOtp, verifyAadhaar, getMe, forgotPassword, resetPassword, adminLogin, changePassword };
+export { registerUser, loginUser, logoutUser, refreshAccessToken, verifyOtp, resendOtp, verifyAadhaar, getMe, forgotPassword, resetPassword, adminLogin, changePassword };

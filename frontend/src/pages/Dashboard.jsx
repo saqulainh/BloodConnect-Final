@@ -83,6 +83,7 @@ const DONOR_TAB_SUBTITLES = {
     "admin-users": "View, edit, ban/unban, promote, and delete users.",
     "admin-requests": "Manage all blood requests — force-fulfill, edit, delete.",
     "admin-camps": "Create, edit, and manage blood donation camps.",
+    "admin-inventory": "Manage blood stock, units, and operational readiness.",
     "admin-health": "Server, database, and system health monitoring.",
     "admin-broadcast": "Send announcements and alerts to all users.",
     "admin-revenue": "Financial overview — revenue trends, top donors, payments.",
@@ -162,10 +163,23 @@ export default function Dashboard() {
         setActiveTab('request-timeline');
     };
 
+    const isAdmin = user?.role === 'admin';
+
     const handleSearch = (e) => {
         if (e.key === "Enter" && searchTerm.trim()) {
             const query = searchTerm.toLowerCase();
-            if (query.includes("donor") || query.includes("find")) setActiveTab("proximity");
+            if (isAdmin) {
+                if (query.includes("user")) setActiveTab("admin-users");
+                else if (query.includes("request") || query.includes("urgent")) setActiveTab("admin-requests");
+                else if (query.includes("camp") || query.includes("event")) setActiveTab("admin-camps");
+                else if (query.includes("inventory") || query.includes("stock") || query.includes("blood bank")) setActiveTab("admin-inventory");
+                else if (query.includes("health") || query.includes("system")) setActiveTab("admin-health");
+                else if (query.includes("broadcast") || query.includes("announce")) setActiveTab("admin-broadcast");
+                else if (query.includes("revenue") || query.includes("payment") || query.includes("donation")) setActiveTab("admin-revenue");
+                else if (query.includes("audit") || query.includes("log")) setActiveTab("admin-audit");
+                else if (query.includes("intel") || query.includes("analytics") || query.includes("mission")) setActiveTab("admin-analytics");
+                else setActiveTab("admin-home");
+            } else if (query.includes("donor") || query.includes("find")) setActiveTab("proximity");
             else if (query.includes("request") || query.includes("urgent")) setActiveTab("requests");
             else if (query.includes("health") || query.includes("wallet") || query.includes("history")) setActiveTab("health-wallet");
             else if (query.includes("camp") || query.includes("event")) setActiveTab("camps");
@@ -256,10 +270,57 @@ export default function Dashboard() {
     };
 
     const isReceiver = user?.role === 'receiver';
-    const TAB_TITLES = isReceiver ? RECEIVER_TAB_TITLES : DONOR_TAB_TITLES;
-    const TAB_SUBTITLES = isReceiver ? RECEIVER_TAB_SUBTITLES : DONOR_TAB_SUBTITLES;
+    const ADMIN_TAB_TITLES = {
+        "admin-home": "Admin Dashboard",
+        "admin-users": "User Management",
+        "admin-requests": "Request Operations",
+        "admin-camps": "Camp Management",
+        "admin-inventory": "Blood Inventory",
+        "admin-health": "System Health",
+        "admin-broadcast": "Broadcast Center",
+        "admin-revenue": "Revenue & Donations",
+        "admin-audit": "Audit Logs",
+        "admin-analytics": "Mission Intel",
+    };
+    const ADMIN_TAB_SUBTITLES = {
+        "admin-home": "Full control center — users, requests, revenue, system.",
+        "admin-users": "View, edit, ban/unban, promote, and delete users.",
+        "admin-requests": "Manage all blood requests — force-fulfill, edit, delete.",
+        "admin-camps": "Create, edit, and manage blood donation camps.",
+        "admin-inventory": "Manage blood inventory across all blood groups.",
+        "admin-health": "Server, database, and system health monitoring.",
+        "admin-broadcast": "Send announcements and alerts to all users.",
+        "admin-revenue": "Financial overview — revenue trends, top donors, payments.",
+        "admin-audit": "Track all admin actions for accountability.",
+        "admin-analytics": "Platform intelligence — revenue, growth, and impact metrics.",
+    };
+    const TAB_TITLES = isAdmin ? ADMIN_TAB_TITLES : (isReceiver ? RECEIVER_TAB_TITLES : DONOR_TAB_TITLES);
+    const TAB_SUBTITLES = isAdmin ? ADMIN_TAB_SUBTITLES : (isReceiver ? RECEIVER_TAB_SUBTITLES : DONOR_TAB_SUBTITLES);
+
+    useEffect(() => {
+        if (isAdmin && !String(activeTab).startsWith("admin-")) {
+            setActiveTab("admin-home");
+        }
+    }, [isAdmin, activeTab]);
 
     const renderContent = () => {
+        // ── Admin Tabs ──
+        if (isAdmin) {
+            switch (activeTab) {
+                case "admin-home": return <AdminHome setActiveTab={setActiveTab} />;
+                case "admin-users": return <UserManagement />;
+                case "admin-requests": return <RequestOperations />;
+                case "admin-camps": return <CampAdmin />;
+                case "admin-inventory": return <BloodInventory />;
+                case "admin-health": return <SystemHealth />;
+                case "admin-broadcast": return <BroadcastCenter />;
+                case "admin-revenue": return <RevenuePanel />;
+                case "admin-audit": return <AuditLogs />;
+                case "admin-analytics": return <AdminAnalytics />;
+                default: return <AdminHome setActiveTab={setActiveTab} />;
+            }
+        }
+
         // ── Receiver Tabs ──
         if (isReceiver) {
             switch (activeTab) {

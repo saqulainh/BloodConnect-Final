@@ -10,6 +10,7 @@ const BASE_URL =
 // ── Token helpers ──────────────────────────────────────────────────────
 export const getAccessToken = () => localStorage.getItem("accessToken");
 export const getRefreshToken = () => localStorage.getItem("refreshToken");
+export const getAdminApiKey = () => localStorage.getItem("adminApiKey");
 
 export const saveTokens = ({ accessToken, refreshToken } = {}) => {
     if (accessToken) localStorage.setItem("accessToken", accessToken);
@@ -21,6 +22,7 @@ export const saveTokens = ({ accessToken, refreshToken } = {}) => {
 export const clearTokens = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
+    localStorage.removeItem("adminApiKey");
     localStorage.removeItem("user");
 };
 
@@ -92,20 +94,46 @@ export const apiFetch = async (endpoint, options = {}, retry = true) => {
         }
     }
 
-    const res = await fetch(`${BASE_URL}${endpoint}`, options);
+    const isAdminEndpoint = endpoint.startsWith("/admin");
+    const shouldAttachAuth =
+        !endpoint.includes("/auth/login") &&
+        !endpoint.includes("/auth/register") &&
+        !endpoint.includes("/auth/admin-login") &&
+        !endpoint.includes("/auth/refresh-token");
+    const adminApiKey = getAdminApiKey();
+    const accessToken = getAccessToken();
+    const normalizedHeaders = { ...(options.headers || {}) };
+    if (shouldAttachAuth && accessToken && !normalizedHeaders.Authorization) {
+        normalizedHeaders.Authorization = `Bearer ${accessToken}`;
+    }
+    const fetchOptions = {
+        ...options,
+        headers: {
+            ...normalizedHeaders,
+            ...(isAdminEndpoint && adminApiKey ? { "X-Admin-Key": adminApiKey } : {}),
+        },
+    };
+
+    const res = await fetch(`${BASE_URL}${endpoint}`, fetchOptions);
 
     if (res.status === 401 && retry && !endpoint.includes("/auth/login") && !endpoint.includes("/auth/register") && !endpoint.includes("/auth/admin-login")) {
-        try {
-            const newToken = await refreshAccessToken();
-            const retryOptions = {
-                ...options,
-                headers: { ...options.headers, Authorization: `Bearer ${newToken}` },
-            };
-            return apiFetch(endpoint, retryOptions, false);
-        } catch {
-            clearTokens();
-            window.location.href = "/login";
-            throw new Error("Session expired. Please login again.");
+        const refreshToken = getRefreshToken();
+
+        // If no refresh token exists (legacy or admin login edge-case),
+        // do not force logout here; let the original 401 be handled by caller.
+        if (refreshToken) {
+            try {
+                const newToken = await refreshAccessToken();
+                const retryOptions = {
+                    ...fetchOptions,
+                    headers: { ...fetchOptions.headers, Authorization: `Bearer ${newToken}` },
+                };
+                return apiFetch(endpoint, retryOptions, false);
+            } catch {
+                clearTokens();
+                window.location.href = "/login";
+                throw new Error("Session expired. Please login again.");
+            }
         }
     }
 
@@ -281,8 +309,12 @@ export const updateMe = async (updates) => {
 // ─────────────────────────────────────────────────────────────────────
 
 /** GET /users/donors — get all donors */
-export const getDonors = async () => {
-    return apiFetch("/users/donors", { method: "GET", headers: authHeaders() });
+export const getDonors = async (filters = {}) => {
+    const qs = new URLSearchParams(
+        Object.entries(filters).filter(([, value]) => value !== undefined && value !== null && value !== "")
+    ).toString();
+    const endpoint = qs ? `/users/donors?${qs}` : "/users/donors";
+    return apiFetch(endpoint, { method: "GET", headers: authHeaders() });
 };
 
 /**
@@ -754,7 +786,7 @@ export const getAdminRevenue = async (period = 30) => {
 /** GET /admin/audit-logs — Audit trail */
 export const getAuditLogs = async (params = {}) => {
     const qs = new URLSearchParams(params).toString();
-    return apiFetch(`/admin/logs?${qs}`, { method: "GET", headers: authHeaders() });
+    return apiFetch(`/admin/audit-logs?${qs}`, { method: "GET", headers: authHeaders() });
 };
 
 // ─────────────────────────────────────────────────────────────────────
@@ -780,6 +812,9 @@ export const adminLogin = async ({ email, password, adminKey }) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password, adminKey }),
     });
+    if (adminKey) {
+        localStorage.setItem("adminApiKey", adminKey);
+    }
     saveTokens(data.data);
     saveUser(data.data);
     return data;

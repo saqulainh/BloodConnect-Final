@@ -1,4 +1,4 @@
-import rateLimit from "express-rate-limit";
+import rateLimit, { ipKeyGenerator } from "express-rate-limit";
 
 // ── Blood Request Rate Limiter ────────────────────────────────────────
 // Max 10 blood requests per 15 minutes per IP to prevent spam
@@ -103,7 +103,7 @@ export const userFingerprintLimiter = rateLimit({
     max: 30,
     keyGenerator: (req) => {
         const userId = req.user?._id?.toString() || "anon";
-        return `${userId}:${req.ip}`;
+        return `${userId}:${ipKeyGenerator(req.ip)}`;
     },
     message: {
         success: false,

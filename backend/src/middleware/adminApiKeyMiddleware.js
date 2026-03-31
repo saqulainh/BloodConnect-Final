@@ -28,11 +28,12 @@ import crypto from "node:crypto";
  * Uses timing-safe comparison to prevent timing-based key guessing.
  */
 export const requireAdminApiKey = (req, res, next) => {
-    const adminKey = process.env.ADMIN_API_KEY;
+    const adminApiKey = process.env.ADMIN_API_KEY;
+    const adminSecretKey = process.env.ADMIN_SECRET_KEY;
 
-    // If the env key is not configured, deny all access (fail secure)
-    if (!adminKey) {
-        console.error("[SECURITY] ADMIN_API_KEY is not set in environment. Admin access denied.");
+    // If neither key is configured, deny all access (fail secure)
+    if (!adminApiKey && !adminSecretKey) {
+        console.error("[SECURITY] Neither ADMIN_API_KEY nor ADMIN_SECRET_KEY is set. Admin access denied.");
         return res.status(503).json({
             success: false,
             message: "Admin service is not configured. Contact the system administrator.",
@@ -54,18 +55,16 @@ export const requireAdminApiKey = (req, res, next) => {
     // An attacker can use this to guess the key byte-by-byte.
     // crypto.timingSafeEqual() always takes the same time regardless.
     try {
-        const adminKeyBuf = Buffer.from(adminKey, "utf8");
         const providedBuf = Buffer.from(provided, "utf8");
 
-        // Lengths must match first (to allow timingSafeEqual to run)
-        if (adminKeyBuf.length !== providedBuf.length) {
-            return res.status(403).json({
-                success: false,
-                message: "Invalid admin API key.",
-            });
-        }
+        const matchesKey = (candidate) => {
+            if (!candidate) return false;
+            const candidateBuf = Buffer.from(candidate, "utf8");
+            if (candidateBuf.length !== providedBuf.length) return false;
+            return crypto.timingSafeEqual(candidateBuf, providedBuf);
+        };
 
-        const isValid = crypto.timingSafeEqual(adminKeyBuf, providedBuf);
+        const isValid = matchesKey(adminApiKey) || matchesKey(adminSecretKey);
 
         if (!isValid) {
             return res.status(403).json({

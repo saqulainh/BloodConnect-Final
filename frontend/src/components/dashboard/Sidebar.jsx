@@ -46,6 +46,7 @@ const ADMIN_ITEMS = [
     { id: "admin-users", icon: UserCog, label: "User Management" },
     { id: "admin-requests", icon: Ticket, label: "Request Ops" },
     { id: "admin-camps", icon: Tent, label: "Camp Management" },
+    { id: "admin-inventory", icon: Droplets, label: "Blood Inventory" },
     { id: "admin-health", icon: Activity, label: "System Health" },
     { id: "admin-broadcast", icon: Megaphone, label: "Broadcast" },
     { id: "admin-revenue", icon: DollarSign, label: "Revenue" },
@@ -83,11 +84,12 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen, activeTab, se
     const name = user?.name || '';
     const initials = name ? name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) : 'U';
     const bloodGroup = user?.bloodGroup || '';
+    const isAdmin = user?.role === 'admin';
     const isReceiver = user?.role === 'receiver';
-    const roleLabel = user?.role === 'donor' ? 'Donor' : isReceiver ? 'Receiver' : 'Member';
+    const roleLabel = isAdmin ? 'Admin' : user?.role === 'donor' ? 'Donor' : isReceiver ? 'Receiver' : 'Member';
 
-    const navItems = isReceiver ? RECEIVER_NAV_ITEMS : DONOR_NAV_ITEMS;
-    const mgmtItems = isReceiver ? RECEIVER_MGMT_ITEMS : DONOR_MGMT_ITEMS;
+    const navItems = isAdmin ? ADMIN_ITEMS : (isReceiver ? RECEIVER_NAV_ITEMS : DONOR_NAV_ITEMS);
+    const mgmtItems = isAdmin ? [] : (isReceiver ? RECEIVER_MGMT_ITEMS : DONOR_MGMT_ITEMS);
 
     const brandGradient = 'from-red-500 to-red-700';
     const brandShadow = 'shadow-red-200';
@@ -110,7 +112,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen, activeTab, se
                 </div>
                 <div className="flex-1">
                     <h1 className="text-base font-black tracking-tight text-slate-900">Blood<span className={brandAccent}>Connect</span></h1>
-                    <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{isReceiver ? 'Receiver Hub' : 'Dashboard'}</p>
+                    <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{isAdmin ? 'Admin Control' : (isReceiver ? 'Receiver Hub' : 'Dashboard')}</p>
                 </div>
                 <button onClick={() => setIsSidebarOpen(false)} className="lg:hidden p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors">
                     <X size={18} />
@@ -149,23 +151,17 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen, activeTab, se
 
             {/* ── Nav ── */}
             <div className="flex-1 overflow-y-auto px-3 py-4 space-y-0.5">
-                <p className="px-4 text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2">Main Menu</p>
+                <p className="px-4 text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2">{isAdmin ? 'Admin Control' : 'Main Menu'}</p>
                 {navItems.map(item => (
                     <NavItem key={item.id} {...item} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />
                 ))}
 
-                <p className="px-4 text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 mt-6">
-                    {isReceiver ? 'My Hub' : 'Management'}
-                </p>
-                {mgmtItems.map(item => (
-                    <NavItem key={item.id} {...item} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />
-                ))}
-
-                {/* Admin-only section */}
-                {user?.role === "admin" && (
+                {!isAdmin && (
                     <>
-                        <p className="px-4 text-[9px] font-black text-red-500 uppercase tracking-widest mb-2 mt-6">🛡️ Admin Control</p>
-                        {ADMIN_ITEMS.map(item => (
+                        <p className="px-4 text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 mt-6">
+                            {isReceiver ? 'My Hub' : 'Management'}
+                        </p>
+                        {mgmtItems.map(item => (
                             <NavItem key={item.id} {...item} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />
                         ))}
                     </>
@@ -184,7 +180,18 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen, activeTab, se
                     onKeyDown={(e) => {
                         if (e.key === 'Enter' && e.target.value.trim()) {
                             const val = e.target.value.toLowerCase();
-                            if (isReceiver) {
+                            if (isAdmin) {
+                                if (val.includes("user")) setActiveTab("admin-users");
+                                else if (val.includes("request") || val.includes("req")) setActiveTab("admin-requests");
+                                else if (val.includes("camp")) setActiveTab("admin-camps");
+                                else if (val.includes("inventory") || val.includes("stock")) setActiveTab("admin-inventory");
+                                else if (val.includes("health") || val.includes("system")) setActiveTab("admin-health");
+                                else if (val.includes("broadcast")) setActiveTab("admin-broadcast");
+                                else if (val.includes("revenue") || val.includes("rev")) setActiveTab("admin-revenue");
+                                else if (val.includes("audit")) setActiveTab("admin-audit");
+                                else if (val.includes("intel") || val.includes("analytics")) setActiveTab("admin-analytics");
+                                else setActiveTab("admin-home");
+                            } else if (isReceiver) {
                                 if (val.includes("request")) setActiveTab("my-requests");
                                 else if (val.includes("donor") || val.includes("find")) setActiveTab("find-donors");
                                 else if (val.includes("map")) setActiveTab("live-map");

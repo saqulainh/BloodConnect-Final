@@ -116,6 +116,8 @@ const DonorManagement = ({ onStartChat }) => {
         return () => clearTimeout(debounce);
     }, [searchTerm, filterGroup, filterCity]);
 
+    const filteredDonors = Array.isArray(donors) ? donors : [];
+
     return (
         <div className="space-y-4">
             {/* Toolbar */}
@@ -202,12 +204,12 @@ const DonorManagement = ({ onStartChat }) => {
                                 <tr>
                                     <td colSpan="6" className="text-center py-8 text-slate-400 font-medium">Loading donors...</td>
                                 </tr>
-                            ) : donors.length === 0 ? (
+                            ) : filteredDonors.length === 0 ? (
                                 <tr>
                                     <td colSpan="6" className="text-center py-8 text-slate-400 font-medium">No donors found.</td>
                                 </tr>
                             ) : (
-                                donors.map((d) => (
+                                filteredDonors.map((d) => (
                                     <tr key={d._id} className="hover:bg-slate-50 transition-colors cursor-pointer group" onClick={() => setViewingDonor(d)}>
                                         <td className="px-6 py-4 font-bold text-slate-800">
                                             <div className="flex items-center gap-3">
