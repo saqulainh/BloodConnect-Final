@@ -1,6 +1,46 @@
 const puppeteer = require('puppeteer');
+const path = require('path');
+const fs = require('fs');
+
+const loadEnvFile = (envPath) => {
+  if (!fs.existsSync(envPath)) return;
+  const raw = fs.readFileSync(envPath, 'utf8');
+  for (const line of raw.split(/\r?\n/)) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith('#')) continue;
+    const eqIdx = trimmed.indexOf('=');
+    if (eqIdx <= 0) continue;
+    const key = trimmed.slice(0, eqIdx).trim();
+    const value = trimmed.slice(eqIdx + 1).trim();
+    if (!(key in process.env)) {
+      process.env[key] = value;
+    }
+  }
+};
 
 (async () => {
+  loadEnvFile(path.join(__dirname, 'backend', '.env'));
+
+  const baseUrl = process.env.SMOKE_BASE_URL || 'http://localhost:3000';
+  const adminEmail = process.env.SMOKE_ADMIN_EMAIL || process.env.ADMIN_EMAIL;
+  const adminPassword = process.env.SMOKE_ADMIN_PASSWORD || process.env.ADMIN_PASSWORD;
+  const adminKey =
+    process.env.SMOKE_ADMIN_KEY ||
+    process.env.ADMIN_SECRET_KEY ||
+    process.env.ADMIN_API_KEY;
+
+  if (!adminEmail || !adminPassword) {
+    throw new Error(
+      'Missing admin credentials. Set SMOKE_ADMIN_EMAIL and SMOKE_ADMIN_PASSWORD (or ADMIN_EMAIL and ADMIN_PASSWORD).'
+    );
+  }
+
+  if (!adminKey) {
+    throw new Error(
+      'Missing admin key. Set SMOKE_ADMIN_KEY, or define ADMIN_SECRET_KEY/ADMIN_API_KEY in backend/.env.'
+    );
+  }
+
   const browser = await puppeteer.launch({ headless: 'new' });
   const page = await browser.newPage();
 
@@ -25,13 +65,16 @@ const puppeteer = require('puppeteer');
     }
   });
 
-  await page.goto('http://localhost:3000/admin-login', { waitUntil: 'networkidle2' });
-  await page.type('input[type="email"]', 'syedsaqulainhaider313@gmail.com');
-  await page.type('input[autocomplete="current-password"]', '@Syedbloodconnect#');
+  await page.goto(`${baseUrl}/admin-login`, { waitUntil: 'networkidle2' });
+  await page.type('input[type="email"]', adminEmail);
+  await page.type('input[autocomplete="current-password"]', adminPassword);
 
   const inputs = await page.$$('input');
   const keyInput = inputs[inputs.length - 1];
-  await keyInput.type('8df1c93b1f0902c919617e7d8ca0c471197551603af7247738b4e394301e9260');
+  if (!keyInput) {
+    throw new Error('Admin key input not found on /admin-login page.');
+  }
+  await keyInput.type(adminKey);
 
   await page.click('button[type="submit"]');
   try {

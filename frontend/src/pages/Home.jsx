@@ -1,11 +1,26 @@
 import React, { useEffect, useRef } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ChevronRight, Droplets, LogIn, LayoutDashboard, UserPlus } from "lucide-react";
 import gsap from "gsap";
 import { useTranslation } from "react-i18next";
 
+const NavCard = ({ to, icon, title, desc, color }) => {
+    const IconComponent = icon;
+    return (
+        <Link to={to} className="nav-card group relative overflow-hidden bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-all duration-300 flex flex-col items-center text-center gap-3">
+            <div className={`w-12 h-12 rounded-full flex items-center justify-center ${color} text-white mb-2 group-hover:scale-110 transition-transform`}>
+                <IconComponent size={24} />
+            </div>
+            <h3 className="text-lg font-bold text-slate-800">{title}</h3>
+            <p className="text-xs text-slate-500 font-medium">{desc}</p>
+            <div className="mt-2 w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                <ChevronRight size={16} />
+            </div>
+        </Link>
+    );
+};
+
 export default function Home() {
-    const navigate = useNavigate();
     const containerRef = useRef(null);
     const { t } = useTranslation();
 
@@ -22,19 +37,6 @@ export default function Home() {
         }, containerRef);
         return () => ctx.revert();
     }, []);
-
-    const NavCard = ({ to, icon: Icon, title, desc, color }) => (
-        <Link to={to} className="nav-card group relative overflow-hidden bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-all duration-300 flex flex-col items-center text-center gap-3">
-            <div className={`w-12 h-12 rounded-full flex items-center justify-center ${color} text-white mb-2 group-hover:scale-110 transition-transform`}>
-                <Icon size={24} />
-            </div>
-            <h3 className="text-lg font-bold text-slate-800">{title}</h3>
-            <p className="text-xs text-slate-500 font-medium">{desc}</p>
-            <div className="mt-2 w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-slate-800 group-hover:text-white transition-colors">
-                <ChevronRight size={16} />
-            </div>
-        </Link>
-    );
 
     return (
         <div ref={containerRef} className="min-h-screen bg-slate-50 font-sans flex flex-col md:flex-row">

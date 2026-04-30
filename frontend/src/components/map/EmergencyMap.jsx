@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import 'leaflet/dist/leaflet.css';
+import { MapContainer, TileLayer, Marker, Popup, Circle, useMap } from 'react-leaflet';
+import L from 'leaflet';
 import getPusher from '../../services/pusher';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 
 import TopStatsBar from './TopStatsBar';
 import RequestMarker from './RequestMarker';
@@ -14,15 +17,45 @@ import * as api from '../../services/api';
 const DEFAULT_CENTER = [20.5937, 78.9629];
 const DEFAULT_ZOOM = 5;
 
+// Leaflet components object for passing to child components
+const LeafletComps = {
+    MapContainer,
+    TileLayer,
+    Marker,
+    Popup,
+    Circle,
+    useMap,
+    L
+};
+
+function MapResizeFix() {
+    const map = useMap();
+
+    useEffect(() => {
+        const refresh = () => map.invalidateSize();
+        const timerA = setTimeout(refresh, 80);
+        const timerB = setTimeout(refresh, 350);
+        window.addEventListener('resize', refresh);
+
+        return () => {
+            clearTimeout(timerA);
+            clearTimeout(timerB);
+            window.removeEventListener('resize', refresh);
+        };
+    }, [map]);
+
+    return null;
+}
+
 const EmergencyMap = () => {
-    const [LeafletComps, setLeafletComps] = useState(null);
     const [requests, setRequests] = useState([]);
     const [donors, setDonors] = useState([]);
     const [selectedRequest, setSelectedRequest] = useState(null);
     const [radiusStats, setRadiusStats] = useState({ donorsFound: 0 });
     const [isHeatmap, setIsHeatmap] = useState(false);
-    const [timelineVal, setTimelineVal] = useState(Date.now());
-    const [minTimeline] = useState(Date.now() - 24 * 60 * 60 * 1000);
+    const [nowTs, setNowTs] = useState(() => Date.now());
+    const [timelineVal, setTimelineVal] = useState(() => Date.now());
+    const minTimeline = nowTs - 24 * 60 * 60 * 1000;
 
     useEffect(() => {
         const fetchMapData = async () => {
@@ -51,23 +84,8 @@ const EmergencyMap = () => {
     }, []);
 
     useEffect(() => {
-        if (typeof window !== 'undefined') {
-            Promise.all([
-                import('react-leaflet'),
-                import('leaflet'),
-                import('leaflet/dist/leaflet.css')
-            ]).then(([RL, Lmod]) => {
-                setLeafletComps({
-                    MapContainer: RL.MapContainer,
-                    TileLayer: RL.TileLayer,
-                    Marker: RL.Marker,
-                    Popup: RL.Popup,
-                    Circle: RL.Circle,
-                    useMap: RL.useMap,
-                    L: Lmod.default
-                });
-            }).catch(console.error);
-        }
+        const timer = setInterval(() => setNowTs(Date.now()), 60 * 1000);
+        return () => clearInterval(timer);
     }, []);
 
     const visibleRequests = useMemo(() => {
@@ -96,25 +114,20 @@ const EmergencyMap = () => {
         fetchRadius();
     }, []);
 
-    if (!LeafletComps) {
-        return <div className="w-full h-full bg-white flex items-center justify-center text-slate-400 font-bold">Booting EIMS Intelligence...</div>;
-    }
-
-    const { MapContainer, TileLayer } = LeafletComps;
-
     return (
         <div className="relative w-full h-[calc(100vh-64px)] bg-white overflow-hidden">
             <TopStatsBar stats={stats} />
             <FilterDrawer onFilterChange={(f) => console.log('Filters:', f)} />
 
             <MapContainer center={DEFAULT_CENTER} zoom={DEFAULT_ZOOM} className="w-full h-full z-0" zoomControl={false}>
+                <MapResizeFix />
                 <TileLayer
-                    url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager_all/{z}/{x}/{y}.png"
-                    attribution='&copy; <a href="https://carto.com/">Carto</a>'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 />
 
                 <HeatmapToggle isHeatmap={isHeatmap} onToggle={() => setIsHeatmap(!isHeatmap)} />
-                <TimelineSlider minTime={minTimeline} maxTime={Date.now()} currentTime={timelineVal} onChange={setTimelineVal} />
+                <TimelineSlider minTime={minTimeline} maxTime={nowTs} currentTime={timelineVal} onChange={setTimelineVal} />
 
                 {!isHeatmap && (
                     <>

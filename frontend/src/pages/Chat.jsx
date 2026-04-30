@@ -91,15 +91,13 @@ const IncomingCallAlert = ({ caller, type, onAccept, onDecline }) => {
     );
 };
 
-// ── Chat Settings Drawer ──
-const SettingsDrawer = ({ isOpen, onClose, settings, setSettings, onClearAll }) => {
-    if (!isOpen) return null;
-
-    const SettingToggle = ({ icon: Icon, label, description, active, onToggle }) => (
+const SettingToggle = ({ icon, label, description, active, onToggle }) => {
+    const IconComponent = icon;
+    return (
         <div className="flex items-center justify-between p-4 bg-white rounded-3xl border border-slate-100 shadow-sm mb-3">
             <div className="flex items-center gap-3">
                 <div className={`w-10 h-10 rounded-2xl flex items-center justify-center ${active ? 'bg-red-600 text-white' : 'bg-slate-100 text-slate-400'}`}>
-                    <Icon size={18} />
+                    <IconComponent size={18} />
                 </div>
                 <div>
                     <p className="text-sm font-black text-slate-900 leading-none mb-1">{label}</p>
@@ -114,6 +112,11 @@ const SettingsDrawer = ({ isOpen, onClose, settings, setSettings, onClearAll }) 
             </button>
         </div>
     );
+};
+
+// ── Chat Settings Drawer ──
+const SettingsDrawer = ({ isOpen, onClose, settings, setSettings, onClearAll }) => {
+    if (!isOpen) return null;
 
     return (
         <div className="fixed inset-0 z-[150] flex justify-end">
@@ -329,6 +332,7 @@ export default function Chat({ preselectedUser }) {
             });
         } catch (err) {
             setMessages(prev => prev.filter(m => m._id !== tempId));
+            console.error(err);
             addToast("Failed to send message.", "error");
         }
     };
@@ -340,6 +344,7 @@ export default function Chat({ preselectedUser }) {
             await initiateCall(currentChatUser._id, type);
         } catch (err) {
             setOutgoingCall({ active: false, type: 'voice' });
+            console.error(err);
             addToast("Call failed. User might be offline.", "error");
         }
     };
@@ -351,7 +356,10 @@ export default function Chat({ preselectedUser }) {
             setMessages([]);
             setShowOptions(false);
             addToast("Chat history cleared.", "success");
-        } catch (err) { addToast("Failed to clear chat.", "error"); }
+        } catch (err) {
+            console.error(err);
+            addToast("Failed to clear chat.", "error");
+        }
     };
 
     const formatTime = (iso) => {

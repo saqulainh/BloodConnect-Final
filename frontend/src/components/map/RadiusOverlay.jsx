@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 // import { Circle, useMap, Popup } from 'react-leaflet';
-import { motion, AnimatePresence } from 'framer-motion';
 
 const RadiusOverlay = ({ request, stats, components }) => {
     const { Circle, Popup, useMap } = components || {};
-    const map = useMap ? useMap() : null;
+    const safeUseMap = useMap || (() => null);
+    const map = safeUseMap();
 
     useEffect(() => {
         if (request?.location?.coordinates && map) {
