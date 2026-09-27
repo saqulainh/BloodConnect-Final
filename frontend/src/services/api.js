@@ -1,6 +1,7 @@
 // ─── API Service Layer ───────────────────────────────────────────────
 // Prefer same-origin /api/v1 so Vite dev proxy and Nginx both work cleanly.
-const rawApiUrl = import.meta.env.VITE_API_URL || "/api/v1";
+const rawApiUrl = import.meta.env.VITE_API_URL ||
+    (import.meta.env.PROD ? "https://bloodconnect-final.onrender.com/api/v1" : "/api/v1");
 const BASE_URL = rawApiUrl.endsWith("/api/v1")
     ? rawApiUrl
     : rawApiUrl.replace(/\/$/, "") + "/api/v1";

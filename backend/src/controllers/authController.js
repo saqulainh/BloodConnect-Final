@@ -331,7 +331,10 @@ const resendOtp = async (req, res) => {
         res.status(200).json({ success: true, message: "OTP resent to your email." });
     } catch (error) {
         console.error("Resend OTP error:", error);
-        res.status(500).json({ success: false, message: "Server error. Please try again." });
+        res.status(500).json({
+            success: false,
+            message: error.message || "Unable to resend verification email. Please try again."
+        });
     }
 };
 

@@ -50,6 +50,8 @@ app.use("/api/", globalLimiter);
 
 const allowedOrigins = [
     process.env.CLIENT_URL || "http://localhost:3000",
+    "https://blood-connect-final-gamma.vercel.app",
+    "https://blood-connect-final.vercel.app",
     "http://localhost:3000",
     "http://localhost:3001",
     "http://localhost:5173",
@@ -63,7 +65,10 @@ const allowedOrigins = [
 // CORS
 app.use(cors({
     origin: function (origin, callback) {
-        if (!origin || allowedOrigins.includes(origin) || origin.startsWith("http://localhost:") || origin.startsWith("http://127.0.0.1:")) {
+        const isBloodConnectVercelDeployment =
+            /^https:\/\/blood-connect-final-[a-z0-9-]+\.vercel\.app$/i.test(origin || "");
+        if (!origin || allowedOrigins.includes(origin) || isBloodConnectVercelDeployment ||
+            origin.startsWith("http://localhost:") || origin.startsWith("http://127.0.0.1:")) {
             callback(null, true);
         } else {
             console.error(`Blocked by CORS: origin="${origin}"`);
