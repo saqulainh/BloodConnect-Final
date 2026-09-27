@@ -99,7 +99,7 @@ export default function HomePage() {
                 height: "100%",
                 ease: "none",
                 scrollTrigger: {
-                    trigger: "#workflow",
+                    trigger: "#how-it-works",
                     start: "top center",
                     end: "bottom center",
                     scrub: 0.5,
@@ -160,7 +160,7 @@ export default function HomePage() {
 
                     {/* Desktop Nav */}
                     <div className="hidden md:flex items-center gap-8 text-sm font-bold text-slate-500">
-                        <a href="#workflow" className="hover:text-red-600 transition-colors">{t("How it Works")}</a>
+                        <a href="#how-it-works" className="hover:text-red-600 transition-colors">{t("How it Works")}</a>
                         <Link to="/register" className="hover:text-red-600 transition-colors">{t("Become a Donor")}</Link>
                     </div>
 
@@ -207,7 +207,7 @@ export default function HomePage() {
                 {/* Mobile Menu */}
                 {menuOpen && (
                     <div className="md:hidden border-t border-slate-100 bg-white px-4 py-6 space-y-4 shadow-xl">
-                        <a href="#workflow" onClick={() => setMenuOpen(false)} className="block text-sm font-bold text-slate-600 hover:text-red-600 py-2">How it Works</a>
+                        <a href="#how-it-works" onClick={() => setMenuOpen(false)} className="block text-sm font-bold text-slate-600 hover:text-red-600 py-2">How it Works</a>
                         <Link to="/register" onClick={() => setMenuOpen(false)} className="block text-sm font-bold text-slate-600 hover:text-red-600 py-2">Become a Donor</Link>
                         <div className="pt-2 flex flex-col gap-3">
                             {isAuthenticated ? (
@@ -224,7 +224,7 @@ export default function HomePage() {
             </nav>
 
             {/* ── Hero Section ────────────────────────────────────────── */}
-            <header ref={heroRef} className="relative pt-24 pb-20 lg:pt-36 lg:pb-32 px-4 overflow-hidden bg-[#fafafa]">
+            <header id="features" ref={heroRef} className="relative pt-24 pb-20 lg:pt-36 lg:pb-32 px-4 overflow-hidden bg-[#fafafa]">
                 {/* Background Blobs & Gradients */}
                 <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-br from-red-100/80 to-pink-50/40 rounded-full blur-[100px] -translate-y-1/3 translate-x-1/4 pointer-events-none" />
                 <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-gradient-to-tr from-blue-50/60 to-slate-100/50 rounded-full blur-[80px] pointer-events-none" />
@@ -400,7 +400,7 @@ export default function HomePage() {
             </header>
 
             {/* ── Workflow Timeline Section ───────────────────────────── */}
-            <section id="workflow" ref={stepsRef} className="relative py-32 px-4 bg-slate-50 overflow-hidden">
+            <section id="how-it-works" ref={stepsRef} className="relative py-32 px-4 bg-slate-50 overflow-hidden">
                 <div className="max-w-6xl mx-auto">
 
                     <div className="text-center md:text-left mb-20 md:ml-32">
@@ -546,7 +546,7 @@ export default function HomePage() {
             </section>
 
             {/* ── CTA Banner ──────────────────────────────────────────── */}
-            <section className="py-24 px-4 bg-red-600 relative overflow-hidden">
+            <section id="impact" className="py-24 px-4 bg-red-600 relative overflow-hidden">
                 <div className="absolute inset-0 opacity-10">
                     <div className="absolute -top-20 -right-20 w-96 h-96 bg-white rounded-full blur-3xl" />
                     <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-red-800 rounded-full blur-3xl" />
@@ -615,15 +615,18 @@ export default function HomePage() {
                         <div className="space-y-4">
                             <h4 className="text-sm font-black text-white uppercase tracking-widest">Legal</h4>
                             <ul className="space-y-2.5 text-sm font-medium">
-                                <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
-                                <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
-                                <li><a href="#" className="hover:text-white transition-colors">Contact Us</a></li>
+                                <li><a href="#legal" className="hover:text-white transition-colors">Privacy Policy</a></li>
+                                <li><a href="#legal" className="hover:text-white transition-colors">Terms of Service</a></li>
+                                <li><a href="tel:+918804385786" className="hover:text-white transition-colors">Contact Us</a></li>
                             </ul>
                         </div>
                     </div>
 
-                    <div className="pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
-                        <p className="text-xs font-medium">© 2024 BloodConnect. Made with ❤️ to save lives.</p>
+                    <div id="legal" className="pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
+                        <div className="text-xs font-medium text-center md:text-left">
+                            <p>© 2024 BloodConnect. Made with ❤️ to save lives.</p>
+                            <p className="mt-1">Developed by Nowic Studio · <a href="tel:+918804385786" className="hover:text-white">8804385786</a></p>
+                        </div>
                         <div className="flex items-center gap-2 text-xs font-medium">
                             <Droplets size={12} className="text-red-500" />
                             Every donation saves up to 3 lives.
@@ -647,4 +650,3 @@ function UserPlus({ size, ...props }) {
         </svg>
     );
 }
-
