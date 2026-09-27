@@ -158,6 +158,7 @@ export const apiFetch = async (endpoint, options = {}, retry = true) => {
     if (!data.success) {
         const error = new Error(data.message || "Something went wrong");
         error.response = { data }; // Attach data for consumer access (e.g. requiresOtp)
+        Object.assign(error, data);
         throw error;
     }
     return data;

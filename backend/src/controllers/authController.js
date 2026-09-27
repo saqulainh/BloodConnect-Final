@@ -304,20 +304,29 @@ const resendOtp = async (req, res) => {
         if (user.isVerified) return res.status(400).json({ success: false, message: "Account already verified." });
 
         const otp = generateOtp();
+        const previousOtp = user.otp;
+        const previousOtpExpires = user.otpExpires;
         user.otp = otp;
         user.otpExpires = Date.now() + 10 * 60 * 1000;
         await user.save();
 
-        await sendEmail(
-            user.email,
-            "Your BloodConnect Verification Code (Resent)",
-            `Your new OTP is ${otp}. It expires in 10 minutes.`,
-            `<div style="font-family:Inter,sans-serif;text-align:center;padding:30px">
-              <h2 style="color:#e53935">BloodConnect OTP</h2>
-              <div style="font-size:32px;font-weight:900;letter-spacing:8px;color:#e53935;margin:20px 0">${otp}</div>
-              <p style="color:#aaa">Expires in 10 minutes</p>
-            </div>`
-        );
+        try {
+            await sendEmail(
+                user.email,
+                "Your BloodConnect Verification Code (Resent)",
+                `Your new OTP is ${otp}. It expires in 10 minutes.`,
+                `<div style="font-family:Inter,sans-serif;text-align:center;padding:30px">
+                  <h2 style="color:#e53935">BloodConnect OTP</h2>
+                  <div style="font-size:32px;font-weight:900;letter-spacing:8px;color:#e53935;margin:20px 0">${otp}</div>
+                  <p style="color:#aaa">Expires in 10 minutes</p>
+                </div>`
+            );
+        } catch (emailError) {
+            user.otp = previousOtp;
+            user.otpExpires = previousOtpExpires;
+            await user.save();
+            throw emailError;
+        }
 
         res.status(200).json({ success: true, message: "OTP resent to your email." });
     } catch (error) {
