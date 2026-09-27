@@ -6,8 +6,8 @@ dns.setServers(["1.1.1.1", "1.0.0.1", "8.8.8.8", "8.8.4.4"]);
 
 // ── Connection Pool Settings (for 10,000+ users) ─────────────────────
 const DB_OPTIONS = {
-    maxPoolSize: 50,               // Max 50 concurrent connections
-    minPoolSize: 5,                // Keep 5 warm connections ready
+    maxPoolSize: Number.parseInt(process.env.MONGO_MAX_POOL_SIZE || "10", 10),
+    minPoolSize: 0,
     socketTimeoutMS: 45000,        // Close idle sockets after 45s
     connectTimeoutMS: 10000,       // Connection attempt timeout 10s
     retryWrites: true,             // Auto retry failed writes

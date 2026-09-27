@@ -16,7 +16,10 @@ import { triggerEIMS, triggerGlobal } from "./src/services/pusherService.js";
 import { startBloodMatchWorker } from "./src/workers/bloodMatchWorker.js";
 
 const PORT = process.env.PORT || 5000;
-const numCPUs = os.cpus().length;
+const configuredWorkers = Number.parseInt(process.env.WEB_CONCURRENCY || "1", 10);
+const numCPUs = Number.isFinite(configuredWorkers) && configuredWorkers > 0
+    ? Math.min(configuredWorkers, os.cpus().length)
+    : 1;
 
 // ─── CLUSTERING FOR HIGH LOAD SCALABILITY ─────────────────────────────
 if (cluster.isPrimary) {
