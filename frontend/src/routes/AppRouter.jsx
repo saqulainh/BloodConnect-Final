@@ -14,6 +14,7 @@ const AadhaarVerifyPage = lazy(() => import("../pages/AadhaarVerifyPage"));
 const ForgotPassword = lazy(() => import("../components/auth/ForgotPassword"));
 const ResetPassword = lazy(() => import("../components/auth/ResetPassword"));
 const AdminLogin = lazy(() => import("../pages/AdminLogin"));
+const LegalPage = lazy(() => import("../pages/LegalPage"));
 
 const LoadingFallback = () => (
     <div className="flex h-screen w-full items-center justify-center bg-white">
@@ -36,6 +37,8 @@ const AppRouter = () => {
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/admin-login" element={<AdminLogin />} />
+                <Route path="/privacy-policy" element={<LegalPage />} />
+                <Route path="/terms" element={<LegalPage />} />
 
                 {/* Protected Routes */}
                 <Route element={<ProtectedRoute />}>

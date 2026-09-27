@@ -586,8 +586,8 @@ export default function RegisterPage() {
 
                                 <p style={{ fontSize: 11.5, color: "#aaa", lineHeight: 1.6 }}>
                                     By creating an account you agree to our{" "}
-                                    <span style={{ color: "#e53935", fontWeight: 700, cursor: "pointer" }}>Terms of Service</span> and{" "}
-                                    <span style={{ color: "#e53935", fontWeight: 700, cursor: "pointer" }}>Privacy Policy</span>.
+                                    <a href="/terms" style={{ color: "#e53935", fontWeight: 700 }}>Terms of Service</a> and{" "}
+                                    <a href="/privacy-policy" style={{ color: "#e53935", fontWeight: 700 }}>Privacy Policy</a>.
                                 </p>
                             </>
                         )}

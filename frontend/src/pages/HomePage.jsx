@@ -615,8 +615,8 @@ export default function HomePage() {
                         <div className="space-y-4">
                             <h4 className="text-sm font-black text-white uppercase tracking-widest">Legal</h4>
                             <ul className="space-y-2.5 text-sm font-medium">
-                                <li><a href="#legal" className="hover:text-white transition-colors">Privacy Policy</a></li>
-                                <li><a href="#legal" className="hover:text-white transition-colors">Terms of Service</a></li>
+                                <li><Link to="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
+                                <li><Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link></li>
                                 <li><a href="tel:+918804385786" className="hover:text-white transition-colors">Contact Us</a></li>
                             </ul>
                         </div>
