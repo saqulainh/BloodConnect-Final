@@ -2,11 +2,13 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Mail, RotateCcw, ArrowRight, Check, Droplets, ShieldCheck } from "lucide-react";
 import { verifyOtp, resendOtp } from "../services/api";
+import { useAuth } from "../context/AuthContext";
 
 export default function OtpVerifyPage() {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const email = searchParams.get("email") || "";
+    const { setUser } = useAuth();
 
     const [otp, setOtp] = useState(["", "", "", "", "", ""]);
     const [loading, setLoading] = useState(false);
@@ -75,7 +77,8 @@ export default function OtpVerifyPage() {
         setLoading(true);
         setError("");
         try {
-            await verifyOtp({ email, otp: code || otp.join("") });
+            const response = await verifyOtp({ email, otp: code || otp.join("") });
+            setUser(response.data);
             setSuccess("Account verified! Redirecting…");
             setTimeout(() => navigate("/dashboard"), 1200);
         } catch (err) {
