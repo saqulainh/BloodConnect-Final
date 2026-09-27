@@ -78,8 +78,10 @@ const registerUser = async (req, res) => {
         });
 
         if (user) {
-            // Send OTP email
-            await sendEmail(
+            // Send OTP before confirming registration so failed delivery does not leave
+            // an account that cannot complete verification.
+            try {
+                await sendEmail(
                 user.email,
                 "Your BloodConnect Verification Code",
                 `Your OTP is ${otp}. It expires in 10 minutes.`,
@@ -98,7 +100,11 @@ const registerUser = async (req, res) => {
                   </div>
                 </div>
                 `
-            );
+                );
+            } catch (emailError) {
+                await User.deleteOne({ _id: user._id });
+                throw new Error(`Unable to send verification email: ${emailError.message}`);
+            }
 
             res.status(201).json({
                 success: true,
