@@ -54,7 +54,8 @@ const ADMIN_ITEMS = [
     { id: "admin-analytics", icon: ShieldAlert, label: "Mission Intel" },
 ];
 
-const NavItem = ({ id, icon: Icon, label, badge, activeTab, setActiveTab, setIsSidebarOpen }) => {
+const NavItem = ({ id, icon, label, badge, activeTab, setActiveTab, setIsSidebarOpen }) => {
+    const IconComponent = icon;
     const active = activeTab === id;
     const accentClass = (active ? 'bg-red-600 text-white shadow-lg shadow-red-200/50' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800');
     const barColor = 'bg-red-900';
@@ -69,7 +70,7 @@ const NavItem = ({ id, icon: Icon, label, badge, activeTab, setActiveTab, setIsS
             className={`group flex items-center gap-3 px-4 py-3 rounded-xl w-full text-sm font-bold transition-all duration-200 relative ${accentClass}`}
         >
             {active && <div className={`absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 ${barColor} rounded-r-full -ml-4`} />}
-            <Icon size={18} className={`transition-transform group-hover:scale-110 ${active ? 'text-white' : 'text-slate-400'}`} />
+            <IconComponent size={18} className={`transition-transform group-hover:scale-110 ${active ? 'text-white' : 'text-slate-400'}`} />
             <span className="flex-1 text-left">{label}</span>
             {badge && (
                 <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${active ? 'bg-white/20 text-white' : badgeInactive}`}>
@@ -101,13 +102,13 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen, activeTab, se
 
     return (
         <aside className={`
-            fixed top-0 left-0 z-50 h-screen w-[270px] bg-white border-r border-slate-100 flex flex-col
+            fixed top-0 left-0 z-50 h-screen w-67.5 bg-white border-r border-slate-100 flex flex-col
             transition-transform duration-300 ease-in-out shadow-2xl shadow-slate-200/50
             ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         `}>
             {/* ── Brand ── */}
             <div className="flex items-center gap-3 px-5 py-5 border-b border-slate-100">
-                <div className={`w-9 h-9 bg-gradient-to-br ${brandGradient} rounded-xl flex items-center justify-center shadow-lg ${brandShadow}`}>
+                <div className={`w-9 h-9 bg-linear-to-br ${brandGradient} rounded-xl flex items-center justify-center shadow-lg ${brandShadow}`}>
                     <Droplets size={18} className="text-white fill-white" />
                 </div>
                 <div className="flex-1">
@@ -120,7 +121,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen, activeTab, se
             </div>
 
             {/* ── User Card ── */}
-            <div className="mx-3 mt-4 p-3.5 bg-gradient-to-br from-slate-50 to-white rounded-2xl border border-slate-100">
+            <div className="mx-3 mt-4 p-3.5 bg-linear-to-br from-slate-50 to-white rounded-2xl border border-slate-100">
                 <div className="flex items-center gap-3">
                     <div className="relative">
                         {user?.profilePicture ? (
@@ -128,7 +129,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen, activeTab, se
                                 <img src={user.profilePicture} alt={user?.name} className="w-full h-full object-cover" />
                             </div>
                         ) : (
-                            <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${avatarGradient} flex items-center justify-center text-white font-black text-sm shadow-md ${avatarShadow}`}>
+                            <div className={`w-11 h-11 rounded-xl bg-linear-to-br ${avatarGradient} flex items-center justify-center text-white font-black text-sm shadow-md ${avatarShadow}`}>
                                 {initials}
                             </div>
                         )}
@@ -186,7 +187,6 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen, activeTab, se
                                 else if (val.includes("camp")) setActiveTab("admin-camps");
                                 else if (val.includes("inventory") || val.includes("stock")) setActiveTab("admin-inventory");
                                 else if (val.includes("health") || val.includes("system")) setActiveTab("admin-health");
-                                else if (val.includes("broadcast")) setActiveTab("admin-broadcast");
                                 else if (val.includes("revenue") || val.includes("rev")) setActiveTab("admin-revenue");
                                 else if (val.includes("audit")) setActiveTab("admin-audit");
                                 else if (val.includes("intel") || val.includes("analytics")) setActiveTab("admin-analytics");
@@ -211,14 +211,6 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen, activeTab, se
                                 else if (val.includes("sos") || val.includes("emergen")) setActiveTab("sos");
                                 else if (val.includes("chat")) setActiveTab("chat");
                                 else if (val.includes("journey")) setActiveTab("blood-journey");
-                                // Admin commands
-                                else if (val.includes("admin") && val.includes("user")) setActiveTab("admin-users");
-                                else if (val.includes("admin") && val.includes("req")) setActiveTab("admin-requests");
-                                else if (val.includes("admin") && val.includes("rev")) setActiveTab("admin-revenue");
-                                else if (val.includes("admin") && val.includes("audit")) setActiveTab("admin-audit");
-                                else if (val.includes("admin") && val.includes("health")) setActiveTab("admin-health");
-                                else if (val.includes("broadcast")) setActiveTab("admin-broadcast");
-                                else if (val.includes("admin")) setActiveTab("admin-home");
                                 else setActiveTab("dashboard");
                             }
                             e.target.value = "";

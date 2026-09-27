@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ShieldCheck, AlertTriangle, CheckCircle, Loader2 } from "lucide-react";
-import { useToast } from "../ui/Toast";
+import { useToast } from "../ui/useToast";
 
 const apiFetch = async (endpoint, options = {}) => {
     const token = localStorage.getItem("accessToken");
@@ -14,7 +14,7 @@ const apiFetch = async (endpoint, options = {}) => {
 };
 
 // ── Score Circle ──────────────────────────────────────────────────────────────
-function ScoreCircle({ score, ready }) {
+function ScoreCircle({ score }) {
     const radius = 44;
     const circumference = 2 * Math.PI * radius;
     const strokeDashoffset = circumference - (score / 100) * circumference;

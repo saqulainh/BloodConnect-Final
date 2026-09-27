@@ -6,17 +6,21 @@ import {
 import { getAdminDashboard } from '../../services/api';
 import LiveMap from '../dashboard/LiveMap';
 
-const StatCard = ({ icon: Icon, label, value, sub, color = 'bg-slate-800', accent = 'text-white' }) => (
-    <div className={`${color} rounded-2xl p-5 text-white relative overflow-hidden group hover:scale-[1.02] transition-transform`}>
-        <div className="absolute top-0 right-0 w-20 h-20 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/3" />
-        <div className="flex items-center gap-3 mb-3">
-            <Icon size={18} className={accent} />
-            <span className="text-[10px] font-black uppercase tracking-widest text-white/60">{label}</span>
+const StatCard = ({ icon, label, value, sub, color = 'bg-slate-800', accent = 'text-white' }) => {
+    const IconComponent = icon;
+
+    return (
+        <div className={`${color} rounded-2xl p-5 text-white relative overflow-hidden group hover:scale-[1.02] transition-transform`}>
+            <div className="absolute top-0 right-0 w-20 h-20 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/3" />
+            <div className="flex items-center gap-3 mb-3">
+                <IconComponent size={18} className={accent} />
+                <span className="text-[10px] font-black uppercase tracking-widest text-white/60">{label}</span>
+            </div>
+            <p className="text-3xl font-black">{value}</p>
+            {sub && <p className="text-xs font-medium text-white/50 mt-1">{sub}</p>}
         </div>
-        <p className="text-3xl font-black">{value}</p>
-        {sub && <p className="text-xs font-medium text-white/50 mt-1">{sub}</p>}
-    </div>
-);
+    );
+};
 
 export default function AdminHome({ setActiveTab }) {
     const [data, setData] = useState(null);

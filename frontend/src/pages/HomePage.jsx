@@ -27,18 +27,22 @@ const BloodBadge = ({ type, urgency }) => {
 };
 
 /* ─── Feature Card ───────────────────────────────────────────── */
-const FeatureCard = ({ icon: Icon, title, desc, gradient, iconColor }) => (
-    <div className="group relative bg-white rounded-3xl p-8 shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-2 transition-all duration-500 overflow-hidden">
-        <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${gradient}`} />
-        <div className="relative z-10">
-            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 ${iconColor} bg-opacity-10`}>
-                <Icon size={28} className={iconColor.replace("bg-", "text-")} />
+const FeatureCard = ({ icon, title, desc, gradient, iconColor }) => {
+    const IconComponent = icon;
+
+    return (
+        <div className="group relative bg-white rounded-3xl p-8 shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-2 transition-all duration-500 overflow-hidden">
+            <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${gradient}`} />
+            <div className="relative z-10">
+                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 ${iconColor} bg-opacity-10`}>
+                    <IconComponent size={28} className={iconColor.replace("bg-", "text-")} />
+                </div>
+                <h3 className="text-xl font-black text-slate-900 mb-3 group-hover:text-slate-900">{title}</h3>
+                <p className="text-slate-500 leading-relaxed font-medium">{desc}</p>
             </div>
-            <h3 className="text-xl font-black text-slate-900 mb-3 group-hover:text-slate-900">{title}</h3>
-            <p className="text-slate-500 leading-relaxed font-medium">{desc}</p>
         </div>
-    </div>
-);
+    );
+};
 
 /* ─── Stat Card ──────────────────────────────────────────────── */
 const StatCard = ({ value, label, color }) => (
@@ -49,31 +53,33 @@ const StatCard = ({ value, label, color }) => (
 );
 
 /* ─── Step Card ──────────────────────────────────────────────── */
-const StepCard = ({ number, icon: Icon, title, desc }) => (
-    <div className="flex flex-col items-center text-center gap-5">
-        <div className="relative">
-            <div className="w-20 h-20 bg-red-600 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-red-200">
-                <Icon size={36} />
+const StepCard = ({ number, icon, title, desc }) => {
+    const IconComponent = icon;
+
+    return (
+        <div className="flex flex-col items-center text-center gap-5">
+            <div className="relative">
+                <div className="w-20 h-20 bg-red-600 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-red-200">
+                    <IconComponent size={36} />
+                </div>
+                <div className="absolute -top-3 -right-3 w-8 h-8 bg-slate-900 rounded-full flex items-center justify-center text-white text-xs font-black">
+                    {number}
+                </div>
             </div>
-            <div className="absolute -top-3 -right-3 w-8 h-8 bg-slate-900 rounded-full flex items-center justify-center text-white text-xs font-black">
-                {number}
+            <div>
+                <h3 className="text-xl font-black text-slate-900 mb-2">{title}</h3>
+                <p className="text-slate-500 font-medium leading-relaxed max-w-xs mx-auto">{desc}</p>
             </div>
         </div>
-        <div>
-            <h3 className="text-xl font-black text-slate-900 mb-2">{title}</h3>
-            <p className="text-slate-500 font-medium leading-relaxed max-w-xs mx-auto">{desc}</p>
-        </div>
-    </div>
-);
+    );
+};
 
 /* ─── Main Component ─────────────────────────────────────────── */
 export default function HomePage() {
     const { isAuthenticated } = useAuth();
     const navigate = useNavigate();
     const heroRef = useRef(null);
-    const featuresRef = useRef(null);
     const stepsRef = useRef(null);
-    const statsRef = useRef(null);
     const [menuOpen, setMenuOpen] = React.useState(false);
     const { t, i18n } = useTranslation();
 
@@ -284,37 +290,56 @@ export default function HomePage() {
                         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-gradient-to-tr from-red-200/40 to-red-400/40 rounded-full blur-3xl animate-pulse" />
 
                         {/* Request Card  (Glassmorphism) */}
-                        <div className="hero-card absolute top-8 left-0 w-72 bg-white/70 backdrop-blur-xl rounded-3xl p-6 shadow-[0_20px_40px_rgba(0,0,0,0.06)] border border-white/50 z-20 hover:-translate-y-2 transition-transform duration-500">
-                            <div className="flex items-center gap-4 mb-5">
-                                <div className="w-12 h-12 bg-gradient-to-br from-red-100 to-red-50 rounded-2xl flex items-center justify-center shadow-inner border border-red-50">
-                                    <Bell size={22} className="text-red-500" />
+                        <div className="hero-card absolute top-8 left-0 w-72 bg-gradient-to-br from-red-50 to-white/90 backdrop-blur-xl rounded-3xl p-6 shadow-[0_20px_40px_rgba(229,57,53,0.1)] border border-red-100 z-20 hover:-translate-y-2 transition-transform duration-500">
+                            <div className="flex items-center gap-3 mb-4">
+                                <div className="w-11 h-11 bg-red-600 rounded-xl flex items-center justify-center shadow-lg shadow-red-200">
+                                    <Bell size={20} className="text-white fill-white" />
                                 </div>
                                 <div>
-                                    <p className="text-[11px] font-bold text-red-500 uppercase tracking-widest leading-none mb-1">Live Request</p>
-                                    <p className="text-base font-black text-slate-900 leading-none">Emergency Ward</p>
+                                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-red-100 rounded-full">
+                                        <span className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse" />
+                                        <span className="text-[9px] font-black text-red-700 uppercase tracking-widest">Live</span>
+                                    </span>
+                                    <p className="text-sm font-black text-red-600 leading-none mt-1.5">Emergency Ward</p>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-2 flex-wrap mb-1">
-                                <BloodBadge type="A+" urgency="critical" />
-                                <BloodBadge type="O+" />
+                            <div className="flex items-center gap-2 flex-wrap mb-4">
+                                <span className="inline-flex items-center gap-1.5 px-3 py-2 bg-red-600 rounded-xl shadow-lg shadow-red-200">
+                                    <Droplets size={14} className="fill-white" />
+                                    <span className="text-white text-sm font-black">O-</span>
+                                </span>
+                                <span className="text-[10px] font-bold text-slate-400 bg-slate-50 px-2 py-1.5 rounded-lg border border-slate-200">
+                                    Rarest
+                                </span>
                             </div>
-                            <div className="mt-5 flex items-center gap-2 text-xs font-bold text-slate-500 bg-slate-50/80 px-3 py-2 rounded-xl border border-slate-100">
-                                <MapPin size={14} className="text-red-500" />
-                                AIIMS Hospital, New Delhi
+                            <div className="flex items-center gap-2 mb-1">
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white text-slate-800 rounded-xl border border-slate-100 shadow-sm">
+                                    <Droplets size={12} className="text-red-500" />
+                                    <span className="text-xs font-black">AB-</span>
+                                </span>
+                                <span className="text-[10px] font-bold text-slate-400 bg-slate-50 px-2 py-1.5 rounded-lg border border-slate-200">
+                                    Very Rare
+                                </span>
+                            </div>
+                            <div className="mt-4 pt-4 border-t border-red-100 flex items-center gap-2 text-[10px] font-bold text-red-600 bg-red-50/50 px-3 py-2.5 rounded-xl group cursor-pointer hover:bg-red-50 transition-colors">
+                                <MapPin size={12} className="text-red-400 group-hover:text-red-500 transition-colors" />
+                                <span className="uppercase tracking-wide">AIIMS Hospital, New Delhi</span>
+                                <ChevronRight size={12} className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
                             </div>
                         </div>
+
 
                         {/* Donor Found Card (Dark rich mode) */}
                         <div className="hero-card absolute bottom-12 left-12 w-64 bg-gradient-to-b from-slate-900 to-slate-800 rounded-3xl p-6 shadow-[0_20px_40px_rgba(0,0,0,0.2)] border border-slate-700 z-30 hover:-translate-y-2 transition-transform duration-500">
                             <div className="flex items-center gap-4 mb-5">
                                 <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center text-white font-black text-xl shadow-[0_4px_12px_rgba(229,57,53,0.4)] border border-red-400/50">
-                                    R
+                                    G
                                 </div>
                                 <div>
                                     <p className="text-emerald-400 text-[10px] font-black uppercase tracking-widest mb-1.5 flex items-center gap-1">
                                         <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" /> Match Found
                                     </p>
-                                    <p className="text-white font-black text-sm">Rahul K. • O+</p>
+                                    <p className="text-white font-black text-sm">George P. - O-</p>
                                     <p className="text-slate-400 text-xs font-medium focus:outline-none">Verified Donor</p>
                                 </div>
                             </div>
@@ -322,7 +347,6 @@ export default function HomePage() {
                                 <Heart size={16} className="text-red-500 group-hover:fill-red-500 transition-all" /> Message Donor
                             </div>
                         </div>
-
                         {/* Enhanced Stats Card (Glassmorphism + Gradients) */}
                         <div className="hero-card absolute top-16 right-0 w-72 bg-white/80 backdrop-blur-xl rounded-3xl p-6 shadow-[0_20px_40px_rgba(0,0,0,0.06)] border border-white/60 z-10 hover:-translate-y-2 transition-transform duration-500">
                             <div className="flex items-center justify-between mb-5">
@@ -623,3 +647,4 @@ function UserPlus({ size, ...props }) {
         </svg>
     );
 }
+

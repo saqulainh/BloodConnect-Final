@@ -1,18 +1,16 @@
 import crypto from "crypto";
 import "dotenv/config";
 
-// We need a 32-byte key for aes-256-cbc. 
-// If AADHAAR_ENCRYPTION_KEY is not set or not 32 bytes, we hash it to ensure it's exactly 32 bytes.
+// We need a 32-byte key for aes-256-cbc.
+// The key is resolved lazily so the app can boot even if the env var is missing,
+// but Aadhaar-dependent routes will still fail clearly when they try to encrypt/decrypt.
 const getEncryptionKey = () => {
     const rawKey = process.env.AADHAAR_ENCRYPTION_KEY;
     if (!rawKey) {
-        console.error("FATAL: AADHAAR_ENCRYPTION_KEY is not set in environment variables.");
-        process.exit(1);
+        throw new Error("AADHAAR_ENCRYPTION_KEY is not set in environment variables.");
     }
     return crypto.createHash("sha256").update(String(rawKey)).digest("base64").substring(0, 32);
 };
-
-const ENCRYPTION_KEY = getEncryptionKey(); // Must be 256 bytes (32 characters)
 const ALGORITHM = "aes-256-cbc";
 const IV_LENGTH = 16;
 
@@ -26,8 +24,9 @@ export const encryptAadhaar = (text) => {
     if (text.includes(":") && text.length > 30) return text;
 
     try {
+        const encryptionKey = getEncryptionKey();
         const iv = crypto.randomBytes(IV_LENGTH);
-        const cipher = crypto.createCipheriv(ALGORITHM, Buffer.from(ENCRYPTION_KEY), iv);
+        const cipher = crypto.createCipheriv(ALGORITHM, Buffer.from(encryptionKey), iv);
         let encrypted = cipher.update(text);
         encrypted = Buffer.concat([encrypted, cipher.final()]);
         return iv.toString("hex") + ":" + encrypted.toString("hex");
@@ -46,10 +45,11 @@ export const decryptAadhaar = (text) => {
     if (!text.includes(":") || text.length < 30) return text;
 
     try {
+        const encryptionKey = getEncryptionKey();
         const textParts = text.split(":");
         const iv = Buffer.from(textParts.shift(), "hex");
         const encryptedText = Buffer.from(textParts.join(":"), "hex");
-        const decipher = crypto.createDecipheriv(ALGORITHM, Buffer.from(ENCRYPTION_KEY), iv);
+        const decipher = crypto.createDecipheriv(ALGORITHM, Buffer.from(encryptionKey), iv);
         let decrypted = decipher.update(encryptedText);
         decrypted = Buffer.concat([decrypted, decipher.final()]);
         return decrypted.toString();

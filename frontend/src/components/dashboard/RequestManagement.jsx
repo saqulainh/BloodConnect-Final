@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
     MapPin,
     ChevronRight,
@@ -214,7 +214,7 @@ const RequestManagement = ({ onStartChat, currentUser }) => {
     const [filterGroup, setFilterGroup] = useState('');
     const [filterUrgency, setFilterUrgency] = useState('');
 
-    const fetchRequests = async () => {
+    const fetchRequests = useCallback(async () => {
         setLoading(true);
         try {
             const filters = {};
@@ -231,14 +231,14 @@ const RequestManagement = ({ onStartChat, currentUser }) => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [searchTerm, filterGroup, filterUrgency]);
 
     useEffect(() => {
         const debounce = setTimeout(() => {
             fetchRequests();
         }, 500);
         return () => clearTimeout(debounce);
-    }, [searchTerm, filterGroup, filterUrgency]);
+    }, [fetchRequests]);
 
     const handleDelete = async (id) => {
         if (!window.confirm("Are you sure you want to delete this blood request?")) return;

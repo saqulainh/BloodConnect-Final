@@ -3,7 +3,7 @@
 ## ⚠️ Critical Alert: Recent Secret Rotation
 
 **Status:** ✅ AUTOMATED SECRETS ROTATED  
-**Date:** April 1, 2026  
+**Date:** May 1, 2026  
 **Action Required:** ⚙️ Manual updates needed for external services
 
 ---
@@ -34,12 +34,12 @@ The following secrets have been automatically generated and updated in `backend/
 Steps:
 1. Go to https://cloud.mongodb.com
 2. Cluster → Security → Database Users
-3. Click the `saqulain` user
+3. Click the database user you want to rotate
 4. Click "Edit Password" → Generate secure password
 5. Copy new password
 6. Update in `.env`:
    ```bash
-   MONGODB_URI=mongodb+srv://saqulain:NEW_PASSWORD@cluster0.dlbkvog.mongodb.net/khoon?appName=Cluster0
+   MONGODB_URI=mongodb+srv://<username>:<new_password>@<cluster>/<database>?retryWrites=true&w=majority
    ```
 7. **Test:** Run backend - it should connect successfully
 8. Restart backend service
@@ -62,7 +62,9 @@ Steps:
 5. Copy password (without spaces)
 6. Update in `.env`:
    ```bash
-   SMTP_PASS=xxxxxxxxxxxxxxxx  # 16 char password from Google
+   SMTP_USER=your_gmail_address@gmail.com
+   SMTP_PASS=xxxxxxxxxxxxxxxx  # 16-char app password from Google
+   EMAIL_FROM=your_gmail_address@gmail.com
    ```
 7. **Test:** Try password reset email functionality
 
@@ -282,6 +284,6 @@ For more details:
 
 ---
 
-**Last Updated:** April 1, 2026  
+**Last Updated:** May 1, 2026  
 **Next Review:** July 1, 2026  
 **Rotation Status:** ✅ Automated secrets updated

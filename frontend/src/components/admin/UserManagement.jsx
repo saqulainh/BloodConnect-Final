@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
     Users, Search, Shield, Trash2, Ban, Edit, ChevronLeft, ChevronRight,
     Loader2, AlertCircle, CheckCircle, X, Filter, UserCog, DownloadCloud
@@ -22,7 +22,7 @@ export default function UserManagement() {
     const [actionLoading, setActionLoading] = useState(null);
     const [feedback, setFeedback] = useState('');
 
-    const fetchUsers = async (page = 1) => {
+    const fetchUsers = useCallback(async (page = 1) => {
         setLoading(true);
         try {
             const params = { page, limit: 15 };
@@ -34,11 +34,11 @@ export default function UserManagement() {
                 setUsers(res.data);
                 setPagination(res.pagination);
             }
-        } catch (err) { console.error(err); }
+        } catch { console.error('Failed to load users'); }
         finally { setLoading(false); }
-    };
+    }, [search, roleFilter, bgFilter]);
 
-    useEffect(() => { fetchUsers(); }, [roleFilter, bgFilter]);
+    useEffect(() => { fetchUsers(); }, [fetchUsers]);
 
     const handleSearch = (e) => {
         if (e.key === 'Enter') fetchUsers();
@@ -51,7 +51,7 @@ export default function UserManagement() {
         try {
             const res = await adminToggleBan(id);
             if (res?.success) { showFeedback(res.message); fetchUsers(pagination.page); }
-        } catch (err) { showFeedback('Failed'); }
+        } catch { showFeedback('Failed'); }
         finally { setActionLoading(null); }
     };
 
@@ -61,7 +61,7 @@ export default function UserManagement() {
         try {
             const res = await adminDeleteUser(id);
             if (res?.success) { showFeedback(res.message); fetchUsers(pagination.page); }
-        } catch (err) { showFeedback('Failed'); }
+        } catch { showFeedback('Failed'); }
         finally { setActionLoading(null); }
     };
 
@@ -70,7 +70,7 @@ export default function UserManagement() {
         try {
             const res = await adminPromoteUser(id, role);
             if (res?.success) { showFeedback(res.message); fetchUsers(pagination.page); }
-        } catch (err) { showFeedback('Failed'); }
+        } catch { showFeedback('Failed'); }
         finally { setActionLoading(null); }
     };
 
@@ -80,7 +80,7 @@ export default function UserManagement() {
         try {
             const res = await adminUpdateUser(editUser._id, editForm);
             if (res?.success) { showFeedback('User updated!'); setEditUser(null); fetchUsers(pagination.page); }
-        } catch (err) { showFeedback('Update failed'); }
+        } catch { showFeedback('Update failed'); }
         finally { setActionLoading(null); }
     };
 
@@ -109,7 +109,7 @@ export default function UserManagement() {
                             setFeedback('Exporting...');
                             await exportAdminUsersCSV();
                             setFeedback('Export Successful!');
-                        } catch (err) {
+                        } catch {
                             showFeedback('Export Failed.');
                         }
                     }} className="flex items-center gap-2 px-4 py-2 bg-rose-50 text-rose-600 rounded-xl text-sm font-bold shadow-sm hover:bg-rose-100 transition-colors border border-rose-200">

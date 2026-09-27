@@ -257,14 +257,14 @@ export default function RegisterPage() {
             if (files.medicalCertificate) fd.append("medicalCertificate", files.medicalCertificate);
             if (files.profilePicture) fd.append("profilePicture", files.profilePicture);
 
-            const res = await registerUser(fd);
+            await registerUser(fd);
             navigate(`/verify-otp?email=${encodeURIComponent(form.email.trim().toLowerCase())}`);
-        } catch (err) {
+        } catch (_err) {
             let msg = "Registration failed. Please try again.";
-            if (typeof err === "string") msg = err;
-            else if (err?.message) msg = err.message;
-            else if (err?.response?.data?.message) msg = err.response.data.message;
-            else msg = JSON.stringify(err);
+            if (typeof _err === "string") msg = _err;
+            else if (_err?.message) msg = _err.message;
+            else if (_err?.response?.data?.message) msg = _err.response.data.message;
+            else msg = JSON.stringify(_err);
             setError(msg);
         } finally {
             setLoading(false);
@@ -336,13 +336,13 @@ export default function RegisterPage() {
                     <div style={{ marginBottom: 24 }}>
                         <h2 style={{ fontSize: 20, fontWeight: 900, color: "#111", margin: "0 0 4px", letterSpacing: "-0.02em" }}>
                             {step === 0 && "Personal Information"}
-                            {step === 1 && "Aadhaar Verification"}
+                            {step === 1 && "Identity Check"}
                             {step === 2 && "Documents & Location"}
                             {step === 3 && "Secure Password"}
                         </h2>
                         <p style={{ fontSize: 13, color: "#aaa", margin: 0, fontWeight: 500 }}>
                             {step === 0 && "Tell us about yourself"}
-                            {step === 1 && "Verify your identity with your Aadhaar card"}
+                            {step === 1 && "Confirm your identity with your Aadhaar details"}
                             {step === 2 && "Upload supporting documents (optional but recommended)"}
                             {step === 3 && "Create a strong password to secure your account"}
                         </p>
@@ -405,7 +405,7 @@ export default function RegisterPage() {
                             </>
                         )}
 
-                        {/* ── STEP 1: Aadhaar Verification ─────────────────────── */}
+                        {/* ── STEP 1: Aadhaar Identity Check ───────────────────── */}
                         {step === 1 && (
                             <>
                                 {/* Info box */}
@@ -414,7 +414,7 @@ export default function RegisterPage() {
                                     <div>
                                         <p style={{ margin: "0 0 2px", fontSize: 12.5, fontWeight: 800, color: "#1a4fa0" }}>Why Aadhaar?</p>
                                         <p style={{ margin: 0, fontSize: 12, color: "#3a6fc7", lineHeight: 1.55 }}>
-                                            Aadhaar verification ensures that all donors are genuine Indian citizens. Your data is stored securely and never shared.
+                                            Aadhaar details are stored securely and used as an internal identity check. This is not an official government Aadhaar API verification.
                                         </p>
                                     </div>
                                 </div>
@@ -463,7 +463,7 @@ export default function RegisterPage() {
                                             <Check size={16} color="#fff" strokeWidth={3} />
                                         </div>
                                         <div>
-                                            <p style={{ margin: 0, fontSize: 13, fontWeight: 800, color: "#15803d" }}>Aadhaar Ready for Verification</p>
+                                            <p style={{ margin: 0, fontSize: 13, fontWeight: 800, color: "#15803d" }}>Aadhaar Ready for Identity Check</p>
                                             <p style={{ margin: 0, fontSize: 11.5, color: "#4ade80" }}>Last 4 digits: {form.aadhaarNumber.slice(-4)} • Image submitted</p>
                                         </div>
                                     </div>

@@ -86,7 +86,7 @@ function Signup() {
                 return;
             }
             navigate("/login");
-        } catch (err) {
+        } catch {
             setError("Unable to connect to the server. Please try again.");
         } finally {
             setIsLoading(false);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { BarChart3, Settings, Menu, Bell, Droplets, Search, Activity, Phone, X, AlertTriangle } from "lucide-react";
 
@@ -40,7 +40,7 @@ import AuditLogs from "../components/admin/AuditLogs";
 import BloodInventory from "../components/admin/BloodInventory";
 
 import { useAuth } from "../context/AuthContext";
-import { useToast } from "../components/ui/Toast";
+import { useToast } from "../components/ui/useToast";
 
 // ── Donor Tab Titles ──
 const DONOR_TAB_TITLES = {
@@ -145,14 +145,11 @@ const RECEIVER_TAB_SUBTITLES = {
 export default function Dashboard() {
     const navigate = useNavigate();
     const { user, logout, loading, isAuthenticated } = useAuth();
-
     const [activeTab, setActiveTab] = useState("dashboard");
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [chatTargetUser, setChatTargetUser] = useState(null);
     const [timelineRequestId, setTimelineRequestId] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
-    const [showNotifications, setShowNotifications] = useState(false);
-    const [unreadCount, setUnreadCount] = useState(3);
     const { toast } = useToast();
     const addToast = React.useCallback((content, variant = 'info', duration = 4000) => {
         toast({ variant, title: content, duration });
@@ -188,17 +185,6 @@ export default function Dashboard() {
             else addToast(`No section matches "${searchTerm}". Try "health wallet", "donors", etc.`, "info");
             setSearchTerm("");
         }
-    };
-
-    const handleNotificationClick = (tab) => {
-        setActiveTab(tab);
-        setShowNotifications(false);
-        if (unreadCount > 0) setUnreadCount(prev => Math.max(0, prev - 1));
-    };
-
-    const markAllRead = () => {
-        setUnreadCount(0);
-        addToast("All notifications marked as read.", "success");
     };
 
     const handleStartChat = (targetUser) => {
@@ -238,7 +224,7 @@ export default function Dashboard() {
             eimsChannel.bind('criticalAlert', (req) => {
                 if (typeof navigator !== 'undefined' && navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 500]);
                 addToast(
-                    <div className="flex flex-col gap-2 min-w-[280px]">
+                    <div className="flex flex-col gap-2 min-w-70">
                         <div className="flex items-center gap-3 border-b border-red-500/20 pb-2">
                             <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center text-white animate-pulse shadow-[0_0_15px_rgba(220,38,38,0.5)]">
                                 <AlertTriangle size={20} />
@@ -297,16 +283,13 @@ export default function Dashboard() {
     const TAB_TITLES = isAdmin ? ADMIN_TAB_TITLES : (isReceiver ? RECEIVER_TAB_TITLES : DONOR_TAB_TITLES);
     const TAB_SUBTITLES = isAdmin ? ADMIN_TAB_SUBTITLES : (isReceiver ? RECEIVER_TAB_SUBTITLES : DONOR_TAB_SUBTITLES);
 
-    useEffect(() => {
-        if (isAdmin && !String(activeTab).startsWith("admin-")) {
-            setActiveTab("admin-home");
-        }
-    }, [isAdmin, activeTab]);
+    // Ensure admin tabs show admin home when switching roles
+    const displayedTab = (isAdmin && !String(activeTab).startsWith("admin-")) ? "admin-home" : activeTab;
 
     const renderContent = () => {
         // ── Admin Tabs ──
         if (isAdmin) {
-            switch (activeTab) {
+            switch (displayedTab) {
                 case "admin-home": return <AdminHome setActiveTab={setActiveTab} />;
                 case "admin-users": return <UserManagement />;
                 case "admin-requests": return <RequestOperations />;
@@ -386,7 +369,7 @@ export default function Dashboard() {
     return (
         <div className="min-h-screen bg-slate-50 flex" style={{ fontFamily: "'Inter', sans-serif" }}>
             <Sidebar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} activeTab={activeTab} setActiveTab={setActiveTab} user={user} logout={handleLogout} />
-            <div className="flex-1 flex flex-col h-screen overflow-hidden lg:ml-[270px]">
+            <div className="flex-1 flex flex-col h-screen overflow-hidden lg:ml-67.5">
                 <header className="bg-white border-b border-slate-100 px-5 lg:px-8 py-4 flex items-center justify-between sticky top-0 z-40 shadow-sm">
                     <div className="flex items-center gap-4">
                         <button onClick={() => setIsSidebarOpen(true)} className="lg:hidden p-2 text-slate-400 hover:bg-slate-100 rounded-xl">
@@ -431,3 +414,5 @@ export default function Dashboard() {
         </div>
     );
 }
+
+

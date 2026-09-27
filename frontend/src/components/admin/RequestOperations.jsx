@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
     Ticket, Search, Trash2, Edit, CheckCircle, ChevronLeft, ChevronRight,
     Loader2, AlertCircle, X, Filter, Zap, DownloadCloud
@@ -21,7 +21,7 @@ export default function RequestOperations() {
     const [editReq, setEditReq] = useState(null);
     const [editForm, setEditForm] = useState({});
 
-    const fetchRequests = async (page = 1) => {
+    const fetchRequests = useCallback(async (page = 1) => {
         setLoading(true);
         try {
             const params = { page, limit: 15 };
@@ -30,11 +30,11 @@ export default function RequestOperations() {
             if (bgFilter) params.bloodGroup = bgFilter;
             const res = await getAdminRequests(params);
             if (res?.success) { setRequests(res.data); setPagination(res.pagination); }
-        } catch (err) { console.error(err); }
+        } catch { console.error('Failed to load requests'); }
         finally { setLoading(false); }
-    };
+    }, [statusFilter, urgencyFilter, bgFilter]);
 
-    useEffect(() => { fetchRequests(); }, [statusFilter, urgencyFilter, bgFilter]);
+    useEffect(() => { fetchRequests(); }, [fetchRequests]);
 
     const showFeedback = (msg) => { setFeedback(msg); setTimeout(() => setFeedback(''), 3000); };
 
@@ -43,7 +43,7 @@ export default function RequestOperations() {
         try {
             const res = await adminForceFulfill(id);
             if (res?.success) { showFeedback('Request force-fulfilled!'); fetchRequests(pagination.page); }
-        } catch (err) { showFeedback('Failed'); }
+        } catch { showFeedback('Failed'); }
         finally { setActionLoading(null); }
     };
 
@@ -53,7 +53,7 @@ export default function RequestOperations() {
         try {
             const res = await adminDeleteRequest(id);
             if (res?.success) { showFeedback('Request deleted.'); fetchRequests(pagination.page); }
-        } catch (err) { showFeedback('Failed'); }
+        } catch { showFeedback('Failed'); }
         finally { setActionLoading(null); }
     };
 
@@ -63,7 +63,7 @@ export default function RequestOperations() {
         try {
             const res = await adminUpdateRequest(editReq._id, editForm);
             if (res?.success) { showFeedback('Request updated!'); setEditReq(null); fetchRequests(pagination.page); }
-        } catch (err) { showFeedback('Update failed'); }
+        } catch { showFeedback('Update failed'); }
         finally { setActionLoading(null); }
     };
 
@@ -92,7 +92,7 @@ export default function RequestOperations() {
                             setFeedback('Exporting...');
                             await exportAdminRequestsCSV();
                             setFeedback('Export Successful!');
-                        } catch (err) {
+                        } catch {
                             showFeedback('Export Failed.');
                         }
                     }} className="flex items-center gap-2 px-4 py-2 bg-rose-50 text-rose-600 rounded-xl text-sm font-bold shadow-sm hover:bg-rose-100 transition-colors border border-rose-200">

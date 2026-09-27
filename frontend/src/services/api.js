@@ -1,11 +1,9 @@
 // ─── API Service Layer ───────────────────────────────────────────────
-// In development: use Vite proxy → localhost:5000 (no CORS issues)
-// In production: use the deployed Vercel backend
-const BASE_URL =
-    import.meta.env.VITE_API_URL ||
-    (import.meta.env.DEV
-        ? "/api/v1"
-        : "https://bloodconnect-vert.vercel.app/api/v1");
+// Prefer same-origin /api/v1 so Vite dev proxy and Nginx both work cleanly.
+const rawApiUrl = import.meta.env.VITE_API_URL || "/api/v1";
+const BASE_URL = rawApiUrl.endsWith("/api/v1")
+    ? rawApiUrl
+    : rawApiUrl.replace(/\/$/, "") + "/api/v1";
 
 // ── Token helpers ──────────────────────────────────────────────────────
 export const getAccessToken = () => localStorage.getItem("accessToken");
@@ -269,7 +267,7 @@ export const changePassword = async (data) => {
 export const logoutUser = async () => {
     try {
         await apiFetch("/auth/logout", { method: "POST", headers: authHeaders() }, false);
-    } catch (err) {
+    } catch {
         // Ignore logout errors
     } finally {
         clearTokens();

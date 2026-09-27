@@ -11,7 +11,8 @@ import {
 import { getAdminMissionStats } from "../../services/api";
 
 // ── Stat Card ─────────────────────────────────────────────────────────
-const StatCard = ({ icon: Icon, label, value, sub, color = "red" }) => {
+const StatCard = ({ icon, label, value, sub, color = "red" }) => {
+    const IconComponent = icon;
     const colorMap = {
         red: "bg-red-50 text-red-600",
         emerald: "bg-emerald-50 text-emerald-600",
@@ -21,7 +22,7 @@ const StatCard = ({ icon: Icon, label, value, sub, color = "red" }) => {
     return (
         <div className="bg-white rounded-2xl border border-slate-100 p-5 flex items-start gap-4 shadow-sm hover:shadow-md transition-shadow">
             <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${colorMap[color]}`}>
-                <Icon size={22} />
+                <IconComponent size={22} />
             </div>
             <div className="min-w-0">
                 <p className="text-xs font-bold text-slate-400 uppercase tracking-wider truncate">{label}</p>

@@ -8,11 +8,12 @@ import DonationTimeline from "../health/DonationTimeline";
 import DonationChart from "../health/DonationChart";
 
 // ── Section Header ────────────────────────────────────────────────────────────
-function SectionHeader({ icon: Icon, title, subtitle }) {
+function SectionHeader({ icon, title, subtitle }) {
+    const IconComponent = icon;
     return (
         <div className="flex items-center gap-3 mb-4">
             <div className="w-8 h-8 bg-red-50 rounded-xl flex items-center justify-center shrink-0">
-                <Icon size={15} className="text-red-500" />
+                <IconComponent size={15} className="text-red-500" />
             </div>
             <div>
                 <p className="text-sm font-black text-slate-800">{title}</p>

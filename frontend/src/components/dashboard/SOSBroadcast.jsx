@@ -6,7 +6,6 @@ import {
 } from "lucide-react";
 import Pusher from "pusher-js";
 import { broadcastSOS, getActiveSOSAlerts } from "../../services/api";
-import { useAuth } from "../../context/AuthContext";
 
 const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
@@ -18,8 +17,9 @@ const URGENCY_STYLES = {
 
 // ── Alert Card ─────────────────────────────────────────────────────────
 const AlertCard = ({ alert, isNew = false }) => {
+    const [now] = useState(() => Date.now());
     const timeAgo = (date) => {
-        const mins = Math.floor((Date.now() - new Date(date)) / 60000);
+        const mins = Math.floor((now - new Date(date)) / 60000);
         if (mins < 1) return "just now";
         if (mins < 60) return `${mins}m ago`;
         return `${Math.floor(mins / 60)}h ago`;
@@ -35,7 +35,7 @@ const AlertCard = ({ alert, isNew = false }) => {
             <div className="flex items-start justify-between gap-3">
                 <div className="flex items-center gap-3">
                     {/* Blood group badge */}
-                    <div className="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center text-white font-black text-sm shadow-md shadow-red-200 flex-shrink-0">
+                    <div className="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center text-white font-black text-sm shadow-md shadow-red-200 shrink-0">
                         {alert.bloodGroup}
                     </div>
                     <div>
@@ -51,7 +51,7 @@ const AlertCard = ({ alert, isNew = false }) => {
                         </p>
                     </div>
                 </div>
-                <div className="text-right flex-shrink-0">
+                <div className="text-right shrink-0">
                     <p className="text-xs text-slate-400 font-medium">{timeAgo(alert.createdAt || alert.timestamp)}</p>
                     <p className="text-xs font-bold text-red-600 mt-1">{alert.units} unit{alert.units !== 1 ? "s" : ""} needed</p>
                 </div>
@@ -72,7 +72,6 @@ const AlertCard = ({ alert, isNew = false }) => {
 
 // ── Main Component ─────────────────────────────────────────────────────
 export default function SOSBroadcast() {
-    const { user } = useAuth();
     const [alerts, setAlerts] = useState([]);
     const [liveAlerts, setLiveAlerts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -154,8 +153,8 @@ export default function SOSBroadcast() {
         <div className="space-y-6">
 
             {/* ── Header ─────────────────────────────────────────────── */}
-            <div className="bg-gradient-to-br from-slate-900 to-red-950 rounded-3xl p-6 text-white relative overflow-hidden">
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-red-600/20 to-transparent" />
+            <div className="bg-linear-to-br from-slate-900 to-red-950 rounded-3xl p-6 text-white relative overflow-hidden">
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,var(--tw-gradient-stops))] from-red-600/20 to-transparent" />
                 <div className="relative flex items-center justify-between">
                     <div>
                         <div className="flex items-center gap-2 mb-2">

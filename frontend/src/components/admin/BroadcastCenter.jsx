@@ -32,7 +32,7 @@ export default function BroadcastCenter() {
             } else {
                 setResult({ success: false, msg: res?.message || 'Failed' });
             }
-        } catch (err) {
+        } catch {
             setResult({ success: false, msg: 'Broadcast failed' });
         }
         finally { setSending(false); }

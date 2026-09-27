@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
     Search,
     Filter,
@@ -89,7 +89,7 @@ const DonorManagement = ({ onStartChat }) => {
     const [filterGroup, setFilterGroup] = useState('');
     const [filterCity, setFilterCity] = useState('');
 
-    const fetchAllDonors = async () => {
+    const fetchAllDonors = useCallback(async () => {
         setLoading(true);
         try {
             const filters = {};
@@ -106,7 +106,7 @@ const DonorManagement = ({ onStartChat }) => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [searchTerm, filterGroup, filterCity]);
 
     // Refetch when filters change
     useEffect(() => {
@@ -114,7 +114,7 @@ const DonorManagement = ({ onStartChat }) => {
             fetchAllDonors();
         }, 500); // 500ms debounce
         return () => clearTimeout(debounce);
-    }, [searchTerm, filterGroup, filterCity]);
+    }, [fetchAllDonors]);
 
     const filteredDonors = Array.isArray(donors) ? donors : [];
 
@@ -140,7 +140,7 @@ const DonorManagement = ({ onStartChat }) => {
                         <Filter size={16} /> Filters
                     </button>
                     <button
-                        onClick={() => alert("To onboard a new donor securely into BloodConnect, please direct them to the public Registration page for OTP and Aadhaar verification.")}
+                        onClick={() => alert("To onboard a new donor securely into BloodConnect, please direct them to the public Registration page for OTP and identity checks.")}
                         className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-bold shadow-sm hover:bg-red-700 transition-colors"
                     >
                         <Plus size={16} /> Add Donor

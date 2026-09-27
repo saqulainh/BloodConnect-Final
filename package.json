@@ -1,5 +1,12 @@
 {
+  "name": "bloodconnect-root",
+  "private": true,
   "dependencies": {
     "puppeteer": "^24.40.0"
+  },
+  "scripts": {
+    "build": "npm --prefix frontend run build",
+    "frontend:build": "npm --prefix frontend run build",
+    "backend:start": "npm --prefix backend start"
   }
 }

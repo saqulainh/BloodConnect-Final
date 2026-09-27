@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { CheckCircle, FlaskConical, Truck, Heart, Clock, Plus, X, Droplets } from 'lucide-react';
 import { getMyDonations, addDonation } from '../../services/api';
 
@@ -175,7 +175,7 @@ export default function BloodJourney() {
     const [selectedDonation, setSelectedDonation] = useState(null);
     const [showAddModal, setShowAddModal] = useState(false);
 
-    const fetchDonations = async () => {
+    const fetchDonations = useCallback(async () => {
         try {
             setLoading(true);
             const res = await getMyDonations();
@@ -191,9 +191,9 @@ export default function BloodJourney() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [selectedDonation]);
 
-    useEffect(() => { fetchDonations(); }, []);
+    useEffect(() => { fetchDonations(); }, [fetchDonations]);
 
     const handleSaved = () => {
         setShowAddModal(false);

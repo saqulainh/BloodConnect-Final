@@ -11,9 +11,9 @@ import DonateModal from '../dashboard/DonateModal';
 
 // Animated counter hook
 const useCountUp = (target, duration = 800) => {
-    const [count, setCount] = useState(0);
+    const [count, setCount] = useState(() => target === 0 ? 0 : 0);
     useEffect(() => {
-        if (target === 0) { setCount(0); return; }
+        if (target === 0) return;
         const step = target / (duration / 16);
         let cur = 0;
         const timer = setInterval(() => {
@@ -26,9 +26,10 @@ const useCountUp = (target, duration = 800) => {
     return count;
 };
 
-const StatCard = ({ label, value, icon: Icon, color, bg, suffix = '' }) => {
+const StatCard = ({ label, value, icon, color, bg, suffix = '' }) => {
     const num = parseInt(value) || 0;
     const animated = useCountUp(num);
+    const IconComponent = icon;
     return (
         <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between hover:shadow-md transition-all duration-300 group">
             <div>
@@ -38,7 +39,7 @@ const StatCard = ({ label, value, icon: Icon, color, bg, suffix = '' }) => {
                 </h3>
             </div>
             <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${bg} ${color} group-hover:scale-110 transition-transform`}>
-                <Icon size={22} />
+                <IconComponent size={22} />
             </div>
         </div>
     );

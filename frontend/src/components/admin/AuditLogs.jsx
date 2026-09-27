@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { FileText, Shield, ChevronLeft, ChevronRight, Loader2, Filter, Clock } from 'lucide-react';
 import { getAuditLogs } from '../../services/api';
 
@@ -26,7 +26,7 @@ export default function AuditLogs() {
     const [targetFilter, setTargetFilter] = useState('');
     const [actionSearch, setActionSearch] = useState('');
 
-    const fetchLogs = async (page = 1) => {
+    const fetchLogs = useCallback(async (page = 1) => {
         setLoading(true);
         try {
             const params = { page, limit: 20 };
@@ -36,9 +36,9 @@ export default function AuditLogs() {
             if (res?.success) { setLogs(res.data); setPagination(res.pagination); }
         } catch (err) { console.error(err); }
         finally { setLoading(false); }
-    };
+    }, [targetFilter, actionSearch]);
 
-    useEffect(() => { fetchLogs(); }, [targetFilter]);
+    useEffect(() => { fetchLogs(); }, [fetchLogs]);
 
     const handleSearch = (e) => {
         if (e.key === 'Enter') fetchLogs();

@@ -5,7 +5,7 @@ import { updateMe, getMyDonations, changePassword } from "../../services/api";
 import BloodJourney from "./BloodJourney";
 
 export default function Settings() {
-    const { user, login } = useAuth(); // getting logic to update global context if necessary
+    const { user } = useAuth();
     const [loading, setLoading] = useState(false);
     const [successMsg, setSuccessMsg] = useState("");
     const [errorMsg, setErrorMsg] = useState("");

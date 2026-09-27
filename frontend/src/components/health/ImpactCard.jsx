@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Heart, Zap, Trophy, Flame } from "lucide-react";
+import { Heart, Zap, Trophy } from "lucide-react";
 
 // ── Animated counter hook ─────────────────────────────────────────────────────
 function useAnimatedCount(target, duration = 1500) {
@@ -22,12 +22,13 @@ function useAnimatedCount(target, duration = 1500) {
     return count;
 }
 
-function StatCard({ icon: Icon, label, value, color, suffix = "" }) {
+function StatCard({ icon, label, value, color, suffix = "" }) {
+    const IconComponent = icon;
     const animated = useAnimatedCount(value);
     return (
         <div className="bg-white border border-slate-100 rounded-2xl p-4 text-center shadow-sm">
             <div className={`w-9 h-9 ${color} rounded-xl flex items-center justify-center mx-auto mb-2`}>
-                <Icon size={16} />
+                <IconComponent size={16} />
             </div>
             <p className="text-2xl font-black text-slate-800">{animated}{suffix}</p>
             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">{label}</p>

@@ -22,20 +22,21 @@ export default function KineticNav() {
 
     // Shape hover effects
     useEffect(() => {
-        if (!containerRef.current) return;
+        const container = containerRef.current;
+        if (!container) return;
 
         try {
             if (!gsap.parseEase("main")) {
                 CustomEase.create("main", "0.65, 0.01, 0.05, 0.99");
                 gsap.defaults({ ease: "main", duration: 0.7 });
             }
-        } catch (e) {
+        } catch {
             gsap.defaults({ ease: "power2.out", duration: 0.7 });
         }
 
         const ctx = gsap.context(() => {
-            const menuItems = containerRef.current.querySelectorAll(".menu-list-item[data-shape]");
-            const shapesContainer = containerRef.current.querySelector(".ambient-background-shapes");
+            const menuItems = container.querySelectorAll(".menu-list-item[data-shape]");
+            const shapesContainer = container.querySelector(".ambient-background-shapes");
 
             menuItems.forEach((item) => {
                 const shapeIndex = item.getAttribute("data-shape");
@@ -66,11 +67,11 @@ export default function KineticNav() {
                     item.removeEventListener("mouseleave", onLeave);
                 };
             });
-        }, containerRef);
+        }, container);
 
         return () => {
             ctx.revert();
-            containerRef.current?.querySelectorAll(".menu-list-item[data-shape]").forEach((item) => item._cleanup?.());
+            container.querySelectorAll(".menu-list-item[data-shape]").forEach((item) => item._cleanup?.());
         };
     }, []);
 

@@ -16,7 +16,7 @@ export default function Profile() {
     useEffect(() => {
         if (!isLoggedIn()) { navigate("/login"); return; }
         fetchUser();
-    }, []);
+    }, [navigate]);
 
     const fetchUser = async () => {
         setLoading(true);
@@ -111,7 +111,7 @@ export default function Profile() {
                         <span style={{ fontSize: 13, color: "#aaa" }}>{user?.role === "donor" ? "🩸 Donor" : "🏥 Receiver"}</span>
                         {isAadhaarVerified ? (
                             <span style={{ display: "flex", alignItems: "center", gap: 3, fontSize: 12, color: "#2e7d32", fontWeight: 700 }}>
-                                <ShieldCheck size={12} /> Aadhaar Verified
+                                <ShieldCheck size={12} /> Identity Verified
                             </span>
                         ) : isVerified && (
                             <span style={{ display: "flex", alignItems: "center", gap: 3, fontSize: 12, color: "#4682B4", fontWeight: 700 }}>
@@ -125,7 +125,7 @@ export default function Profile() {
                             style={{ marginTop: 12, background: "#fff5f5", border: "1px solid #ffcdd2", color: "#e53935", padding: "6px 12px", borderRadius: 20, fontSize: 11, fontWeight: 800, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 5 }}
                         >
                             <AlertCircle size={12} />
-                            GET AADHAAR VERIFIED
+                            GET IDENTITY CHECKED
                         </button>
                     )}
 

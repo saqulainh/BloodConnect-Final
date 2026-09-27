@@ -75,7 +75,7 @@ export default function OtpVerifyPage() {
         setLoading(true);
         setError("");
         try {
-            const data = await verifyOtp({ email, otp: code || otp.join("") });
+            await verifyOtp({ email, otp: code || otp.join("") });
             setSuccess("Account verified! Redirecting…");
             setTimeout(() => navigate("/dashboard"), 1200);
         } catch (err) {

@@ -136,8 +136,9 @@ const GratitudeModal = ({ req, onClose, onSend, sending }) => {
 // Donor Card
 const DonorCard = ({ req, alreadySent, onThank, onStartChat }) => {
     const donor = req.fulfilledBy;
+    const [now] = useState(() => Date.now());
     const timeAgo = (d) => {
-        const s = Math.floor((Date.now() - new Date(d)) / 1000);
+        const s = Math.floor((now - new Date(d)) / 1000);
         if (s < 3600)  return `${Math.floor(s / 60)}m ago`;
         if (s < 86400) return `${Math.floor(s / 3600)}h ago`;
         return `${Math.floor(s / 86400)}d ago`;
@@ -273,7 +274,6 @@ const GratitudeBoard = ({ onStartChat }) => {
     );
 
     const thankedCount  = sentIds.size;
-    const uniqueDonors  = [...new Set(requests.map(r => r.fulfilledBy?._id).filter(Boolean))].length;
     const pendingThanks = requests.filter(r => !sentIds.has(r._id)).length;
 
     return (

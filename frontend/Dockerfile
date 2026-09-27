@@ -13,7 +13,7 @@ RUN npm ci --legacy-peer-deps
 COPY . .
 
 # Build args for Vite environment variables
-ARG VITE_API_URL=http://localhost:5000
+ARG VITE_API_URL=/api/v1
 ARG VITE_PUSHER_KEY
 ARG VITE_PUSHER_CLUSTER
 

@@ -46,7 +46,7 @@ export default function BloodInventory() {
                 setEditUnits('');
                 fetchInventory(); // Refresh data
             }
-        } catch (error) {
+        } catch {
             showFeedback('Update failed');
         } finally {
             setActionLoading(false);

@@ -27,7 +27,7 @@ import {
 } from 'recharts';
 import { getAnalytics } from '../../services/api';
 import QuickActionButton from './QuickActionButton';
-import { recentActivity as fallbackRecentActivity, COLORS } from '../../data/dashboardData';
+import { COLORS } from '../../data/dashboardData';
 import LiveMap from './LiveMap';
 import DonateModal from './DonateModal';
 
@@ -345,3 +345,6 @@ const DashboardHome = ({ setActiveTab, user }) => {
 };
 
 export default DashboardHome;
+
+
+

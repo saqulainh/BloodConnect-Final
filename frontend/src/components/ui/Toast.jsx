@@ -1,14 +1,6 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { CheckCircle, XCircle, Info, AlertTriangle, X } from 'lucide-react';
-
-// ─── Toast Context ─────────────────────────────────────────────────────
-const ToastContext = createContext(null);
-
-export const useToast = () => {
-    const ctx = useContext(ToastContext);
-    if (!ctx) throw new Error('useToast must be used inside ToastProvider');
-    return ctx;
-};
+import { ToastContext } from './toastContext';
 
 // ─── Toast Item Component ──────────────────────────────────────────────
 const VARIANT_STYLES = {

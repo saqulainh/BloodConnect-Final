@@ -5,7 +5,7 @@ const TimelineSlider = ({ minTime, maxTime, currentTime, onChange }) => {
     if (!minTime || !maxTime || minTime === maxTime) return null;
 
     return (
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-[1000] w-[90%] max-w-2xl">
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-1000 w-[90%] max-w-2xl">
             <div className="bg-slate-900/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-4">
                 <div className="flex justify-between items-center mb-2 px-1">
                     <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">History Playback</span>

@@ -1,6 +1,8 @@
 import React from "react";
 import { Activity, AlertTriangle, Users, Clock } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
+
+const MotionDiv = motion.div;
 
 const TopStatsBar = ({ stats }) => {
     // stats: { activeRequests, criticalCases, availableDonors, avgResponseTime }
@@ -13,14 +15,14 @@ const TopStatsBar = ({ stats }) => {
     ];
 
     return (
-        <div className="absolute top-6 left-1/2 -translate-x-1/2 z-[1000] w-[95%] max-w-4xl">
-            <motion.div
+        <div className="absolute top-6 left-1/2 -translate-x-1/2 z-1000 w-[95%] max-w-4xl">
+            <MotionDiv
                 initial={{ y: -50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 className="bg-white/90 backdrop-blur-xl border border-red-100 rounded-2xl shadow-2xl p-2 flex flex-wrap lg:flex-nowrap items-center justify-around gap-2"
             >
                 {items.map((item, idx) => (
-                    <div key={idx} className="flex items-center gap-3 px-4 py-2 rounded-xl transition-all hover:bg-red-50 group min-w-[140px]">
+                    <div key={idx} className="flex items-center gap-3 px-4 py-2 rounded-xl transition-all hover:bg-red-50 group min-w-35">
                         <div className={`w-10 h-10 rounded-lg ${item.bg} flex items-center justify-center ${item.animate ? 'animate-pulse' : ''}`}>
                             <item.icon size={20} className={item.color} />
                         </div>
@@ -30,7 +32,7 @@ const TopStatsBar = ({ stats }) => {
                         </div>
                     </div>
                 ))}
-            </motion.div>
+            </MotionDiv>
         </div>
     );
 };

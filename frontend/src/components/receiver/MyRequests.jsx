@@ -255,6 +255,7 @@ const CancelModal = ({ req, onClose, onConfirm }) => {
 // ─────────────────────────────────────────────────────────────────────────────
 const RequestCard = ({ req, onEdit, onDelete, onCancel, onGratitude, onStartChat, onViewTimeline, gratSending }) => {
     const [expanded, setExpanded] = useState(false);
+    const [now] = useState(() => Date.now());
 
     const isFulfilled = req.status === 'Completed' || req.status === 'resolved';
     const isCancelled = req.status === 'Cancelled';
@@ -276,7 +277,7 @@ const RequestCard = ({ req, onEdit, onDelete, onCancel, onGratitude, onStartChat
     };
 
     const timeAgo = (date) => {
-        const s = Math.floor((Date.now() - new Date(date)) / 1000);
+        const s = Math.floor((now - new Date(date)) / 1000);
         if (s < 60)   return `${s}s ago`;
         if (s < 3600) return `${Math.floor(s/60)}m ago`;
         if (s < 86400)return `${Math.floor(s/3600)}h ago`;

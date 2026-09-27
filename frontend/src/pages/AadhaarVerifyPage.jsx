@@ -22,7 +22,7 @@ export default function AadhaarVerifyPage() {
         setError("");
         try {
             await verifyAadhaar({ email: user.email, aadhaarNumber });
-            setSuccess("Aadhaar verified successfully! Your profile now has the Verified Badge.");
+            setSuccess("Identity check passed successfully! Your profile now has the Verified Badge.");
             setTimeout(() => navigate("/profile"), 2000);
         } catch (err) {
             setError(err.message || "Verification failed. Please check the number and try again.");
@@ -40,7 +40,7 @@ export default function AadhaarVerifyPage() {
                     <button onClick={() => navigate("/profile")} style={{ background: "rgba(255,255,255,0.2)", border: "none", borderRadius: "50%", padding: 8, color: "#fff", cursor: "pointer" }}>
                         <ArrowLeft size={18} />
                     </button>
-                    <h1 style={{ fontSize: 18, fontWeight: 900, margin: 0 }}>Aadhaar Verification</h1>
+                    <h1 style={{ fontSize: 18, fontWeight: 900, margin: 0 }}>Identity Check</h1>
                 </div>
             </div>
 
@@ -51,10 +51,10 @@ export default function AadhaarVerifyPage() {
                         <Fingerprint size={32} color="#e53935" />
                     </div>
 
-                    <h2 style={{ fontSize: 22, fontWeight: 900, color: "#111", margin: "0 0 10px" }}>Identity Verification</h2>
+                    <h2 style={{ fontSize: 22, fontWeight: 900, color: "#111", margin: "0 0 10px" }}>Identity Check</h2>
                     <p style={{ fontSize: 14, color: "#666", lineHeight: 1.6, marginBottom: 24 }}>
-                        Verify your identity to earn the <span style={{ color: "#2e7d32", fontWeight: 700 }}>Aadhaar Verified</span> badge.
-                        This increases trust and prioritizing you in urgent donation requests.
+                        Confirm your registered Aadhaar details to earn the <span style={{ color: "#2e7d32", fontWeight: 700 }}>Identity Verified</span> badge.
+                        This increases trust and prioritizes you in urgent donation requests.
                     </p>
 
                     <form onSubmit={handleVerify} style={{ textAlign: "left" }}>
@@ -95,7 +95,7 @@ export default function AadhaarVerifyPage() {
                     </form>
 
                     <p style={{ marginTop: 24, fontSize: 12, color: "#aaa", fontStyle: "italic" }}>
-                        🛡️ Your data is encrypted and used only for verification purposes.
+                        🛡️ Your data is encrypted and used only for internal identity checks.
                     </p>
                 </div>
             </div>

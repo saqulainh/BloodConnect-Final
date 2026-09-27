@@ -11,7 +11,7 @@ import {
     clearChatHistory, initiateCall
 } from "../services/api";
 import { subscribeToUserChannel, unsubscribeFromUserChannel } from "../services/pusher";
-import { useToast } from "../components/ui/Toast";
+import { useToast } from "../components/ui/useToast";
 
 // ── Call Modal Component ──
 const CallModal = ({ isOpen, type, targetUser, onCancel }) => {

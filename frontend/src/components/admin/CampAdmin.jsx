@@ -16,7 +16,7 @@ export default function CampAdmin() {
         try {
             const res = await getAdminCamps();
             if (res?.success) setCamps(res.data);
-        } catch (err) { console.error(err); }
+        } catch { console.error('Failed to load camps'); }
         finally { setLoading(false); }
     };
 
@@ -42,7 +42,7 @@ export default function CampAdmin() {
                 setForm({ name: '', location: '', date: '', description: '', bloodGroupsNeeded: '' });
                 fetchCamps();
             }
-        } catch (err) { showFeedback('Error saving camp'); }
+        } catch { showFeedback('Error saving camp'); }
         finally { setActionLoading(false); }
     };
 
@@ -51,7 +51,7 @@ export default function CampAdmin() {
         try {
             const res = await adminDeleteCamp(id);
             if (res?.success) { showFeedback('Camp deleted.'); fetchCamps(); }
-        } catch (err) { showFeedback('Delete failed'); }
+        } catch { showFeedback('Delete failed'); }
     };
 
     const openEdit = (camp) => {
@@ -84,7 +84,7 @@ export default function CampAdmin() {
                 }));
                 showFeedback('Coordinates captured!');
             },
-            (error) => {
+            () => {
                 showFeedback('Unable to retrieve location');
             }
         );

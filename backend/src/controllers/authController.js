@@ -153,7 +153,7 @@ const loginUser = async (req, res) => {
             });
         }
 
-        // ── Aadhaar last-4 check (optional 2FA layer) ──────────────────────
+        // ── Aadhaar last-4 identity check (optional 2FA layer) ─────────────
         if (aadhaarLast4) {
             if (aadhaarLast4.length !== 4 || !/^\d{4}$/.test(aadhaarLast4)) {
                 return res.status(400).json({ success: false, message: "Aadhaar last 4 digits must be exactly 4 numbers." });
@@ -166,7 +166,7 @@ const loginUser = async (req, res) => {
             if (storedLast4 !== aadhaarLast4) {
                 return res.status(403).json({
                     success: false,
-                    message: "Aadhaar mismatch. The last 4 digits do not match our records.",
+                    message: "Identity check mismatch. The last 4 digits do not match our records.",
                     aadhaarMismatch: true
                 });
             }

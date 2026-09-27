@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Filter, X, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+const MotionDiv = motion.div;
+
 const FilterDrawer = ({ onFilterChange }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [activeGroup, setActiveGroup] = useState('All');
@@ -19,7 +21,7 @@ const FilterDrawer = ({ onFilterChange }) => {
 
             <AnimatePresence>
                 {isOpen && (
-                    <motion.div
+                    <MotionDiv
                         initial={{ x: -300 }}
                         animate={{ x: 0 }}
                         exit={{ x: -300 }}
@@ -63,7 +65,7 @@ const FilterDrawer = ({ onFilterChange }) => {
                                 Apply Intel
                             </button>
                         </div>
-                    </motion.div>
+                    </MotionDiv>
                 )}
             </AnimatePresence>
         </>

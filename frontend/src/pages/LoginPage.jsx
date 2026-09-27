@@ -18,26 +18,33 @@ function useTypewriter(lines, speed = 75, pause = 2200) {
     const [lineIdx, setLineIdx] = useState(0);
     const [charIdx, setCharIdx] = useState(0);
     const [deleting, setDeleting] = useState(false);
-    const [fading, setFading] = useState(false);
 
     useEffect(() => {
         const current = lines[lineIdx];
         let t;
         if (!deleting && charIdx <= current.length) {
-            if (charIdx === 0) setFading(false);
-            t = setTimeout(() => { setDisplay(current.slice(0, charIdx)); setCharIdx(c => c + 1); }, speed);
+            t = setTimeout(() => {
+                setDisplay(current.slice(0, charIdx));
+                setCharIdx(c => c + 1);
+            }, speed);
         } else if (!deleting && charIdx > current.length) {
-            t = setTimeout(() => { setFading(true); setTimeout(() => setDeleting(true), 400); }, pause);
+            t = setTimeout(() => setDeleting(true), pause);
         } else if (deleting && charIdx >= 0) {
-            t = setTimeout(() => { setDisplay(current.slice(0, charIdx)); setCharIdx(c => c - 1); }, speed / 2.5);
+            t = setTimeout(() => {
+                setDisplay(current.slice(0, charIdx));
+                setCharIdx(c => c - 1);
+            }, speed / 2.5);
         } else {
-            setDeleting(false);
-            setLineIdx(i => (i + 1) % lines.length);
+            t = setTimeout(() => {
+                setDeleting(false);
+                setLineIdx(i => (i + 1) % lines.length);
+                setCharIdx(0);
+            }, 0);
         }
         return () => clearTimeout(t);
     }, [charIdx, deleting, lineIdx, lines, speed, pause]);
 
-    return { display, fading };
+    return { display, fading: deleting || charIdx > lines[lineIdx].length };
 }
 
 // ── Trust badges ────────────────────────────────────────────────────────
@@ -74,7 +81,7 @@ export default function LoginPage() {
             );
         });
         return () => ctx.revert();
-    }, []);
+    }, [navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -82,7 +89,7 @@ export default function LoginPage() {
         setError("");
         setLoading(true);
         try {
-            const data = await login({ email: form.email, password: form.password, aadhaarLast4: useAadhaar ? aadhaarLast4 : undefined });
+            await login({ email: form.email, password: form.password, aadhaarLast4: useAadhaar ? aadhaarLast4 : undefined });
             navigate("/dashboard");
         } catch (err) {
             console.error("Login caught error:", err);
@@ -152,17 +159,20 @@ export default function LoginPage() {
 
                     {/* Trust badges */}
                     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-                        {TRUST.map(({ icon: Icon, label, sub }) => (
-                            <div key={label} style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                        {TRUST.map((item) => {
+                            const TrustIcon = item.icon;
+                            return (
+                            <div key={item.label} style={{ display: "flex", alignItems: "center", gap: 14 }}>
                                 <div style={{ width: 42, height: 42, background: "#fff5f5", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                                    <Icon size={20} color="#e53935" />
+                                    <TrustIcon size={20} color="#e53935" />
                                 </div>
                                 <div>
-                                    <p style={{ margin: 0, fontWeight: 800, fontSize: 13.5, color: "#111" }}>{label}</p>
-                                    <p style={{ margin: 0, fontSize: 12, color: "#aaa" }}>{sub}</p>
+                                    <p style={{ margin: 0, fontWeight: 800, fontSize: 13.5, color: "#111" }}>{item.label}</p>
+                                    <p style={{ margin: 0, fontSize: 12, color: "#aaa" }}>{item.sub}</p>
                                 </div>
                             </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 </div>
 
@@ -255,7 +265,7 @@ export default function LoginPage() {
                             </div>
                         </div>
 
-                        {/* ── Aadhaar 2FA Toggle ── */}
+                        {/* ── Aadhaar last-4 check toggle ── */}
                         <div>
                             <button type="button" onClick={() => { setUseAadhaar(!useAadhaar); setAadhaarLast4(""); }}
                                 style={{
@@ -265,7 +275,7 @@ export default function LoginPage() {
                                     padding: "7px 14px", cursor: "pointer", transition: "all 0.2s"
                                 }}>
                                 <Shield size={14} />
-                                {useAadhaar ? "Aadhaar Verification ON" : "Add Aadhaar Verification"}
+                                {useAadhaar ? "Aadhaar Last-4 Check ON" : "Add Aadhaar Last-4 Check"}
                                 <span style={{ marginLeft: "auto", width: 30, height: 16, background: useAadhaar ? "#e53935" : "#ddd", borderRadius: 8, position: "relative", display: "inline-flex", alignItems: "center", transition: "background 0.2s" }}>
                                     <span style={{ position: "absolute", left: useAadhaar ? 16 : 2, width: 12, height: 12, background: "#fff", borderRadius: "50%", transition: "left 0.2s", boxShadow: "0 1px 3px rgba(0,0,0,0.2)" }} />
                                 </span>
@@ -274,7 +284,7 @@ export default function LoginPage() {
                             {useAadhaar && (
                                 <div style={{ marginTop: 12 }}>
                                     <label style={{ display: "block", fontSize: 11, fontWeight: 800, color: "#888", marginBottom: 7, letterSpacing: "0.08em", textTransform: "uppercase" }}>
-                                        Aadhaar Last 4 Digits
+                                        Aadhaar Last 4 Digits Check
                                     </label>
                                     <div style={{ position: "relative" }}>
                                         <ShieldCheck size={15} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: aadhaarLast4.length === 4 ? "#22c55e" : "#e53935", pointerEvents: "none" }} />
@@ -282,7 +292,7 @@ export default function LoginPage() {
                                             type="text" inputMode="numeric" maxLength={4}
                                             value={aadhaarLast4}
                                             onChange={e => setAadhaarLast4(e.target.value.replace(/\D/g, "").slice(0, 4))}
-                                            placeholder="Last 4 digits of Aadhaar"
+                                            placeholder="Last 4 digits only"
                                             style={{ width: "100%", padding: "11px 14px 11px 42px", border: "1.5px solid #fdd", borderRadius: 10, fontSize: 15, background: "#fff8f8", outline: "none", boxSizing: "border-box", color: "#111", fontFamily: "monospace", letterSpacing: "0.2em", fontWeight: 800, transition: "border 0.2s" }}
                                             onFocus={e => { e.target.style.borderColor = "#e53935"; e.target.style.background = "#fff"; }}
                                             onBlur={e => { e.target.style.borderColor = "#fdd"; e.target.style.background = "#fff8f8"; }}

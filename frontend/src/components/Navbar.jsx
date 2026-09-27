@@ -17,7 +17,7 @@ export default function Navbar() {
     const location = useLocation();
     const [menuOpen, setMenuOpen] = useState(false);
     const navRef = useRef(null);
-    const { isAuthenticated, user, logout } = useAuth();
+    const { isAuthenticated, user } = useAuth();
     const { t, i18n } = useTranslation();
 
     useEffect(() => {
