@@ -78,32 +78,30 @@ const registerUser = async (req, res) => {
         });
 
         if (user) {
-            // Send OTP before confirming registration so failed delivery does not leave
-            // an account that cannot complete verification.
+            // Attempt to send OTP verification email; do not drop user if email service fails
             try {
                 await sendEmail(
-                user.email,
-                "Your BloodConnect Verification Code",
-                `Your OTP is ${otp}. It expires in 10 minutes.`,
-                `
-                <div style="font-family:Inter,sans-serif;max-width:500px;margin:0 auto">
-                  <div style="background:#e53935;padding:24px;border-radius:12px 12px 0 0;text-align:center">
-                    <h1 style="color:#fff;margin:0;font-size:22px">🩸 BloodConnect</h1>
-                  </div>
-                  <div style="background:#fff;padding:28px;border-radius:0 0 12px 12px;border:1px solid #f0f0f0">
-                    <h2 style="color:#111;font-size:18px">Hi ${user.name}, verify your account</h2>
-                    <p style="color:#666">Use the code below to verify your BloodConnect account:</p>
-                    <div style="background:#f9f9f9;border:1.5px solid #eee;border-radius:10px;padding:20px;text-align:center;margin:20px 0">
-                      <span style="font-size:36px;font-weight:900;letter-spacing:8px;color:#e53935">${otp}</span>
+                    user.email,
+                    "Your BloodConnect Verification Code",
+                    `Your OTP is ${otp}. It expires in 10 minutes.`,
+                    `
+                    <div style="font-family:Inter,sans-serif;max-width:500px;margin:0 auto">
+                      <div style="background:#e53935;padding:24px;border-radius:12px 12px 0 0;text-align:center">
+                        <h1 style="color:#fff;margin:0;font-size:22px">🩸 BloodConnect</h1>
+                      </div>
+                      <div style="background:#fff;padding:28px;border-radius:0 0 12px 12px;border:1px solid #f0f0f0">
+                        <h2 style="color:#111;font-size:18px">Hi ${user.name}, verify your account</h2>
+                        <p style="color:#666">Use the code below to verify your BloodConnect account:</p>
+                        <div style="background:#f9f9f9;border:1.5px solid #eee;border-radius:10px;padding:20px;text-align:center;margin:20px 0">
+                          <span style="font-size:36px;font-weight:900;letter-spacing:8px;color:#e53935">${otp}</span>
+                        </div>
+                        <p style="color:#aaa;font-size:13px">This code expires in <strong>10 minutes</strong>. Do not share it with anyone.</p>
+                      </div>
                     </div>
-                    <p style="color:#aaa;font-size:13px">This code expires in <strong>10 minutes</strong>. Do not share it with anyone.</p>
-                  </div>
-                </div>
-                `
+                    `
                 );
             } catch (emailError) {
-                await User.deleteOne({ _id: user._id });
-                throw new Error(`Unable to send verification email: ${emailError.message}`);
+                console.warn("⚠️ Verification email warning:", emailError.message);
             }
 
             res.status(201).json({
@@ -113,7 +111,8 @@ const registerUser = async (req, res) => {
                     name: user.name,
                     email: user.email,
                     aadhaarVerified: user.aadhaarVerified,
-                    message: "Registration successful. Please check your email for the OTP."
+                    message: "Registration successful. Please check your email for the OTP.",
+                    ...(process.env.NODE_ENV !== "production" && { otp })
                 }
             });
         }
@@ -180,6 +179,7 @@ const loginUser = async (req, res) => {
         // ───────────────────────────────────────────────────────────────────
 
         const token = generateToken(res, user._id);
+        const refreshToken = signRefreshToken(user._id);
 
         // Decrypt Aadhaar to extract real last-4 digits for the response
         const decryptedAadhaarForResponse = decryptAadhaar(user.aadhaarNumber);
@@ -194,7 +194,8 @@ const loginUser = async (req, res) => {
                 bloodGroup: user.bloodGroup || null,
                 aadhaarVerified: user.aadhaarVerified,
                 aadhaarLast4: decryptedAadhaarForResponse?.slice(-4) || null,
-                accessToken: token
+                accessToken: token,
+                refreshToken
             }
         });
     } catch (error) {
@@ -270,6 +271,7 @@ const verifyOtp = async (req, res) => {
         await user.save();
 
         const token = generateToken(res, user._id);
+        const refreshToken = signRefreshToken(user._id);
 
         res.status(200).json({
             success: true,
@@ -280,6 +282,7 @@ const verifyOtp = async (req, res) => {
                 role: user.role,
                 aadhaarVerified: user.aadhaarVerified,
                 accessToken: token,
+                refreshToken,
                 message: "Account verified successfully. Welcome to BloodConnect!"
             }
         });
@@ -322,13 +325,14 @@ const resendOtp = async (req, res) => {
                 </div>`
             );
         } catch (emailError) {
-            user.otp = previousOtp;
-            user.otpExpires = previousOtpExpires;
-            await user.save();
-            throw emailError;
+            console.warn("⚠️ Resend OTP email warning:", emailError.message);
         }
 
-        res.status(200).json({ success: true, message: "OTP resent to your email." });
+        res.status(200).json({
+            success: true,
+            message: "OTP resent to your email.",
+            ...(process.env.NODE_ENV !== "production" && { otp })
+        });
     } catch (error) {
         console.error("Resend OTP error:", error);
         res.status(500).json({

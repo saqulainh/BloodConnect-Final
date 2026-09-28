@@ -92,7 +92,7 @@ const refreshAccessToken = async () => {
 
 const checkTokenExpiry = () => {
     const token = getAccessToken();
-    if (!token) return true;
+    if (!token) return false;
     try {
         const payload = JSON.parse(atob(token.split('.')[1]));
         // Expired if less than 60 seconds remain
@@ -104,28 +104,28 @@ const checkTokenExpiry = () => {
 
 // ── Core fetch wrapper (handles 401 → refresh → retry) ────────────────
 export const apiFetch = async (endpoint, options = {}, retry = true) => {
-    // Before making any auth request, check if token is expired
-    if (!isDemoMode() && (
-        !endpoint.includes("/auth/login") &&
-        !endpoint.includes("/auth/register") &&
-        !endpoint.includes("/auth/refresh-token") &&
-        !endpoint.includes("/auth/admin-login")
-    )) {
+    // Proactively refresh near-expiry token for authenticated requests
+    if (!isDemoMode() && !endpoint.startsWith("/auth/")) {
         if (checkTokenExpiry()) {
-            if (!endpoint.startsWith("/camps")) {
-                clearTokens();
-                window.location.href = "/login";
-                throw new Error("Session expired. Please login again.");
+            const refreshToken = getRefreshToken();
+            if (refreshToken) {
+                try {
+                    await refreshAccessToken();
+                } catch {
+                    clearTokens();
+                    window.location.href = "/login";
+                    throw new Error("Session expired. Please login again.");
+                }
             }
         }
     }
 
     const isAdminEndpoint = endpoint.startsWith("/admin");
-    const shouldAttachAuth =
-        !endpoint.includes("/auth/login") &&
-        !endpoint.includes("/auth/register") &&
-        !endpoint.includes("/auth/admin-login") &&
-        !endpoint.includes("/auth/refresh-token");
+    const isPublicAuthEndpoint =
+        endpoint.startsWith("/auth/") &&
+        !endpoint.includes("/auth/change-password") &&
+        !endpoint.includes("/auth/logout");
+    const shouldAttachAuth = !isPublicAuthEndpoint;
     const adminApiKey = getAdminApiKey();
     const accessToken = getAccessToken();
     const normalizedHeaders = { ...(options.headers || {}) };
@@ -152,7 +152,7 @@ export const apiFetch = async (endpoint, options = {}, retry = true) => {
         throw error;
     }
 
-    if (res.status === 401 && retry && !endpoint.includes("/auth/login") && !endpoint.includes("/auth/register") && !endpoint.includes("/auth/admin-login")) {
+    if (res.status === 401 && retry && !endpoint.startsWith("/auth/")) {
         const refreshToken = getRefreshToken();
 
         // If no refresh token exists (legacy or admin login edge-case),
