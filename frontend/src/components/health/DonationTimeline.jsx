@@ -40,7 +40,7 @@ function LogModal({ onClose, onSaved }) {
         setLoading(true);
         try {
             const token = localStorage.getItem("accessToken");
-            const res = await fetch("/api/v1/health-wallet/log-donation", {
+            const res = await fetch("https://bloodconnect-final.onrender.com/api/v1/health-wallet/log-donation", {
                 method: "POST",
                 headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
                 body: JSON.stringify(form),

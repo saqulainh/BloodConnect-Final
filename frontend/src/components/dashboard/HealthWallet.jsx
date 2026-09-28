@@ -71,7 +71,7 @@ export default function HealthWallet() {
         setError(null);
         try {
             const token = localStorage.getItem("accessToken");
-            const res = await fetch("/api/v1/health-wallet/stats", {
+            const res = await fetch("https://bloodconnect-final.onrender.com/api/v1/health-wallet/stats", {
                 headers: { Authorization: `Bearer ${token}` },
             });
             const data = await res.json();
