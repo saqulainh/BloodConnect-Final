@@ -87,7 +87,14 @@ export default function AdminAnalytics() {
         </div>
     );
 
-    const { summary, donorGrowth, revenueTrend, bloodGroupStats, topCities, recentTransactions } = data;
+    const {
+        summary = {},
+        donorGrowth = [],
+        revenueTrend = [],
+        bloodGroupStats = [],
+        topCities = [],
+        recentTransactions = []
+    } = data || {};
 
     const formatINR = (v) => `₹${(v || 0).toLocaleString("en-IN")}`;
 
@@ -111,27 +118,27 @@ export default function AdminAnalytics() {
                     icon={DollarSign}
                     label="Total Revenue"
                     value={formatINR(summary.totalRevenue)}
-                    sub={`${summary.successfulDonations} successful donations`}
+                    sub={`${summary.successfulDonations || 0} successful donations`}
                     color="emerald"
                 />
                 <StatCard
                     icon={Users}
                     label="Total Donors"
-                    value={summary.totalDonors.toLocaleString()}
-                    sub={`+${summary.newUsersThisWeek} this week`}
+                    value={(summary.totalDonors || 0).toLocaleString()}
+                    sub={`+${summary.newUsersThisWeek || 0} this week`}
                     color="red"
                 />
                 <StatCard
                     icon={Droplets}
                     label="Requests Fulfilled"
-                    value={`${summary.fulfillmentRate}%`}
-                    sub={`${summary.fulfilledRequests} of ${summary.totalRequests} requests`}
+                    value={`${summary.fulfillmentRate || 0}%`}
+                    sub={`${summary.fulfilledRequests || 0} of ${summary.totalRequests || 0} requests`}
                     color="red"
                 />
                 <StatCard
                     icon={GitBranch}
                     label="Platform Users"
-                    value={summary.totalUsers.toLocaleString()}
+                    value={(summary.totalUsers || 0).toLocaleString()}
                     sub="All registered users"
                     color="red"
                 />

@@ -15,6 +15,8 @@ const ForgotPassword = lazy(() => import("../components/auth/ForgotPassword"));
 const ResetPassword = lazy(() => import("../components/auth/ResetPassword"));
 const AdminLogin = lazy(() => import("../pages/AdminLogin"));
 const LegalPage = lazy(() => import("../pages/LegalPage"));
+const BloodBanksPage = lazy(() => import("../pages/BloodBanksPage"));
+const ContactPage = lazy(() => import("../pages/ContactPage"));
 
 const LoadingFallback = () => (
     <div className="flex h-screen w-full items-center justify-center bg-white">
@@ -31,6 +33,9 @@ const AppRouter = () => {
             <Routes>
                 {/* Public Routes */}
                 <Route path="/" element={<HomePage />} />
+                <Route path="/blood-banks" element={<BloodBanksPage />} />
+                <Route path="/hospitals" element={<Navigate to="/blood-banks" replace />} />
+                <Route path="/donors" element={<Navigate to="/find-donors" replace />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/verify-otp" element={<OtpVerifyPage />} />
@@ -39,6 +44,8 @@ const AppRouter = () => {
                 <Route path="/admin-login" element={<AdminLogin />} />
                 <Route path="/privacy-policy" element={<LegalPage />} />
                 <Route path="/terms" element={<LegalPage />} />
+                <Route path="/terms-of-service" element={<Navigate to="/terms" replace />} />
+                <Route path="/contact" element={<ContactPage />} />
 
                 {/* Protected Routes */}
                 <Route element={<ProtectedRoute />}>

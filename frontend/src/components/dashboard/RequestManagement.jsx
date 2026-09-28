@@ -48,10 +48,8 @@ const RequestBloodForm = ({ onClose, initialData = null }) => {
 
             if (initialData && initialData._id) {
                 await updateBloodRequest(initialData._id, payload);
-                alert("Request updated successfully!");
             } else {
                 await createBloodRequest(payload);
-                alert("Request created successfully!");
             }
             onClose();
         } catch (err) {
@@ -137,7 +135,7 @@ const RequestBloodForm = ({ onClose, initialData = null }) => {
 
 const RequestDetailsModal = ({ request, onClose, onStartChat, currentUser }) => {
     if (!request) return null;
-    const isMyRequest = currentUser && request.requester && request.requester._id === currentUser._id;
+    const isMyRequest = currentUser && request.requester && ((request.requester._id || request.requester) === currentUser._id);
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in">
@@ -247,7 +245,6 @@ const RequestManagement = ({ onStartChat, currentUser }) => {
             fetchRequests();
         } catch (error) {
             console.error("Failed to delete request", error);
-            alert("Delete failed: " + error.message);
         }
     };
 
@@ -334,7 +331,9 @@ const RequestManagement = ({ onStartChat, currentUser }) => {
                     <div className="text-center py-8 text-slate-400 font-medium">No active blood requests found.</div>
                 ) : (
                     requests.map((req) => {
-                        const isMyRequest = currentUser && req.requester && req.requester._id === currentUser._id;
+                        const reqOwnerId = req.requester?._id || req.requester;
+                        const myId = currentUser?._id || currentUser?.id;
+                        const isMyRequest = Boolean(myId && reqOwnerId && String(reqOwnerId) === String(myId));
                         return (
                             <div key={req._id} className="bg-white p-5 rounded-xl border border-slate-100 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4 transition-all hover:shadow-md border-l-4 border-l-red-500">
                                 <div className="flex items-center gap-4 w-full md:w-auto cursor-pointer flex-1" onClick={() => setViewingRequest(req)}>

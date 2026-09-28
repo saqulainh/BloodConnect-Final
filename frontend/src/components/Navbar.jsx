@@ -8,7 +8,8 @@ import { useTranslation } from "react-i18next";
 
 const NAV_LINKS = [
     { label: "Home", to: "/" },
-    { label: "Donors", to: "/donors" },
+    { label: "Find Donors", to: "/find-donors" },
+    { label: "Blood Banks", to: "/blood-banks" },
     { label: "For Patients", to: "/patients" },
     { label: "Donations", to: "/donations" },
 ];

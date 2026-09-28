@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, MapPin, Phone, Droplets, ChevronDown, ArrowLeft, CheckCircle, Clock, ShieldCheck } from "lucide-react";
+import { Search, MapPin, Phone, Droplets, ChevronDown, ArrowLeft, CheckCircle, Clock, ShieldCheck, Building2 } from "lucide-react";
 import { getNearbyDonors, getCurrentLocation } from "../services/api";
 
 const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"];
@@ -129,6 +129,25 @@ export default function FindDonors() {
 
             {/* ── RESULTS SECTION ── */}
             <div style={{ maxWidth: 1100, margin: "0 auto", padding: "40px 24px" }}>
+
+                {/* Institutional Hospital Blood Banks Banner */}
+                <div style={{ background: "linear-gradient(135deg, #fff5f5 0%, #ffebee 100%)", border: "1.5px solid #ffcdd2", borderRadius: 16, padding: "18px 24px", marginBottom: 32, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap", boxShadow: "0 2px 12px rgba(229,57,53,0.06)" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                        <div style={{ width: 44, height: 44, borderRadius: 12, background: "#e53935", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                            <Building2 size={24} />
+                        </div>
+                        <div>
+                            <h3 style={{ margin: "0 0 4px", fontSize: 16, fontWeight: 900, color: "#111" }}>Need Guaranteed Institutional Blood Stock?</h3>
+                            <p style={{ margin: 0, fontSize: 13, color: "#666" }}>Check real-time stock units across government, private & Red Cross hospital blood banks with 24x7 emergency helplines.</p>
+                        </div>
+                    </div>
+                    <button onClick={() => navigate("/blood-banks")}
+                        style={{ background: "#e53935", color: "#fff", border: "none", borderRadius: 10, padding: "10px 20px", fontWeight: 800, fontSize: 13, cursor: "pointer", display: "flex", alignItems: "center", gap: 6, whiteSpace: "nowrap", transition: "all 0.2s" }}
+                        onMouseEnter={(e) => (e.currentTarget.style.background = "#b71c1c")}
+                        onMouseLeave={(e) => (e.currentTarget.style.background = "#e53935")}>
+                        View Blood Banks Directory →
+                    </button>
+                </div>
 
                 {/* Error */}
                 {locationError && (

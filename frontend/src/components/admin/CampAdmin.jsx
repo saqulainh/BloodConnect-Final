@@ -7,7 +7,7 @@ export default function CampAdmin() {
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
     const [editCamp, setEditCamp] = useState(null);
-    const [form, setForm] = useState({ name: '', location: '', date: '', description: '', bloodGroupsNeeded: '' });
+    const [form, setForm] = useState({ name: '', organizer: '', location: '', lat: '', lng: '', date: '', time: '', description: '', bloodGroupsNeeded: '', status: 'Upcoming' });
     const [actionLoading, setActionLoading] = useState(false);
     const [feedback, setFeedback] = useState('');
 
@@ -28,7 +28,9 @@ export default function CampAdmin() {
         setActionLoading(true);
         try {
             const payload = { ...form };
-            if (payload.bloodGroupsNeeded) payload.bloodGroupsNeeded = payload.bloodGroupsNeeded.split(',').map(s => s.trim());
+            if (payload.bloodGroupsNeeded && typeof payload.bloodGroupsNeeded === 'string') {
+                payload.bloodGroupsNeeded = payload.bloodGroupsNeeded.split(',').map(s => s.trim()).filter(Boolean);
+            }
             let res;
             if (editCamp) {
                 res = await adminUpdateCamp(editCamp._id, payload);
@@ -39,7 +41,7 @@ export default function CampAdmin() {
                 showFeedback(editCamp ? 'Camp updated!' : 'Camp created!');
                 setShowForm(false);
                 setEditCamp(null);
-                setForm({ name: '', location: '', date: '', description: '', bloodGroupsNeeded: '' });
+                setForm({ name: '', organizer: '', location: '', lat: '', lng: '', date: '', time: '', description: '', bloodGroupsNeeded: '', status: 'Upcoming' });
                 fetchCamps();
             }
         } catch { showFeedback('Error saving camp'); }
@@ -66,6 +68,7 @@ export default function CampAdmin() {
             time: camp.time || '',
             description: camp.description || '',
             bloodGroupsNeeded: (camp.bloodGroupsNeeded || []).join(', '),
+            status: camp.status || 'Upcoming'
         });
         setShowForm(true);
     };
@@ -90,6 +93,17 @@ export default function CampAdmin() {
         );
     };
 
+    const getStatusBadge = (status) => {
+        switch (status) {
+            case 'Completed':
+                return 'bg-blue-50 text-blue-700 border-blue-200';
+            case 'Cancelled':
+                return 'bg-rose-50 text-rose-700 border-rose-200';
+            default:
+                return 'bg-emerald-50 text-emerald-700 border-emerald-200';
+        }
+    };
+
     return (
         <div className="space-y-6 animate-in fade-in duration-500">
             <div className="flex items-center justify-between">
@@ -99,7 +113,7 @@ export default function CampAdmin() {
                     </h2>
                     <p className="text-sm text-slate-400 mt-1">{camps.length} camps on platform</p>
                 </div>
-                <button onClick={() => { setEditCamp(null); setForm({ name: '', organizer: '', location: '', lat: '', lng: '', date: '', time: '', description: '', bloodGroupsNeeded: '' }); setShowForm(true); }}
+                <button onClick={() => { setEditCamp(null); setForm({ name: '', organizer: '', location: '', lat: '', lng: '', date: '', time: '', description: '', bloodGroupsNeeded: '', status: 'Upcoming' }); setShowForm(true); }}
                     className="px-5 py-2.5 bg-rose-600 text-white text-sm font-black rounded-xl hover:bg-rose-700 transition-colors flex items-center gap-2">
                     <Plus size={16} /> Create Camp
                 </button>
@@ -124,7 +138,12 @@ export default function CampAdmin() {
                         <div key={c._id} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 hover:shadow-md transition-shadow">
                             <div className="flex items-start justify-between mb-3">
                                 <div>
-                                    <h3 className="font-black text-slate-800 text-lg">{c.name}</h3>
+                                    <div className="flex items-center gap-2">
+                                        <h3 className="font-black text-slate-800 text-lg">{c.name}</h3>
+                                        <span className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border ${getStatusBadge(c.status)}`}>
+                                            {c.status || 'Upcoming'}
+                                        </span>
+                                    </div>
                                     <div className="flex items-center gap-3 mt-1">
                                         <span className="text-xs text-slate-400 font-medium flex items-center gap-1"><MapPin size={10} />{c.location}</span>
                                         <span className="text-xs text-slate-400 font-medium flex items-center gap-1">
@@ -133,8 +152,8 @@ export default function CampAdmin() {
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-1">
-                                    <button onClick={() => openEdit(c)} className="p-1.5 hover:bg-red-50 rounded-lg text-red-500"><Edit size={14} /></button>
-                                    <button onClick={() => handleDelete(c._id)} className="p-1.5 hover:bg-red-50 rounded-lg text-red-400"><Trash2 size={14} /></button>
+                                    <button onClick={() => openEdit(c)} className="p-1.5 hover:bg-rose-50 rounded-lg text-rose-500" title="Edit Camp"><Edit size={14} /></button>
+                                    <button onClick={() => handleDelete(c._id)} className="p-1.5 hover:bg-rose-50 rounded-lg text-rose-400" title="Delete Camp"><Trash2 size={14} /></button>
                                 </div>
                             </div>
                             {c.description && <p className="text-xs text-slate-500 mb-3 line-clamp-2">{c.description}</p>}
@@ -161,6 +180,20 @@ export default function CampAdmin() {
                             <button onClick={() => setShowForm(false)} className="p-2 hover:bg-slate-100 rounded-xl text-slate-400"><X size={18} /></button>
                         </div>
                         <div className="p-6 space-y-4 overflow-y-auto flex-1 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:bg-slate-200 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-transparent">
+                            {/* Status Selector */}
+                            <div>
+                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1 block">Status</label>
+                                <select
+                                    value={form.status || 'Upcoming'}
+                                    onChange={e => setForm({ ...form, status: e.target.value })}
+                                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-rose-500/20"
+                                >
+                                    <option value="Upcoming">Upcoming (Active / Visible for registration)</option>
+                                    <option value="Completed">Completed (Past Event)</option>
+                                    <option value="Cancelled">Cancelled (Hidden / Suspended)</option>
+                                </select>
+                            </div>
+
                             {/* Standard Fields */}
                             {[
                                 { key: 'name', label: 'Camp Name', type: 'text' },

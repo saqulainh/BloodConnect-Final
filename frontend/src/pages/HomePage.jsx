@@ -9,6 +9,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useAuth } from "../context/AuthContext";
 import { useTranslation } from "react-i18next";
+import Footer from "../components/Footer";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -224,13 +225,13 @@ export default function HomePage() {
             </nav>
 
             {/* ── Hero Section ────────────────────────────────────────── */}
-            <header id="features" ref={heroRef} className="relative pt-24 pb-20 lg:pt-36 lg:pb-32 px-4 overflow-hidden bg-[#fafafa]">
+            <header id="features" ref={heroRef} className="relative scroll-mt-20 pt-24 pb-20 lg:pt-36 lg:pb-32 px-4 overflow-hidden bg-[#fafafa]">
                 {/* Background Blobs & Gradients */}
                 <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-br from-red-100/80 to-pink-50/40 rounded-full blur-[100px] -translate-y-1/3 translate-x-1/4 pointer-events-none" />
                 <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-gradient-to-tr from-blue-50/60 to-slate-100/50 rounded-full blur-[80px] pointer-events-none" />
 
                 {/* Grid Overlay */}
-                <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-5 mix-blend-overlay pointer-events-none"></div>
+                <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{ backgroundImage: "radial-gradient(#64748b 0.7px, transparent 0.7px)", backgroundSize: "14px 14px" }} />
 
                 <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
                     {/* Left Content */}
@@ -244,7 +245,7 @@ export default function HomePage() {
                             <span className="text-red-700 text-sm font-bold tracking-wide">Live Request: O- Blood needed in Mumbai</span>
                         </div>
 
-                        <h1 className="hero-h1 text-6xl lg:text-[80px] font-black tracking-tighter leading-[0.9] text-slate-900 drop-shadow-sm">
+                        <h1 className="hero-h1 text-5xl sm:text-6xl lg:text-[80px] font-black tracking-tighter leading-[0.9] text-slate-900 drop-shadow-sm">
                             {t("Save a Life")},<br />
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-400">{t("Be a Hero")}.</span>
                         </h1>
@@ -400,7 +401,7 @@ export default function HomePage() {
             </header>
 
             {/* ── Workflow Timeline Section ───────────────────────────── */}
-            <section id="how-it-works" ref={stepsRef} className="relative py-32 px-4 bg-slate-50 overflow-hidden">
+            <section id="how-it-works" ref={stepsRef} className="relative scroll-mt-20 py-32 px-4 bg-slate-50 overflow-hidden">
                 <div className="max-w-6xl mx-auto">
 
                     <div className="text-center md:text-left mb-20 md:ml-32">
@@ -546,7 +547,7 @@ export default function HomePage() {
             </section>
 
             {/* ── CTA Banner ──────────────────────────────────────────── */}
-            <section id="impact" className="py-24 px-4 bg-red-600 relative overflow-hidden">
+            <section id="impact" className="scroll-mt-20 py-24 px-4 bg-red-600 relative overflow-hidden">
                 <div className="absolute inset-0 opacity-10">
                     <div className="absolute -top-20 -right-20 w-96 h-96 bg-white rounded-full blur-3xl" />
                     <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-red-800 rounded-full blur-3xl" />
@@ -574,66 +575,7 @@ export default function HomePage() {
                 </div>
             </section>
 
-            {/* ── Footer ──────────────────────────────────────────────── */}
-            <footer className="bg-slate-900 text-slate-400 py-16 px-4">
-                <div className="max-w-7xl mx-auto">
-                    <div className="grid md:grid-cols-4 gap-10 mb-12">
-                        {/* Brand */}
-                        <div className="md:col-span-2 space-y-4">
-                            <div className="flex items-center gap-2.5">
-                                <div className="w-9 h-9 bg-red-600 rounded-xl flex items-center justify-center shadow-lg shadow-red-900">
-                                    <Droplets size={20} className="text-white fill-white" />
-                                </div>
-                                <span className="font-black text-xl text-white tracking-tight">
-                                    Blood<span className="text-red-500">Connect</span>
-                                </span>
-                            </div>
-                            <p className="text-slate-500 font-medium leading-relaxed max-w-sm">
-                                Bridging the gap between blood donors and patients across India. Fast, free, and verified.
-                            </p>
-                            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-red-400">
-                                <span className="relative flex h-2 w-2">
-                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75" />
-                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600" />
-                                </span>
-                                432 Donors Online Right Now
-                            </div>
-                        </div>
-
-                        {/* Quick Links */}
-                        <div className="space-y-4">
-                            <h4 className="text-sm font-black text-white uppercase tracking-widest">Platform</h4>
-                            <ul className="space-y-2.5 text-sm font-medium">
-                                <li><a href="#features" className="hover:text-white transition-colors">Features</a></li>
-                                <li><a href="#how-it-works" className="hover:text-white transition-colors">How it Works</a></li>
-                                <li><a href="#impact" className="hover:text-white transition-colors">Impact</a></li>
-                                <li><Link to="/register" className="hover:text-white transition-colors">Register as Donor</Link></li>
-                            </ul>
-                        </div>
-
-                        {/* Legal */}
-                        <div className="space-y-4">
-                            <h4 className="text-sm font-black text-white uppercase tracking-widest">Legal</h4>
-                            <ul className="space-y-2.5 text-sm font-medium">
-                                <li><Link to="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
-                                <li><Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link></li>
-                                <li><a href="tel:+918804385786" className="hover:text-white transition-colors">Contact Us</a></li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div id="legal" className="pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
-                        <div className="text-xs font-medium text-center md:text-left">
-                            <p>© 2024 BloodConnect. Made with ❤️ to save lives.</p>
-                            <p className="mt-1">Developed by Nowic Studio · <a href="tel:+918804385786" className="hover:text-white">8804385786</a></p>
-                        </div>
-                        <div className="flex items-center gap-2 text-xs font-medium">
-                            <Droplets size={12} className="text-red-500" />
-                            Every donation saves up to 3 lives.
-                        </div>
-                    </div>
-                </div>
-            </footer>
+            <Footer />
         </div>
     );
 }

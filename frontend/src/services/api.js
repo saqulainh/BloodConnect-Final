@@ -864,3 +864,35 @@ export const adminLogin = async ({ email, password, adminKey }) => {
     saveUser(data.data);
     return data;
 };
+
+// ─────────────────────────────────────────────────────────────────────
+// HOSPITALS & BLOOD BANKS DIRECTORY ENDPOINTS
+// ─────────────────────────────────────────────────────────────────────
+
+/** GET /hospitals — Verified hospitals & blood banks with live stock */
+export const getHospitals = async (params = {}) => {
+    const cleanParams = Object.fromEntries(
+        Object.entries(params).filter(([_, v]) => v !== undefined && v !== null && v !== "")
+    );
+    const qs = new URLSearchParams(cleanParams).toString();
+    return apiFetch(qs ? `/hospitals?${qs}` : "/hospitals", { method: "GET" });
+};
+
+/** GET /hospitals/cities — Distinct cities with verified centers */
+export const getHospitalCities = async () => {
+    return apiFetch("/hospitals/cities", { method: "GET" });
+};
+
+/** GET /hospitals/:id — Single hospital details & stock */
+export const getHospitalById = async (id) => {
+    return apiFetch(`/hospitals/${id}`, { method: "GET" });
+};
+
+/** PATCH /hospitals/:id/stock — Update live blood units */
+export const adminUpdateHospitalStock = async (id, bloodGroup, units) => {
+    return apiFetch(`/hospitals/${id}/stock`, {
+        method: "PATCH",
+        headers: authHeaders(),
+        body: JSON.stringify({ bloodGroup, units }),
+    });
+};

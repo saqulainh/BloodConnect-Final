@@ -120,7 +120,10 @@ export default function SOSBroadcast() {
 
     // ── Broadcast SOS ───────────────────────────────────────────────
     const handleBroadcast = async () => {
-        if (!form.hospital.trim()) return alert("Please enter the hospital name.");
+        if (!form.hospital.trim()) {
+            setBroadcastResult({ success: false, message: "Please enter the hospital name before broadcasting." });
+            return;
+        }
         setBroadcasting(true);
         setBroadcastResult(null);
         try {
@@ -285,8 +288,8 @@ export default function SOSBroadcast() {
                     </div>
                 ) : (
                     <div className="space-y-3">
-                        {liveAlerts.map((a, i) => <AlertCard key={`live-${i}`} alert={a} isNew={true} />)}
-                        {alerts.map(a => <AlertCard key={a.id} alert={a} />)}
+                        {liveAlerts.map((a, i) => <AlertCard key={`live-${a._id || a.id || i}`} alert={a} isNew={true} />)}
+                        {alerts.map((a, i) => <AlertCard key={a._id || a.id || i} alert={a} />)}
                     </div>
                 )}
             </div>
