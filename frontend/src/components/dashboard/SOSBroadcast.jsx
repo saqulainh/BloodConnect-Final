@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
     Siren, Droplets, MapPin, Clock, Phone,
     UserCheck, Loader2, AlertCircle, Send,
-    RefreshCw, ChevronRight, Activity
+    RefreshCw, ChevronRight, Activity, Sparkles
 } from "lucide-react";
 import Pusher from "pusher-js";
 import { broadcastSOS, getActiveSOSAlerts } from "../../services/api";
@@ -13,6 +13,30 @@ const URGENCY_STYLES = {
     Critical: "bg-red-600 text-white",
     Urgent: "bg-amber-500 text-white",
     Normal: "bg-slate-100 text-slate-600",
+};
+
+const parseEmergencyText = (text) => {
+    const normalizedText = text.trim().replace(/\s+/g, " ");
+    if (!normalizedText) return {};
+
+    const bloodGroupMatch = normalizedText.match(/\b(A|B|AB|O)\s*([+-]|positive|negative)\b/i);
+    const bloodGroup = bloodGroupMatch
+        ? `${bloodGroupMatch[1].toUpperCase()}${bloodGroupMatch[2].toLowerCase() === "positive" ? "+" : bloodGroupMatch[2].toLowerCase() === "negative" ? "-" : bloodGroupMatch[2]}`
+        : undefined;
+    const unitsMatch = normalizedText.match(/\b(\d+)\s*(?:units?|bags?)\b/i);
+    const urgency = /critical|immediately|emergency|urgent/i.test(normalizedText)
+        ? (/critical|immediately|emergency/i.test(normalizedText) ? "Critical" : "Urgent")
+        : undefined;
+    const hospitalMatch = normalizedText.match(/\b(?:at|in|near)\s+([\w .'-]+?)(?=\s+(?:for|needs?|requires?)\b|[,.]|$)/i);
+    const patientMatch = normalizedText.match(/\bfor\s+([\w .'-]+?)(?=\s+(?:needs?|requires?|needs blood)\b|[,.]|$)/i);
+
+    return {
+        ...(bloodGroup && BLOOD_GROUPS.includes(bloodGroup) ? { bloodGroup } : {}),
+        ...(unitsMatch ? { units: Number(unitsMatch[1]) } : {}),
+        ...(urgency ? { urgency } : {}),
+        ...(hospitalMatch ? { hospital: hospitalMatch[1].trim() } : {}),
+        ...(patientMatch ? { patientName: patientMatch[1].trim() } : {}),
+    };
 };
 
 // ── Alert Card ─────────────────────────────────────────────────────────
@@ -78,6 +102,8 @@ export default function SOSBroadcast() {
     const [broadcasting, setBroadcasting] = useState(false);
     const [broadcastResult, setBroadcastResult] = useState(null);
     const [showForm, setShowForm] = useState(false);
+    const [aiText, setAiText] = useState("");
+    const [aiResult, setAiResult] = useState("");
     const [form, setForm] = useState({
         bloodGroup: "O+",
         hospital: "",
@@ -150,6 +176,17 @@ export default function SOSBroadcast() {
         }
     };
 
+    const handleAiAssist = () => {
+        const parsed = parseEmergencyText(aiText);
+        const parsedFields = Object.keys(parsed);
+        if (parsedFields.length === 0) {
+            setAiResult("No details found. Try adding blood group, units, hospital, or urgency.");
+            return;
+        }
+        setForm((previousForm) => ({ ...previousForm, ...parsed }));
+        setAiResult(`${parsedFields.length} detail${parsedFields.length === 1 ? "" : "s"} detected. Please review before broadcasting.`);
+    };
+
     const allAlerts = [...liveAlerts, ...alerts].slice(0, 20);
 
     return (
@@ -199,6 +236,32 @@ export default function SOSBroadcast() {
 
                 {showForm && (
                     <div className="space-y-3 animate-in slide-in-from-top-2 duration-200">
+                        <div className="rounded-2xl border border-violet-100 bg-violet-50/70 p-4">
+                            <div className="flex items-center gap-2 mb-2">
+                                <Sparkles size={15} className="text-violet-600" />
+                                <p className="text-xs font-black uppercase tracking-wider text-violet-800">AI Assist</p>
+                            </div>
+                            <p className="text-[11px] leading-relaxed text-violet-700 mb-2">
+                                Describe the emergency in one sentence and we will prefill the request details.
+                            </p>
+                            <div className="flex flex-col sm:flex-row gap-2">
+                                <input
+                                    type="text"
+                                    value={aiText}
+                                    onChange={e => setAiText(e.target.value)}
+                                    placeholder="2 units O- needed at AIIMS Delhi urgently"
+                                    className="min-w-0 flex-1 px-3 py-2.5 rounded-xl border border-violet-200 bg-white text-sm text-slate-700 focus:outline-none focus:border-violet-400"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={handleAiAssist}
+                                    className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-violet-600 text-white text-xs font-black hover:bg-violet-700 transition-colors"
+                                >
+                                    <Sparkles size={14} /> Analyze
+                                </button>
+                            </div>
+                            {aiResult && <p className="mt-2 text-[11px] font-semibold text-violet-700">{aiResult}</p>}
+                        </div>
                         <div className="grid grid-cols-2 gap-3">
                             <div>
                                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Blood Group *</label>
