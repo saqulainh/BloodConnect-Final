@@ -3,7 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import {
     Heart, Search, Users, Activity, ArrowRight,
     ShieldCheck, Clock, Droplets, Menu, X,
-    MapPin, Bell, BarChart2, ChevronRight, Globe
+    MapPin, Bell, BarChart2, ChevronRight, Globe,
+    Truck, Navigation, Thermometer, Zap
 } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -162,6 +163,7 @@ export default function HomePage() {
                     {/* Desktop Nav */}
                     <div className="hidden md:flex items-center gap-8 text-sm font-bold text-slate-500">
                         <a href="#how-it-works" className="hover:text-red-600 transition-colors">{t("How it Works")}</a>
+                        <Link to="/blood-banks" className="hover:text-red-600 transition-colors">Blood Banks</Link>
                         <Link to="/register" className="hover:text-red-600 transition-colors">{t("Become a Donor")}</Link>
                     </div>
 
@@ -209,6 +211,7 @@ export default function HomePage() {
                 {menuOpen && (
                     <div className="md:hidden border-t border-slate-100 bg-white px-4 py-6 space-y-4 shadow-xl">
                         <a href="#how-it-works" onClick={() => setMenuOpen(false)} className="block text-sm font-bold text-slate-600 hover:text-red-600 py-2">How it Works</a>
+                        <Link to="/blood-banks" onClick={() => setMenuOpen(false)} className="block text-sm font-bold text-slate-600 hover:text-red-600 py-2">Blood Banks</Link>
                         <Link to="/register" onClick={() => setMenuOpen(false)} className="block text-sm font-bold text-slate-600 hover:text-red-600 py-2">Become a Donor</Link>
                         <div className="pt-2 flex flex-col gap-3">
                             {isAuthenticated ? (
@@ -225,7 +228,7 @@ export default function HomePage() {
             </nav>
 
             {/* ── Hero Section ────────────────────────────────────────── */}
-            <header id="features" ref={heroRef} className="relative scroll-mt-20 pt-24 pb-20 lg:pt-36 lg:pb-32 px-4 overflow-hidden bg-[#fafafa]">
+            <header ref={heroRef} className="relative pt-24 pb-20 lg:pt-36 lg:pb-32 px-4 overflow-hidden bg-[#fafafa]">
                 {/* Background Blobs & Gradients */}
                 <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-br from-red-100/80 to-pink-50/40 rounded-full blur-[100px] -translate-y-1/3 translate-x-1/4 pointer-events-none" />
                 <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-gradient-to-tr from-blue-50/60 to-slate-100/50 rounded-full blur-[80px] pointer-events-none" />
@@ -399,6 +402,87 @@ export default function HomePage() {
                     </div>
                 </div>
             </header>
+
+            {/* ── Key Features Section (Uber for Blood & Cold Chain) ──── */}
+            <section id="features" className="relative scroll-mt-20 py-24 px-4 bg-white border-b border-slate-100">
+                <div className="max-w-6xl mx-auto">
+                    <div className="text-center max-w-2xl mx-auto mb-16">
+                        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red-50 text-red-600 text-xs font-bold uppercase tracking-wider border border-red-100 mb-4">
+                            <Zap size={14} className="text-red-500 fill-red-500" />
+                            Next-Gen Medical Logistics
+                        </div>
+                        <h2 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight">
+                            Live "Uber for Blood" <br />
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-rose-500">
+                                Real-Time Transit Tracking
+                            </span>
+                        </h2>
+                        <p className="mt-4 text-slate-600 font-medium text-base">
+                            From donation arm to ICU bedside in minutes. Track the life-saving parcel live with verified cold-chain safety.
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {/* Feature 1: Live Transit Map */}
+                        <div className="p-6 rounded-2xl bg-slate-50 border border-slate-100 hover:border-red-200 hover:shadow-xl hover:shadow-red-50/50 transition-all duration-300 group">
+                            <div className="w-12 h-12 rounded-xl bg-red-100/80 text-red-600 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+                                <Truck size={24} />
+                            </div>
+                            <h3 className="text-lg font-bold text-slate-900 mb-2">Live Moving Map</h3>
+                            <p className="text-sm text-slate-600 leading-relaxed">
+                                Zomato/Uber style real-time GPS tracking. Watch the volunteer rider move live towards the hospital with accurate ETA countdowns.
+                            </p>
+                            <div className="mt-4 pt-3 border-t border-slate-200/60 flex items-center text-xs font-bold text-red-600 gap-1">
+                                <span>"Blood 10 min door hai"</span>
+                                <Navigation size={12} className="animate-pulse" />
+                            </div>
+                        </div>
+
+                        {/* Feature 2: Cold Chain 2°C–6°C */}
+                        <div className="p-6 rounded-2xl bg-slate-50 border border-slate-100 hover:border-red-200 hover:shadow-xl hover:shadow-red-50/50 transition-all duration-300 group">
+                            <div className="w-12 h-12 rounded-xl bg-blue-100/80 text-blue-600 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+                                <Thermometer size={24} />
+                            </div>
+                            <h3 className="text-lg font-bold text-slate-900 mb-2">2°C–6°C Cold Chain</h3>
+                            <p className="text-sm text-slate-600 leading-relaxed">
+                                Biological temperature assurance. Thermal carrier box sensor logging ensures red blood cells and platelets never degrade during transit.
+                            </p>
+                            <div className="mt-4 pt-3 border-t border-slate-200/60 flex items-center text-xs font-bold text-blue-600 gap-1">
+                                <span>Thermal integrity certified</span>
+                            </div>
+                        </div>
+
+                        {/* Feature 3: Dual OTP Chain of Custody */}
+                        <div className="p-6 rounded-2xl bg-slate-50 border border-slate-100 hover:border-red-200 hover:shadow-xl hover:shadow-red-50/50 transition-all duration-300 group">
+                            <div className="w-12 h-12 rounded-xl bg-emerald-100/80 text-emerald-600 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+                                <ShieldCheck size={24} />
+                            </div>
+                            <h3 className="text-lg font-bold text-slate-900 mb-2">Dual-OTP Chain of Custody</h3>
+                            <p className="text-sm text-slate-600 leading-relaxed">
+                                Zero-tamper protocol: Donor authorizes pickup with secret PIN 1, and hospital blood bank verifies secure delivery with secret PIN 2.
+                            </p>
+                            <div className="mt-4 pt-3 border-t border-slate-200/60 flex items-center text-xs font-bold text-emerald-600 gap-1">
+                                <span>Cryptographic verification</span>
+                            </div>
+                        </div>
+
+                        {/* Feature 4: Volunteer Transporter Network */}
+                        <div className="p-6 rounded-2xl bg-slate-50 border border-slate-100 hover:border-red-200 hover:shadow-xl hover:shadow-red-50/50 transition-all duration-300 group">
+                            <div className="w-12 h-12 rounded-xl bg-amber-100/80 text-amber-600 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+                                <Users size={24} />
+                            </div>
+                            <h3 className="text-lg font-bold text-slate-900 mb-2">Volunteer Transporters</h3>
+                            <p className="text-sm text-slate-600 leading-relaxed">
+                                Certified rapid-response community riders with temperature-controlled medical backpacks ready to deploy on urgent SOS calls.
+                            </p>
+                            <div className="mt-4 pt-3 border-t border-slate-200/60 flex items-center text-xs font-bold text-amber-600 gap-1">
+                                <span>Join as Transporter</span>
+                                <ArrowRight size={12} />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
             {/* ── Workflow Timeline Section ───────────────────────────── */}
             <section id="how-it-works" ref={stepsRef} className="relative scroll-mt-20 py-32 px-4 bg-slate-50 overflow-hidden">
