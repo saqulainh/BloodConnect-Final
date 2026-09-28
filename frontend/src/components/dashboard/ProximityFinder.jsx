@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react";
 import {
     MapPin, Navigation, Droplets, Clock, ShieldCheck,
     Search, Loader2, AlertCircle, Phone, MessageSquare,
-    ChevronRight, Zap, Filter
+    ChevronRight, Zap, Filter, Sparkles
 } from "lucide-react";
 import { getProximityDonors } from "../../services/api";
 
@@ -19,6 +19,18 @@ const getDriveColor = (minutes) => {
     if (minutes <= 25) return "text-amber-600";
     return "text-red-600";
 };
+
+const getMatchScore = (donor) => {
+    const distanceScore = Math.max(0, 30 - Math.min(Number(donor.distanceKm) || 30, 30)) / 30 * 35;
+    const driveScore = Math.max(0, 25 - Math.min(Number(donor.driveTimeMinutes) || 25, 25)) / 25 * 25;
+    const readinessScore = donor.isEligible ? 25 : 5;
+    const verificationScore = donor.aadhaarVerified ? 15 : 0;
+    return Math.round(distanceScore + driveScore + readinessScore + verificationScore);
+};
+
+const rankDonors = (donors) => donors
+    .map((donor) => ({ ...donor, aiMatchScore: getMatchScore(donor) }))
+    .sort((firstDonor, secondDonor) => secondDonor.aiMatchScore - firstDonor.aiMatchScore);
 
 // ── DonorCard ─────────────────────────────────────────────────────────
 const DonorCard = ({ donor, onChat }) => {
@@ -66,10 +78,19 @@ const DonorCard = ({ donor, onChat }) => {
                 </div>
 
                 {/* Eligibility badge */}
-                <div className={`flex-shrink-0 px-2 py-1 rounded-lg border text-[10px] font-black ${donor.isEligible ? ELIGIBILITY_COLORS.eligible : ELIGIBILITY_COLORS.ineligible}`}>
-                    {donor.isEligible ? "✅ Ready" : "⏳ " + donor.eligibilityNote}
+                <div className="flex flex-col items-end gap-1 shrink-0">
+                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-violet-50 text-violet-700 border border-violet-100 text-[10px] font-black">
+                        <Sparkles size={10} /> {donor.aiMatchScore}% match
+                    </span>
+                    <span className={`px-2 py-1 rounded-lg border text-[10px] font-black ${donor.isEligible ? ELIGIBILITY_COLORS.eligible : ELIGIBILITY_COLORS.ineligible}`}>
+                        {donor.isEligible ? "✅ Ready" : "⏳ " + donor.eligibilityNote}
+                    </span>
                 </div>
             </div>
+
+            <p className="mt-3 text-[11px] font-semibold text-violet-700 bg-violet-50/60 rounded-lg px-3 py-2">
+                AI priority: {donor.isEligible ? "eligible" : "eligibility pending"}, {donor.aadhaarVerified ? "verified" : "profile verified"}, and fastest available route.
+            </p>
 
             {/* Action buttons */}
             <div className="flex gap-2 mt-3 pt-3 border-t border-slate-50">
@@ -131,7 +152,8 @@ export default function ProximityFinder({ onStartChat }) {
         }
     }, [bloodGroup, radius]);
 
-    const eligibleDonors = donors.filter(d => d.isEligible);
+    const rankedDonors = rankDonors(donors);
+    const eligibleDonors = rankedDonors.filter(d => d.isEligible);
 
     return (
         <div className="space-y-6">
@@ -232,7 +254,7 @@ export default function ProximityFinder({ onStartChat }) {
                         </div>
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                            {donors.map(donor => (
+                            {rankedDonors.map(donor => (
                                 <DonorCard key={donor._id} donor={donor} onChat={onStartChat} />
                             ))}
                         </div>
