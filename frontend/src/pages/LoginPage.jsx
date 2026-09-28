@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Mail, Lock, ArrowRight, Droplets, Heart, ShieldCheck, Users, Activity, Shield } from "lucide-react";
 import gsap from "gsap";
-import { isLoggedIn, isDemoMode } from "../services/api";
+import { isDemoMode } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 
 // ── Typewriter hook ────────────────────────────────────────────────────
@@ -56,7 +56,7 @@ const TRUST = [
 
 export default function LoginPage() {
     const navigate = useNavigate();
-    const { login } = useAuth();
+    const { login, isAuthenticated, loading: authLoading } = useAuth();
     const [form, setForm] = useState({ email: "", password: "" });
     const [showPwd, setShowPwd] = useState(false);
     const [useAadhaar, setUseAadhaar] = useState(false);
@@ -68,7 +68,10 @@ export default function LoginPage() {
     const leftRef = useRef(null);
 
     useEffect(() => {
-        if (isLoggedIn()) { navigate("/dashboard"); return; }
+        if (!authLoading && isAuthenticated) {
+            navigate(isDemoMode() ? "/dashboard?demo=1" : "/dashboard");
+            return;
+        }
 
         const ctx = gsap.context(() => {
             gsap.fromTo(leftRef.current,
@@ -81,7 +84,7 @@ export default function LoginPage() {
             );
         });
         return () => ctx.revert();
-    }, [navigate]);
+    }, [authLoading, isAuthenticated, navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();

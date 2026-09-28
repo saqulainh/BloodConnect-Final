@@ -17,8 +17,8 @@ export const AuthProvider = ({ children }) => {
             }
             if (isLoggedIn()) {
                 try {
-                    const { data } = await getMe();
-                    setUser(data.user || data);
+                    const response = await getMe();
+                    setUser(response.data?.user || response.data);
                 } catch {
                     await logoutUser();
                 }
@@ -40,6 +40,11 @@ export const AuthProvider = ({ children }) => {
     };
 
     const logout = async () => {
+        if (isDemoMode()) {
+            sessionStorage.removeItem("bloodconnect-demo");
+            setUser(null);
+            return;
+        }
         await logoutUser();
         setUser(null);
     };
