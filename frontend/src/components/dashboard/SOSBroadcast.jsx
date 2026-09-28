@@ -27,7 +27,7 @@ const parseEmergencyText = (text) => {
     const urgency = /critical|immediately|emergency|urgent/i.test(normalizedText)
         ? (/critical|immediately|emergency/i.test(normalizedText) ? "Critical" : "Urgent")
         : undefined;
-    const hospitalMatch = normalizedText.match(/\b(?:at|in|near)\s+([\w .'-]+?)(?=\s+(?:for|needs?|requires?)\b|[,.]|$)/i);
+    const hospitalMatch = normalizedText.match(/\b(?:at|in|near)\s+([\w .'-]+?)(?=\s+(?:for|needs?|requires?|urgent(?:ly)?|critical|immediately)\b|[,.]|$)/i);
     const patientMatch = normalizedText.match(/\bfor\s+([\w .'-]+?)(?=\s+(?:needs?|requires?|needs blood)\b|[,.]|$)/i);
 
     return {
