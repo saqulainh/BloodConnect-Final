@@ -105,12 +105,12 @@ const checkTokenExpiry = () => {
 // ── Core fetch wrapper (handles 401 → refresh → retry) ────────────────
 export const apiFetch = async (endpoint, options = {}, retry = true) => {
     // Before making any auth request, check if token is expired
-    if (
+    if (!isDemoMode() && (
         !endpoint.includes("/auth/login") &&
         !endpoint.includes("/auth/register") &&
         !endpoint.includes("/auth/refresh-token") &&
         !endpoint.includes("/auth/admin-login")
-    ) {
+    )) {
         if (checkTokenExpiry()) {
             if (!endpoint.startsWith("/camps")) {
                 clearTokens();
