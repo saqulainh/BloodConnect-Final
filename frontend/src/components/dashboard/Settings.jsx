@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { User, Phone, MapPin, Droplet, UserCheck, ShieldCheck, Mail, ShieldAlert, Settings as SettingsIcon, Award, History, Heart, Key, CheckCircle, XCircle } from "lucide-react";
+import { User, Phone, MapPin, Droplet, UserCheck, ShieldCheck, Mail, ShieldAlert, Settings as SettingsIcon, Award, History, Heart, Key, CheckCircle, XCircle, Eye, EyeOff } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { updateMe, getMyDonations, changePassword } from "../../services/api";
 import BloodJourney from "./BloodJourney";
@@ -13,6 +13,11 @@ export default function Settings() {
     const [passwordLoading, setPasswordLoading] = useState(false);
     const [pwdSuccess, setPwdSuccess] = useState("");
     const [pwdError, setPwdError] = useState("");
+    const [visiblePasswords, setVisiblePasswords] = useState({
+        currentPassword: false,
+        newPassword: false,
+        confirmPassword: false,
+    });
 
     const [donationsData, setDonationsData] = useState({ records: [], totalDonations: 0, totalUnits: 0 });
     const [trackingJourneyId, setTrackingJourneyId] = useState(null);
@@ -108,6 +113,13 @@ export default function Settings() {
         }
     };
 
+    const togglePasswordVisibility = (field) => {
+        setVisiblePasswords((previous) => ({
+            ...previous,
+            [field]: !previous[field],
+        }));
+    };
+
     const handleSave = async (e) => {
         e.preventDefault();
         setErrorMsg("");
@@ -187,11 +199,14 @@ export default function Settings() {
                                 <Key size={18} />
                             </div>
                             <input
-                                type="password"
+                                type={visiblePasswords.currentPassword ? "text" : "password"}
                                 value={passwordData.currentPassword}
                                 onChange={(e) => setPasswordData(p => ({ ...p, currentPassword: e.target.value }))}
-                                className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-colors"
+                                className="w-full pl-11 pr-11 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-colors"
                             />
+                            <button type="button" onClick={() => togglePasswordVisibility("currentPassword")} aria-label="Toggle current password visibility" className="absolute inset-y-0 right-3 flex items-center text-slate-400 hover:text-slate-600">
+                                {visiblePasswords.currentPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                            </button>
                         </div>
                     </div>
                     <div className="space-y-2">
@@ -201,11 +216,14 @@ export default function Settings() {
                                 <Key size={18} />
                             </div>
                             <input
-                                type="password"
+                                type={visiblePasswords.newPassword ? "text" : "password"}
                                 value={passwordData.newPassword}
                                 onChange={(e) => setPasswordData(p => ({ ...p, newPassword: e.target.value }))}
-                                className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-colors"
+                                className="w-full pl-11 pr-11 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-colors"
                             />
+                            <button type="button" onClick={() => togglePasswordVisibility("newPassword")} aria-label="Toggle new password visibility" className="absolute inset-y-0 right-3 flex items-center text-slate-400 hover:text-slate-600">
+                                {visiblePasswords.newPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                            </button>
                         </div>
                     </div>
                     <div className="space-y-2">
@@ -215,11 +233,14 @@ export default function Settings() {
                                 <Key size={18} />
                             </div>
                             <input
-                                type="password"
+                                type={visiblePasswords.confirmPassword ? "text" : "password"}
                                 value={passwordData.confirmPassword}
                                 onChange={(e) => setPasswordData(p => ({ ...p, confirmPassword: e.target.value }))}
-                                className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-colors"
+                                className="w-full pl-11 pr-11 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-900 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-colors"
                             />
+                            <button type="button" onClick={() => togglePasswordVisibility("confirmPassword")} aria-label="Toggle confirm password visibility" className="absolute inset-y-0 right-3 flex items-center text-slate-400 hover:text-slate-600">
+                                {visiblePasswords.confirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                            </button>
                         </div>
                     </div>
                 </div>

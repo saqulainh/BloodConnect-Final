@@ -9,6 +9,7 @@ export default function ResetPassword() {
     const cardRef = useRef(null);
     const [form, setForm] = useState({ email: "", otp: "", newPassword: "", confirmPassword: "" });
     const [showPwd, setShowPwd] = useState(false);
+    const [showConfirm, setShowConfirm] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [success, setSuccess] = useState(false);
@@ -108,9 +109,16 @@ export default function ResetPassword() {
 
                                 <div>
                                     <label style={labelStyle}>Confirm Password</label>
-                                    <input type="password" value={form.confirmPassword}
+                                    <div style={{ position: "relative" }}>
+                                    <input type={showConfirm ? "text" : "password"} value={form.confirmPassword}
                                         onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })}
-                                        placeholder="Repeat new password" style={inputStyle} onFocus={onFocus} onBlur={onBlur} required />
+                                        placeholder="Repeat new password" style={{ ...inputStyle, paddingRight: 44 }} onFocus={onFocus} onBlur={onBlur} required />
+                                    <button type="button" onClick={() => setShowConfirm(!showConfirm)}
+                                        aria-label={showConfirm ? "Hide confirm password" : "Show confirm password"}
+                                        style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#aaa" }}>
+                                        {showConfirm ? <EyeOff size={15} /> : <Eye size={15} />}
+                                    </button>
+                                    </div>
                                     {form.confirmPassword && form.newPassword !== form.confirmPassword && (
                                         <p style={{ color: "#e53935", fontSize: 12, marginTop: 4 }}>Passwords do not match</p>
                                     )}
