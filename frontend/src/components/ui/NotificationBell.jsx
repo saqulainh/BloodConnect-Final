@@ -49,7 +49,7 @@ export default function NotificationBell({ userId }) {
         if (!PUSHER_KEY) return;
 
         const pusher = new Pusher(PUSHER_KEY, { cluster: PUSHER_CLUSTER });
-        const globalChannel = pusher.subscribe('global-updates');
+        const globalChannel = pusher.subscribe('global-events');
 
         const handleNewNotification = (data) => {
             setNotifications(prev => [data, ...prev]);
@@ -75,7 +75,7 @@ export default function NotificationBell({ userId }) {
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
             globalChannel.unbind_all();
-            pusher.unsubscribe('global-updates');
+            pusher.unsubscribe('global-events');
             if (userChannel) {
                 userChannel.unbind_all();
                 pusher.unsubscribe(`user-${userId}`);

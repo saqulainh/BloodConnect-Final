@@ -5,8 +5,14 @@ let pusherInstance = null;
 
 const getPusher = () => {
     if (!pusherInstance) {
-        pusherInstance = new Pusher(import.meta.env.VITE_PUSHER_KEY, {
-            cluster: import.meta.env.VITE_PUSHER_CLUSTER,
+        const key = import.meta.env.VITE_PUSHER_KEY;
+        const cluster = import.meta.env.VITE_PUSHER_CLUSTER;
+        if (!key || !cluster) {
+            console.warn("[Pusher] Missing VITE_PUSHER_KEY or VITE_PUSHER_CLUSTER; realtime disabled.");
+            return null;
+        }
+        pusherInstance = new Pusher(key, {
+            cluster,
         });
     }
     return pusherInstance;
@@ -23,6 +29,7 @@ const getPusher = () => {
  */
 export const subscribeToUserChannel = (userId, onEvent) => {
     const pusher = getPusher();
+    if (!pusher) return null;
     const channelName = `user-${userId}`;
     const channel = pusher.subscribe(channelName);
 
@@ -46,7 +53,7 @@ export const subscribeToUserChannel = (userId, onEvent) => {
 export const unsubscribeFromUserChannel = (channel, userId) => {
     if (!channel) return;
     channel.unbind_all();
-    getPusher().unsubscribe(`user-${userId}`);
+    getPusher()?.unsubscribe(`user-${userId}`);
 };
 
 export default getPusher;

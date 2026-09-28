@@ -215,6 +215,7 @@ export default function Dashboard() {
 
             // EIMS Global Critical Alert
             const pusherInst = getPusher();
+            if (!pusherInst) return undefined;
             const eimsChannel = pusherInst.subscribe('global-events');
             eimsChannel.bind('criticalAlert', (req) => {
                 if (typeof navigator !== 'undefined' && navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 500]);
@@ -409,4 +410,3 @@ export default function Dashboard() {
         </div>
     );
 }
-
