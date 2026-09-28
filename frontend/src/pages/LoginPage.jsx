@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Mail, Lock, ArrowRight, Droplets, Heart, ShieldCheck, Users, Activity, Shield } from "lucide-react";
 import gsap from "gsap";
-import { isLoggedIn } from "../services/api";
+import { isLoggedIn, isDemoMode } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 
 // ── Typewriter hook ────────────────────────────────────────────────────
@@ -90,7 +90,7 @@ export default function LoginPage() {
         setLoading(true);
         try {
             await login({ email: form.email, password: form.password, aadhaarLast4: useAadhaar ? aadhaarLast4 : undefined });
-            navigate("/dashboard");
+            navigate(isDemoMode() ? "/dashboard?demo=1" : "/dashboard");
         } catch (err) {
             console.error("Login caught error:", err);
             
