@@ -144,7 +144,7 @@ const RECEIVER_TAB_SUBTITLES = {
 
 export default function Dashboard() {
     const navigate = useNavigate();
-    const { user, logout, loading, isAuthenticated } = useAuth();
+    const { user, logout, loading } = useAuth();
     const [activeTab, setActiveTab] = useState("dashboard");
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [chatTargetUser, setChatTargetUser] = useState(null);
@@ -193,11 +193,6 @@ export default function Dashboard() {
     };
 
     useEffect(() => {
-        if (!loading && !isAuthenticated) {
-            navigate("/login");
-            return;
-        }
-
         if (user?._id) {
             const handleGlobalPusher = (eventName, data) => {
                 if (eventName === "incoming-call") {
@@ -248,7 +243,7 @@ export default function Dashboard() {
                 pusherInst.unsubscribe('global-events');
             };
         }
-    }, [loading, isAuthenticated, user, navigate, addToast]);
+    }, [user, addToast]);
 
     const handleLogout = async () => {
         await logout();
@@ -414,5 +409,4 @@ export default function Dashboard() {
         </div>
     );
 }
-
 
