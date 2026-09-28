@@ -24,6 +24,18 @@ import Footer from "../components/Footer";
 const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 const CATEGORIES = ["All", "Government", "Private", "Red Cross", "Charitable", "Rotary"];
 
+const getStockUnits = (hospital, bloodGroup) => {
+    if (Array.isArray(hospital.bloodStock)) {
+        return hospital.bloodStock.find((stock) => stock.bloodGroup === bloodGroup)?.units || 0;
+    }
+    return Number(hospital.bloodStock?.[bloodGroup] || 0);
+};
+
+const matchesCategory = (hospitalCategory, selectedCategory) => {
+    if (selectedCategory === "All") return true;
+    return hospitalCategory?.toLowerCase().startsWith(selectedCategory.toLowerCase());
+};
+
 export default function BloodBanksPage() {
     const navigate = useNavigate();
     const [hospitals, setHospitals] = useState([]);
@@ -89,7 +101,7 @@ export default function BloodBanksPage() {
             }
 
             // Category filter
-            if (selectedCategory !== "All" && hospital.category !== selectedCategory) {
+            if (!matchesCategory(hospital.category, selectedCategory)) {
                 return false;
             }
 
@@ -100,8 +112,7 @@ export default function BloodBanksPage() {
 
             // Blood group stock filter
             if (selectedBloodGroup !== "All") {
-                const stockItem = hospital.bloodStock?.find(s => s.bloodGroup === selectedBloodGroup);
-                if (!stockItem || stockItem.units <= 0) return false;
+                if (getStockUnits(hospital, selectedBloodGroup) <= 0) return false;
             }
 
             return true;
@@ -466,8 +477,7 @@ export default function BloodBanksPage() {
                                             {/* Blood Stock Chips Grid */}
                                             <div className="grid grid-cols-4 sm:grid-cols-8 gap-1.5">
                                                 {BLOOD_GROUPS.map((group) => {
-                                                    const stockItem = hospital.bloodStock?.find(s => s.bloodGroup === group);
-                                                    const units = stockItem ? stockItem.units : 0;
+                                                    const units = getStockUnits(hospital, group);
                                                     const status = getStockStatus(units);
                                                     const isHighlight = selectedBloodGroup === group;
 
@@ -493,7 +503,9 @@ export default function BloodBanksPage() {
                                     {/* Action Footers */}
                                     <div className="px-5 py-3.5 bg-slate-50 border-t border-slate-100 flex items-center justify-between gap-3">
                                         <div className="text-[11px] text-slate-500 font-medium truncate">
-                                            {hospital.helpline ? `Emergency: ${hospital.helpline}` : `Call: ${hospital.phone}`}
+                                            {hospital.emergencyNumber
+                                                ? `Emergency: ${hospital.emergencyNumber}`
+                                                : `Call: ${hospital.contactNumber || hospital.phone || "Unavailable"}`}
                                         </div>
 
                                         <div className="flex items-center gap-2 flex-shrink-0">
@@ -510,7 +522,7 @@ export default function BloodBanksPage() {
 
                                             {/* Direct Phone Call */}
                                             <a
-                                                href={`tel:${hospital.phone}`}
+                                                href={`tel:${hospital.emergencyNumber || hospital.contactNumber || hospital.phone || ""}`}
                                                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold transition-all shadow-sm"
                                             >
                                                 <Phone className="w-3.5 h-3.5" />
@@ -524,6 +536,7 @@ export default function BloodBanksPage() {
                     </div>
                 )}
             </div>
+            <Footer />
         </div>
     );
 }
