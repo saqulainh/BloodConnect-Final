@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState, useEffect } from "react";
-import { getMe, loginUser, logoutUser, isLoggedIn } from "../services/api";
+import { getMe, loginUser, logoutUser, isLoggedIn, isDemoMode, getDemoUser } from "../services/api";
 
 const AuthContext = createContext();
 
@@ -10,6 +10,11 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         const initAuth = async () => {
+            if (isDemoMode()) {
+                setUser(getDemoUser());
+                setLoading(false);
+                return;
+            }
             if (isLoggedIn()) {
                 try {
                     const { data } = await getMe();
@@ -24,6 +29,11 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const login = async (credentials) => {
+        if (isDemoMode()) {
+            const data = { success: true, data: getDemoUser(), demo: true };
+            setUser(data.data);
+            return data;
+        }
         const data = await loginUser(credentials);
         setUser(data.data);
         return data;

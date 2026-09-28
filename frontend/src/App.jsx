@@ -2,6 +2,8 @@ import React from "react";
 import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { ToastProvider } from "./components/ui/Toast";
+import DebugApiPopup from "./components/ui/DebugApiPopup";
+import DemoModeBanner from "./components/ui/DemoModeBanner";
 import AppRouter from "./routes/AppRouter";
 
 function App() {
@@ -10,6 +12,8 @@ function App() {
       <AuthProvider>
         <ToastProvider>
           <AppRouter />
+          <DebugApiPopup />
+          <DemoModeBanner />
         </ToastProvider>
       </AuthProvider>
     </BrowserRouter>

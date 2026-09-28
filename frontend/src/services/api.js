@@ -6,6 +6,33 @@ const BASE_URL = rawApiUrl.endsWith("/api/v1")
     ? rawApiUrl
     : rawApiUrl.replace(/\/$/, "") + "/api/v1";
 
+export const isDemoMode = () => {
+    const queryEnabled = new URLSearchParams(window.location.search).get("demo") === "1";
+    if (queryEnabled) sessionStorage.setItem("bloodconnect-demo", "1");
+    return queryEnabled || sessionStorage.getItem("bloodconnect-demo") === "1";
+};
+
+export const enableDemoMode = () => sessionStorage.setItem("bloodconnect-demo", "1");
+export const disableDemoMode = () => sessionStorage.removeItem("bloodconnect-demo");
+
+export const getDemoUser = () => ({
+    _id: "demo-user",
+    name: "Demo Presenter",
+    email: "demo@bloodconnect.local",
+    role: "donor",
+    bloodGroup: "O+",
+    aadhaarVerified: true,
+    isDemo: true,
+});
+
+const emitApiError = ({ endpoint, method, status, message }) => {
+    if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("bloodconnect:api-error", {
+            detail: { endpoint, method, status, message },
+        }));
+    }
+};
+
 // ── Token helpers ──────────────────────────────────────────────────────
 export const getAccessToken = () => localStorage.getItem("accessToken");
 export const getRefreshToken = () => localStorage.getItem("refreshToken");
@@ -113,7 +140,17 @@ export const apiFetch = async (endpoint, options = {}, retry = true) => {
         },
     };
 
-    const res = await fetch(`${BASE_URL}${endpoint}`, fetchOptions);
+    let res;
+    try {
+        res = await fetch(`${BASE_URL}${endpoint}`, fetchOptions);
+    } catch (error) {
+        emitApiError({
+            endpoint: `${BASE_URL}${endpoint}`,
+            method: options.method || "GET",
+            message: error.message || "Network request failed",
+        });
+        throw error;
+    }
 
     if (res.status === 401 && retry && !endpoint.includes("/auth/login") && !endpoint.includes("/auth/register") && !endpoint.includes("/auth/admin-login")) {
         const refreshToken = getRefreshToken();
@@ -153,11 +190,19 @@ export const apiFetch = async (endpoint, options = {}, retry = true) => {
         return { success: true, message: text || "Request successful" };
     } else {
         // Error with no JSON body
-        throw new Error(text || `Error: ${res.status} ${res.statusText}`);
+        const message = text || `Error: ${res.status} ${res.statusText}`;
+        emitApiError({ endpoint, method: options.method || "GET", status: res.status, message });
+        throw new Error(message);
     }
 
     if (!data.success) {
         const error = new Error(data.message || "Something went wrong");
+        emitApiError({
+            endpoint,
+            method: options.method || "GET",
+            status: res.status,
+            message: error.message,
+        });
         error.response = { data }; // Attach data for consumer access (e.g. requiresOtp)
         Object.assign(error, data);
         throw error;

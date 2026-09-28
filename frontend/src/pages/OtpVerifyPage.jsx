@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Mail, RotateCcw, ArrowRight, Check, Droplets, ShieldCheck } from "lucide-react";
-import { verifyOtp, resendOtp } from "../services/api";
+import { verifyOtp, resendOtp, isDemoMode, getDemoUser } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 
 export default function OtpVerifyPage() {
@@ -77,6 +77,12 @@ export default function OtpVerifyPage() {
         setLoading(true);
         setError("");
         try {
+            if (isDemoMode()) {
+                setUser(getDemoUser());
+                setSuccess("Demo account verified. Redirecting…");
+                setTimeout(() => navigate("/dashboard"), 700);
+                return;
+            }
             const response = await verifyOtp({ email, otp: code || otp.join("") });
             setUser(response.data);
             setSuccess("Account verified! Redirecting…");

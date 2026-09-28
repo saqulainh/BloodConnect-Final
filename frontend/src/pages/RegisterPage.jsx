@@ -6,6 +6,8 @@ import {
     Check, AlertCircle, Upload, X
 } from "lucide-react";
 import { registerUser, getCurrentLocation } from "../services/api";
+import { isDemoMode, getDemoUser } from "../services/api";
+import { useAuth } from "../context/AuthContext";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
@@ -162,6 +164,7 @@ function FileUpload({ label, accept, onChange, preview, hint }) {
 // ─── Main Component ───────────────────────────────────────────────────────────
 export default function RegisterPage() {
     const navigate = useNavigate();
+    const { setUser } = useAuth();
     const [step, setStep] = useState(0);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
@@ -243,6 +246,11 @@ export default function RegisterPage() {
         setLoading(true);
         setError("");
         try {
+            if (isDemoMode()) {
+                setUser(getDemoUser());
+                navigate("/dashboard");
+                return;
+            }
             const fd = new FormData();
             fd.append("name", form.name.trim());
             fd.append("email", form.email.trim().toLowerCase());
