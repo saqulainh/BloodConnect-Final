@@ -2,13 +2,14 @@ import React from 'react';
 import {
     LayoutDashboard, Users, Ticket, Tent,
     BarChart3, Settings, LogOut, X, Droplets, Search, MessageSquare, ShieldAlert,
-    Navigation, Wallet, Siren, Route, Heart, Map, Eye,
+    Navigation, Wallet, Siren, Route, Heart, Map, Eye, Bike,
     Shield, UserCog, Activity, Megaphone, DollarSign, FileText
 } from 'lucide-react';
 
 // ── Donor Navigation ──────────────────────────────────────────────────
 const DONOR_NAV_ITEMS = [
     { id: "dashboard", icon: LayoutDashboard, label: "Dashboard" },
+    { id: "live-transit", icon: Bike, label: "Live Blood Transit", badge: "Live Transit" },
     { id: "donors", icon: Users, label: "Donors" },
     { id: "requests", icon: Ticket, label: "Blood Requests" },
     { id: "proximity", icon: Navigation, label: "Nearby Donors", badge: "AI" },
@@ -26,6 +27,7 @@ const DONOR_MGMT_ITEMS = [
 // ── Receiver Navigation ───────────────────────────────────────────────
 const RECEIVER_NAV_ITEMS = [
     { id: "dashboard", icon: LayoutDashboard, label: "Dashboard" },
+    { id: "live-transit", icon: Bike, label: "Live Blood Transit", badge: "Live Transit" },
     { id: "my-requests", icon: Ticket, label: "My Requests", badge: "Live" },
     { id: "find-donors", icon: Navigation, label: "Find Donors", badge: "AI" },
     { id: "live-map", icon: Map, label: "Live Map", badge: "EIMS" },
@@ -38,6 +40,16 @@ const RECEIVER_MGMT_ITEMS = [
     { id: "receiver-analytics", icon: BarChart3, label: "Analytics" },
     { id: "gratitude", icon: Heart, label: "Gratitude Board", badge: "💚" },
     { id: "sos", icon: Siren, label: "SOS Broadcast", badge: "🚨" },
+    { id: "settings", icon: Settings, label: "Settings" },
+];
+
+// ── Transporter Navigation ────────────────────────────────────────────
+const TRANSPORTER_NAV_ITEMS = [
+    { id: "dashboard", icon: LayoutDashboard, label: "Transporter Ops" },
+    { id: "live-transit", icon: Bike, label: "Live Blood Transit", badge: "Live Transit" },
+    { id: "chat", icon: MessageSquare, label: "Secure Chat" },
+];
+const TRANSPORTER_MGMT_ITEMS = [
     { id: "settings", icon: Settings, label: "Settings" },
 ];
 
@@ -87,10 +99,11 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen, activeTab, se
     const bloodGroup = user?.bloodGroup || '';
     const isAdmin = user?.role === 'admin';
     const isReceiver = user?.role === 'receiver';
-    const roleLabel = isAdmin ? 'Admin' : user?.role === 'donor' ? 'Donor' : isReceiver ? 'Receiver' : 'Member';
+    const isTransporter = user?.role === 'transporter';
+    const roleLabel = isAdmin ? 'Admin' : user?.role === 'donor' ? 'Donor' : isReceiver ? 'Receiver' : isTransporter ? 'Transporter' : 'Member';
 
-    const navItems = isAdmin ? ADMIN_ITEMS : (isReceiver ? RECEIVER_NAV_ITEMS : DONOR_NAV_ITEMS);
-    const mgmtItems = isAdmin ? [] : (isReceiver ? RECEIVER_MGMT_ITEMS : DONOR_MGMT_ITEMS);
+    const navItems = isAdmin ? ADMIN_ITEMS : isTransporter ? TRANSPORTER_NAV_ITEMS : (isReceiver ? RECEIVER_NAV_ITEMS : DONOR_NAV_ITEMS);
+    const mgmtItems = isAdmin ? [] : isTransporter ? TRANSPORTER_MGMT_ITEMS : (isReceiver ? RECEIVER_MGMT_ITEMS : DONOR_MGMT_ITEMS);
 
     const brandGradient = 'from-red-500 to-red-700';
     const brandShadow = 'shadow-red-200';
@@ -113,7 +126,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen, activeTab, se
                 </div>
                 <div className="flex-1">
                     <h1 className="text-base font-black tracking-tight text-slate-900">Blood<span className={brandAccent}>Connect</span></h1>
-                    <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{isAdmin ? 'Admin Control' : (isReceiver ? 'Receiver Hub' : 'Dashboard')}</p>
+                    <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{isAdmin ? 'Admin Control' : isReceiver ? 'Receiver Hub' : isTransporter ? 'Courier Ops' : 'Dashboard'}</p>
                 </div>
                 <button onClick={() => setIsSidebarOpen(false)} className="lg:hidden p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors">
                     <X size={18} />
@@ -191,8 +204,14 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen, activeTab, se
                                 else if (val.includes("audit")) setActiveTab("admin-audit");
                                 else if (val.includes("intel") || val.includes("analytics")) setActiveTab("admin-analytics");
                                 else setActiveTab("admin-home");
+                            } else if (isTransporter) {
+                                if (val.includes("transit") || val.includes("map") || val.includes("track") || val.includes("live") || val.includes("uber")) setActiveTab("live-transit");
+                                else if (val.includes("chat")) setActiveTab("chat");
+                                else if (val.includes("setting")) setActiveTab("settings");
+                                else setActiveTab("dashboard");
                             } else if (isReceiver) {
-                                if (val.includes("request")) setActiveTab("my-requests");
+                                if (val.includes("transit") || val.includes("uber") || val.includes("courier")) setActiveTab("live-transit");
+                                else if (val.includes("request")) setActiveTab("my-requests");
                                 else if (val.includes("donor") || val.includes("find")) setActiveTab("find-donors");
                                 else if (val.includes("map")) setActiveTab("live-map");
                                 else if (val.includes("wallet")) setActiveTab("receiver-wallet");
@@ -204,7 +223,8 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen, activeTab, se
                                 else if (val.includes("chat")) setActiveTab("chat");
                                 else setActiveTab("dashboard");
                             } else {
-                                if (val.includes("donor") || val.includes("find")) setActiveTab("proximity");
+                                if (val.includes("transit") || val.includes("uber") || val.includes("courier")) setActiveTab("live-transit");
+                                else if (val.includes("donor") || val.includes("find")) setActiveTab("proximity");
                                 else if (val.includes("request")) setActiveTab("requests");
                                 else if (val.includes("health") || val.includes("wallet")) setActiveTab("health-wallet");
                                 else if (val.includes("camp")) setActiveTab("camps");

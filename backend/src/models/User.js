@@ -8,8 +8,8 @@ const userSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true, index: true }, // Index for fast login lookup
     password: { type: String, required: true },
     phone: { type: String, required: true },
-    role: { type: String, enum: ["donor", "receiver", "admin"], default: "donor", index: true }, // Index for filtering
-    bloodGroup: { type: String, required: true, index: true }, // Index for donor search
+    role: { type: String, enum: ["donor", "receiver", "admin", "transporter"], default: "donor", index: true }, // Index for filtering
+    bloodGroup: { type: String, default: "N/A", index: true }, // Index for donor search
     aadhaarNumber: { type: String, required: true, unique: true }, // Encrypted before save
     address: { type: String },
     city: { type: String, default: "", index: true }, // Used by admin analytics top-cities aggregation

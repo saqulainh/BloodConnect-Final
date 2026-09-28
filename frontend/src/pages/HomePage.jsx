@@ -4,7 +4,8 @@ import {
     Heart, Search, Users, Activity, ArrowRight,
     ShieldCheck, Clock, Droplets, Menu, X,
     MapPin, Bell, BarChart2, ChevronRight, Globe,
-    Truck, Navigation, Thermometer, Zap
+    Truck, Navigation, Thermometer, Zap,
+    Building2, Ambulance, HeartHandshake, UserCheck, Footprints
 } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -403,81 +404,150 @@ export default function HomePage() {
                 </div>
             </header>
 
-            {/* ── Key Features Section (Uber for Blood & Cold Chain) ──── */}
+            {/* ── Key Features Section (Verified Emergency Blood Logistics Network) ──── */}
             <section id="features" className="relative scroll-mt-20 py-24 px-4 bg-white border-b border-slate-100">
                 <div className="max-w-6xl mx-auto">
-                    <div className="text-center max-w-2xl mx-auto mb-16">
+                    <div className="text-center max-w-3xl mx-auto mb-16">
                         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red-50 text-red-600 text-xs font-bold uppercase tracking-wider border border-red-100 mb-4">
-                            <Zap size={14} className="text-red-500 fill-red-500" />
-                            Next-Gen Medical Logistics
+                            <ShieldCheck size={14} className="text-red-500 fill-red-500" />
+                            Verified Emergency Blood Logistics Network
                         </div>
                         <h2 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight">
-                            Live "Uber for Blood" <br />
+                            Real-Time Medical <br />
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-rose-500">
-                                Real-Time Transit Tracking
+                                Blood Logistics
                             </span>
                         </h2>
-                        <p className="mt-4 text-slate-600 font-medium text-base">
-                            From donation arm to ICU bedside in minutes. Track the life-saving parcel live with verified cold-chain safety.
+                        <p className="mt-4 text-slate-700 font-medium text-base md:text-lg leading-relaxed">
+                            Connect hospitals with licensed blood banks, ambulance partners, certified medical couriers, and trained emergency volunteers for secure, temperature-controlled blood delivery.
                         </p>
+
+                        {/* Regulatory & Safety Clarification Banner */}
+                        <div className="mt-5 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-50 border border-amber-200 text-xs font-semibold text-amber-800 shadow-sm">
+                            <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping" />
+                            <span><strong>Uber-style live tracking, not commercial cab transport.</strong> Compliant clinical custody with validated cold-chain preservation.</span>
+                        </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {/* Feature 1: Live Transit Map */}
-                        <div className="p-6 rounded-2xl bg-slate-50 border border-slate-100 hover:border-red-200 hover:shadow-xl hover:shadow-red-50/50 transition-all duration-300 group">
-                            <div className="w-12 h-12 rounded-xl bg-red-100/80 text-red-600 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
-                                <Truck size={24} />
+                    {/* 5 Verified Transport Modalities */}
+                    <div className="mb-14">
+                        <div className="text-xs font-black uppercase tracking-wider text-slate-400 mb-4 text-center">
+                            Authorized Transport Modalities
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                            {/* Modality 1: Hospital-to-Hospital */}
+                            <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-red-200 hover:shadow-lg transition-all group">
+                                <div className="w-10 h-10 rounded-xl bg-red-100/80 text-red-600 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                                    <Building2 size={20} />
+                                </div>
+                                <h3 className="text-sm font-bold text-slate-900 mb-1">Hospital-to-Hospital</h3>
+                                <p className="text-xs text-slate-600 leading-relaxed">
+                                    Licensed blood banks &amp; hospitals transfer units using authorized institutional vehicles. Maximum compliance &amp; reliability.
+                                </p>
+                                <span className="inline-block mt-3 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">
+                                    Highest Compliance
+                                </span>
                             </div>
-                            <h3 className="text-lg font-bold text-slate-900 mb-2">Live Moving Map</h3>
-                            <p className="text-sm text-slate-600 leading-relaxed">
-                                Zomato/Uber style real-time GPS tracking. Watch the volunteer rider move live towards the hospital with accurate ETA countdowns.
+
+                            {/* Modality 2: Ambulance & Medical Couriers */}
+                            <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-red-200 hover:shadow-lg transition-all group">
+                                <div className="w-10 h-10 rounded-xl bg-blue-100/80 text-blue-600 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                                    <Ambulance size={20} />
+                                </div>
+                                <h3 className="text-sm font-bold text-slate-900 mb-1">Ambulance &amp; Medical Couriers</h3>
+                                <p className="text-xs text-slate-600 leading-relaxed">
+                                    Certified medical logistics providers with calibrated cold-chain carriers, real-time temperature logs, and trained staff.
+                                </p>
+                                <span className="inline-block mt-3 text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">
+                                    Cold-Chain Certified
+                                </span>
+                            </div>
+
+                            {/* Modality 3: Red Cross / NGO Network */}
+                            <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-red-200 hover:shadow-lg transition-all group">
+                                <div className="w-10 h-10 rounded-xl bg-rose-100/80 text-rose-600 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                                    <HeartHandshake size={20} />
+                                </div>
+                                <h3 className="text-sm font-bold text-slate-900 mb-1">Red Cross &amp; NGO Fleet</h3>
+                                <p className="text-xs text-slate-600 leading-relaxed">
+                                    Verified NGOs, Red Cross chapters, and donor societies coordinating rapid regional green-corridor transfers.
+                                </p>
+                                <span className="inline-block mt-3 text-[10px] font-bold text-rose-700 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-100">
+                                    Humanitarian Network
+                                </span>
+                            </div>
+
+                            {/* Modality 4: Certified Medical Volunteers */}
+                            <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-red-200 hover:shadow-lg transition-all group">
+                                <div className="w-10 h-10 rounded-xl bg-amber-100/80 text-amber-600 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                                    <UserCheck size={20} />
+                                </div>
+                                <h3 className="text-sm font-bold text-slate-900 mb-1">Certified Volunteers</h3>
+                                <p className="text-xs text-slate-600 leading-relaxed">
+                                    Background-screened, trained medical volunteers equipped with temperature boxes, operating strictly under authorized handover.
+                                </p>
+                                <span className="inline-block mt-3 text-[10px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-100">
+                                    Vetted &amp; Trained
+                                </span>
+                            </div>
+
+                            {/* Modality 5: Hospital Staff Runners */}
+                            <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-red-200 hover:shadow-lg transition-all group">
+                                <div className="w-10 h-10 rounded-xl bg-purple-100/80 text-purple-600 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                                    <Footprints size={20} />
+                                </div>
+                                <h3 className="text-sm font-bold text-slate-900 mb-1">Hospital Staff Runners</h3>
+                                <p className="text-xs text-slate-600 leading-relaxed">
+                                    Designated hospital orderly/runner staff for urgent inter-departmental or intra-campus emergency deliveries.
+                                </p>
+                                <span className="inline-block mt-3 text-[10px] font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded-full border border-purple-100">
+                                    Intra-Campus Speed
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* 3 Core Safety & Telemetry Safeguards */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 border-t border-slate-100">
+                        {/* Live Moving Map */}
+                        <div className="p-6 rounded-2xl bg-slate-50 border border-slate-100 hover:border-red-200 transition-all">
+                            <div className="w-10 h-10 rounded-xl bg-red-100/80 text-red-600 flex items-center justify-center mb-4">
+                                <Navigation size={20} className="animate-pulse" />
+                            </div>
+                            <h4 className="text-base font-bold text-slate-900 mb-1">Live Moving GPS Map</h4>
+                            <p className="text-xs text-slate-600 leading-relaxed">
+                                Real-time dynamic GPS telemetry with accurate arrival ETA countdown, live turns, and progress tracking right on hospital screens.
                             </p>
-                            <div className="mt-4 pt-3 border-t border-slate-200/60 flex items-center text-xs font-bold text-red-600 gap-1">
-                                <span>"Blood 10 min door hai"</span>
-                                <Navigation size={12} className="animate-pulse" />
+                            <div className="mt-3 text-xs font-semibold text-red-600 flex items-center gap-1">
+                                <span>Real-time ETA Telemetry</span>
                             </div>
                         </div>
 
-                        {/* Feature 2: Cold Chain 2°C–6°C */}
-                        <div className="p-6 rounded-2xl bg-slate-50 border border-slate-100 hover:border-red-200 hover:shadow-xl hover:shadow-red-50/50 transition-all duration-300 group">
-                            <div className="w-12 h-12 rounded-xl bg-blue-100/80 text-blue-600 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
-                                <Thermometer size={24} />
+                        {/* Cold Chain 2°C–6°C */}
+                        <div className="p-6 rounded-2xl bg-slate-50 border border-slate-100 hover:border-blue-200 transition-all">
+                            <div className="w-10 h-10 rounded-xl bg-blue-100/80 text-blue-600 flex items-center justify-center mb-4">
+                                <Thermometer size={20} />
                             </div>
-                            <h3 className="text-lg font-bold text-slate-900 mb-2">2°C–6°C Cold Chain</h3>
-                            <p className="text-sm text-slate-600 leading-relaxed">
-                                Biological temperature assurance. Thermal carrier box sensor logging ensures red blood cells and platelets never degrade during transit.
+                            <h4 className="text-base font-bold text-slate-900 mb-1">2°C–6°C Cold Chain Integrity</h4>
+                            <p className="text-xs text-slate-600 leading-relaxed">
+                                Continuous thermal box monitoring ensures biological preservation of whole blood, RBCs, and platelets according to national standards.
                             </p>
-                            <div className="mt-4 pt-3 border-t border-slate-200/60 flex items-center text-xs font-bold text-blue-600 gap-1">
-                                <span>Thermal integrity certified</span>
+                            <div className="mt-3 text-xs font-semibold text-blue-600 flex items-center gap-1">
+                                <span>Biological Grade Assurance</span>
                             </div>
                         </div>
 
-                        {/* Feature 3: Dual OTP Chain of Custody */}
-                        <div className="p-6 rounded-2xl bg-slate-50 border border-slate-100 hover:border-red-200 hover:shadow-xl hover:shadow-red-50/50 transition-all duration-300 group">
-                            <div className="w-12 h-12 rounded-xl bg-emerald-100/80 text-emerald-600 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
-                                <ShieldCheck size={24} />
+                        {/* Dual OTP Chain of Custody */}
+                        <div className="p-6 rounded-2xl bg-slate-50 border border-slate-100 hover:border-emerald-200 transition-all">
+                            <div className="w-10 h-10 rounded-xl bg-emerald-100/80 text-emerald-600 flex items-center justify-center mb-4">
+                                <ShieldCheck size={20} />
                             </div>
-                            <h3 className="text-lg font-bold text-slate-900 mb-2">Dual-OTP Chain of Custody</h3>
-                            <p className="text-sm text-slate-600 leading-relaxed">
-                                Zero-tamper protocol: Donor authorizes pickup with secret PIN 1, and hospital blood bank verifies secure delivery with secret PIN 2.
+                            <h4 className="text-base font-bold text-slate-900 mb-1">Dual-OTP Chain of Custody</h4>
+                            <p className="text-xs text-slate-600 leading-relaxed">
+                                Tamper-proof security: Dispatching facility signs off with Pickup PIN 1, and receiving hospital verifies delivery with Receiving PIN 2.
                             </p>
-                            <div className="mt-4 pt-3 border-t border-slate-200/60 flex items-center text-xs font-bold text-emerald-600 gap-1">
-                                <span>Cryptographic verification</span>
-                            </div>
-                        </div>
-
-                        {/* Feature 4: Volunteer Transporter Network */}
-                        <div className="p-6 rounded-2xl bg-slate-50 border border-slate-100 hover:border-red-200 hover:shadow-xl hover:shadow-red-50/50 transition-all duration-300 group">
-                            <div className="w-12 h-12 rounded-xl bg-amber-100/80 text-amber-600 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
-                                <Users size={24} />
-                            </div>
-                            <h3 className="text-lg font-bold text-slate-900 mb-2">Volunteer Transporters</h3>
-                            <p className="text-sm text-slate-600 leading-relaxed">
-                                Certified rapid-response community riders with temperature-controlled medical backpacks ready to deploy on urgent SOS calls.
-                            </p>
-                            <div className="mt-4 pt-3 border-t border-slate-200/60 flex items-center text-xs font-bold text-amber-600 gap-1">
-                                <span>Join as Transporter</span>
-                                <ArrowRight size={12} />
+                            <div className="mt-3 text-xs font-semibold text-emerald-600 flex items-center gap-1">
+                                <span>Cryptographic Handover</span>
                             </div>
                         </div>
                     </div>

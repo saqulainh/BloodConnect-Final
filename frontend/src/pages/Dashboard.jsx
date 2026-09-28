@@ -27,6 +27,8 @@ import ReceiverTimeline from "../components/receiver/ReceiverTimeline";
 import ReceiverAnalytics from "../components/receiver/ReceiverAnalytics";
 import GratitudeBoard from "../components/receiver/GratitudeBoard";
 import LiveMap from "../components/dashboard/LiveMap";
+import LiveTransitMap from "../components/transit/LiveTransitMap";
+import TransporterDashboard from "../components/transit/TransporterDashboard";
 
 // ── Admin Components ──
 import AdminHome from "../components/admin/AdminHome";
@@ -45,6 +47,7 @@ import { useToast } from "../components/ui/useToast";
 // ── Donor Tab Titles ──
 const DONOR_TAB_TITLES = {
     dashboard: "Overview",
+    "live-transit": "Live Blood Transit",
     donors: "Donors",
     requests: "Blood Requests",
     proximity: "Nearby Donors",
@@ -68,6 +71,7 @@ const DONOR_TAB_TITLES = {
 };
 const DONOR_TAB_SUBTITLES = {
     dashboard: "Welcome back! Here's today's summary.",
+    "live-transit": "Live moving GPS route & cold-chain temperature telemetry.",
     donors: "Manage registered donors and their availability.",
     requests: "Track and fulfill urgent blood requests.",
     proximity: "AI-powered geo-matching with drive-time estimates.",
@@ -93,6 +97,7 @@ const DONOR_TAB_SUBTITLES = {
 // ── Receiver Tab Titles ──
 const RECEIVER_TAB_TITLES = {
     dashboard: "Receiver Dashboard",
+    "live-transit": "Live Blood Transit",
     "my-requests": "My Requests",
     "find-donors": "Find Donors",
     "live-map": "Live Map",
@@ -118,6 +123,7 @@ const RECEIVER_TAB_TITLES = {
 };
 const RECEIVER_TAB_SUBTITLES = {
     dashboard: "Welcome back! Track your blood requests in real-time.",
+    "live-transit": "Live moving GPS route & cold-chain temperature telemetry.",
     "my-requests": "Create, manage, and track all your blood requests.",
     "find-donors": "AI-powered search for compatible donors near you.",
     "live-map": "Real-time emergency intelligence map — donors & requests.",
@@ -130,6 +136,40 @@ const RECEIVER_TAB_SUBTITLES = {
     sos: "Broadcast critical requests to nearby donors instantly.",
     settings: "Configure your account preferences.",
     // Admin tabs (accessible if user is also admin)
+    "admin-analytics": "Platform intelligence — revenue, growth, and impact metrics.",
+    "admin-home": "Full control center — users, requests, revenue, system.",
+    "admin-users": "View, edit, ban/unban, promote, and delete users.",
+    "admin-requests": "Manage all blood requests — force-fulfill, edit, delete.",
+    "admin-camps": "Create, edit, and manage blood donation camps.",
+    "admin-inventory": "Manage blood inventory across all blood groups.",
+    "admin-health": "Server, database, and system health monitoring.",
+    "admin-broadcast": "Send announcements and alerts to all users.",
+    "admin-revenue": "Financial overview — revenue trends, top donors, payments.",
+    "admin-audit": "Track all admin actions for accountability.",
+};
+
+// ── Transporter Tab Titles ──
+const TRANSPORTER_TAB_TITLES = {
+    dashboard: "Transporter Mission Control",
+    "live-transit": "Live Blood Transit",
+    chat: "Secure Dispatch Chat",
+    settings: "Settings",
+    "admin-analytics": "Mission Intel",
+    "admin-home": "Admin Dashboard",
+    "admin-users": "User Management",
+    "admin-requests": "Request Operations",
+    "admin-camps": "Camp Management",
+    "admin-inventory": "Blood Inventory",
+    "admin-health": "System Health",
+    "admin-broadcast": "Broadcast Center",
+    "admin-revenue": "Revenue & Donations",
+    "admin-audit": "Audit Logs",
+};
+const TRANSPORTER_TAB_SUBTITLES = {
+    dashboard: "Real-time courier dispatch missions & cold-chain custody",
+    "live-transit": "Live moving GPS route & temperature telemetry",
+    chat: "Communicate directly with donors and hospital blood banks",
+    settings: "Courier preferences and profile configuration",
     "admin-analytics": "Platform intelligence — revenue, growth, and impact metrics.",
     "admin-home": "Full control center — users, requests, revenue, system.",
     "admin-users": "View, edit, ban/unban, promote, and delete users.",
@@ -252,6 +292,7 @@ export default function Dashboard() {
     };
 
     const isReceiver = user?.role === 'receiver';
+    const isTransporter = user?.role === 'transporter';
     const ADMIN_TAB_TITLES = {
         "admin-home": "Admin Dashboard",
         "admin-users": "User Management",
@@ -276,8 +317,8 @@ export default function Dashboard() {
         "admin-audit": "Track all admin actions for accountability.",
         "admin-analytics": "Platform intelligence — revenue, growth, and impact metrics.",
     };
-    const TAB_TITLES = isAdmin ? ADMIN_TAB_TITLES : (isReceiver ? RECEIVER_TAB_TITLES : DONOR_TAB_TITLES);
-    const TAB_SUBTITLES = isAdmin ? ADMIN_TAB_SUBTITLES : (isReceiver ? RECEIVER_TAB_SUBTITLES : DONOR_TAB_SUBTITLES);
+    const TAB_TITLES = isAdmin ? ADMIN_TAB_TITLES : (isTransporter ? TRANSPORTER_TAB_TITLES : (isReceiver ? RECEIVER_TAB_TITLES : DONOR_TAB_TITLES));
+    const TAB_SUBTITLES = isAdmin ? ADMIN_TAB_SUBTITLES : (isTransporter ? TRANSPORTER_TAB_SUBTITLES : (isReceiver ? RECEIVER_TAB_SUBTITLES : DONOR_TAB_SUBTITLES));
 
     // Ensure admin tabs show admin home when switching roles
     const displayedTab = (isAdmin && !String(activeTab).startsWith("admin-")) ? "admin-home" : activeTab;
@@ -300,10 +341,22 @@ export default function Dashboard() {
             }
         }
 
+        // ── Transporter Tabs ──
+        if (isTransporter) {
+            switch (activeTab) {
+                case "dashboard": return <TransporterDashboard user={user} />;
+                case "live-transit": return <LiveTransitMap currentUserRole="transporter" />;
+                case "chat": return <Chat preselectedUser={chatTargetUser} />;
+                case "settings": return <SettingsPanel />;
+                default: return <TransporterDashboard user={user} />;
+            }
+        }
+
         // ── Receiver Tabs ──
         if (isReceiver) {
             switch (activeTab) {
                 case "dashboard": return <ReceiverDashboardHome setActiveTab={setActiveTab} user={user} />;
+                case "live-transit": return <LiveTransitMap currentUserRole="receiver" />;
                 case "my-requests": return <MyRequests onStartChat={handleStartChat} onViewTimeline={handleViewTimeline} />;
                 case "find-donors": return <FindDonorsReceiver onStartChat={handleStartChat} />;
                 case "live-map": return <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-4 lg:p-6"><h3 className="text-xl font-black text-slate-800 mb-4">EIMS Live Map</h3><LiveMap setActiveTab={setActiveTab} /></div>;
@@ -329,9 +382,10 @@ export default function Dashboard() {
                 default: return <ReceiverDashboardHome setActiveTab={setActiveTab} user={user} />;
             }
         }
-        // ── Donor Tabs (unchanged) ──
+        // ── Donor Tabs ──
         switch (activeTab) {
             case "dashboard": return <DashboardHome setActiveTab={setActiveTab} user={user} />;
+            case "live-transit": return <LiveTransitMap currentUserRole="donor" />;
             case "donors": return <DonorManagement onStartChat={handleStartChat} />;
             case "requests": return <RequestManagement onStartChat={handleStartChat} currentUser={user} />;
             case "proximity": return <ProximityFinder onStartChat={handleStartChat} />;

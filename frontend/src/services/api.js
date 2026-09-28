@@ -896,3 +896,76 @@ export const adminUpdateHospitalStock = async (id, bloodGroup, units) => {
         body: JSON.stringify({ bloodGroup, units }),
     });
 };
+
+// ─────────────────────────────────────────────────────────────────────
+// LIVE BLOOD TRANSIT TRACKING (Uber for Blood)
+// ─────────────────────────────────────────────────────────────────────
+
+/** POST /transits — Request courier transit for blood donation/request */
+export const createTransit = async (transitData) => {
+    return apiFetch("/transits", {
+        method: "POST",
+        headers: authHeaders(),
+        body: JSON.stringify(transitData),
+    });
+};
+
+/** GET /transits/active — Active transit for current user (or fallback demo) */
+export const getActiveTransit = async () => {
+    return apiFetch("/transits/active", {
+        method: "GET",
+        headers: authHeaders(),
+    });
+};
+
+/** GET /transits/available — Unassigned transits waiting for volunteers */
+export const getAvailableTransits = async () => {
+    return apiFetch("/transits/available", {
+        method: "GET",
+        headers: authHeaders(),
+    });
+};
+
+/** GET /transits/:id — Get details of a specific transit */
+export const getTransitById = async (id) => {
+    return apiFetch(`/transits/${id}`, {
+        method: "GET",
+        headers: authHeaders(),
+    });
+};
+
+/** PATCH /transits/:id/accept — Volunteer transporter accepts transit */
+export const acceptTransit = async (id) => {
+    return apiFetch(`/transits/${id}/accept`, {
+        method: "PATCH",
+        headers: authHeaders(),
+    });
+};
+
+/** PATCH /transits/:id/pickup — Transporter verifies donor pickup with OTP */
+export const verifyPickup = async (id, otp, sealNumber) => {
+    return apiFetch(`/transits/${id}/pickup`, {
+        method: "PATCH",
+        headers: authHeaders(),
+        body: JSON.stringify({ otp, sealNumber }),
+    });
+};
+
+/** PATCH /transits/:id/location — Transporter broadcasts GPS + cold chain temp */
+export const updateTransitLocationAndTemp = async (id, locationData) => {
+    return apiFetch(`/transits/${id}/location`, {
+        method: "PATCH",
+        headers: authHeaders(),
+        body: JSON.stringify(locationData),
+    });
+};
+
+/** PATCH /transits/:id/deliver — Hospital/Receiver verifies delivery OTP */
+export const verifyDelivery = async (id, otp) => {
+    return apiFetch(`/transits/${id}/deliver`, {
+        method: "PATCH",
+        headers: authHeaders(),
+        body: JSON.stringify({ otp }),
+    });
+};
+

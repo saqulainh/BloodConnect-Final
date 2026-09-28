@@ -219,7 +219,7 @@ export default function RegisterPage() {
             if (!form.name.trim()) return setError("Full name is required."), false;
             if (!/^\S+@\S+\.\S+$/.test(form.email)) return setError("Valid email is required."), false;
             if (!/^\d{10}$/.test(form.phone.replace(/\s/g, ""))) return setError("Phone must be 10 digits."), false;
-            if (!form.bloodGroup) return setError("Please select your blood group."), false;
+            if (form.role !== "transporter" && !form.bloodGroup) return setError("Please select your blood group."), false;
             return true;
         }
         if (step === 1) {
@@ -255,7 +255,7 @@ export default function RegisterPage() {
             fd.append("name", form.name.trim());
             fd.append("email", form.email.trim().toLowerCase());
             fd.append("phone", form.phone.replace(/\s/g, ""));
-            fd.append("bloodGroup", form.bloodGroup);
+            fd.append("bloodGroup", form.bloodGroup || "N/A");
             fd.append("role", form.role);
             fd.append("address", form.address);
             fd.append("aadhaarNumber", form.aadhaarNumber.replace(/\s/g, ""));
@@ -375,7 +375,29 @@ export default function RegisterPage() {
                                 <InputField icon={Phone} label="Phone Number" type="tel" value={form.phone} onChange={set("phone")} placeholder="10-digit mobile number" required />
 
                                 <div>
-                                    <Label>Blood Group</Label>
+                                    <Label>I am registering as</Label>
+                                    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10 }}>
+                                        {[
+                                            { id: "donor", label: "🩸 Donor" },
+                                            { id: "receiver", label: "🏥 Receiver" },
+                                            { id: "transporter", label: "🚴 Courier" }
+                                        ].map((r) => (
+                                            <button key={r.id} type="button" onClick={() => setForm({ ...form, role: r.id })}
+                                                style={{
+                                                    padding: "13px 8px", borderRadius: 12, border: form.role === r.id ? "2px solid #e53935" : "1.5px solid #eee",
+                                                    background: form.role === r.id ? "#fff0f0" : "#fafafa",
+                                                    color: form.role === r.id ? "#e53935" : "#999",
+                                                    fontWeight: 800, fontSize: 13, cursor: "pointer", transition: "all 0.15s",
+                                                    textAlign: "center"
+                                                }}>
+                                                {r.label}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <Label>Blood Group {form.role === "transporter" && <span style={{ fontSize: 11, fontWeight: 500, color: "#888" }}>(Optional for Courier)</span>}</Label>
                                     <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8 }}>
                                         {BLOOD_GROUPS.map((bg) => (
                                             <button key={bg} type="button" onClick={() => setForm({ ...form, bloodGroup: bg })}
@@ -386,24 +408,6 @@ export default function RegisterPage() {
                                                     fontWeight: 800, fontSize: 13, cursor: "pointer", transition: "all 0.15s"
                                                 }}>
                                                 {bg}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <Label>I am registering as</Label>
-                                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-                                        {["donor", "receiver"].map((r) => (
-                                            <button key={r} type="button" onClick={() => setForm({ ...form, role: r })}
-                                                style={{
-                                                    padding: "13px 10px", borderRadius: 12, border: form.role === r ? "2px solid #e53935" : "1.5px solid #eee",
-                                                    background: form.role === r ? "#fff0f0" : "#fafafa",
-                                                    color: form.role === r ? "#e53935" : "#999",
-                                                    fontWeight: 800, fontSize: 13, cursor: "pointer", transition: "all 0.15s",
-                                                    textTransform: "capitalize"
-                                                }}>
-                                                {r === "donor" ? "🩸 Donor" : "🏥 Receiver"}
                                             </button>
                                         ))}
                                     </div>
