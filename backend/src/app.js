@@ -26,6 +26,7 @@ import receiverRoutes from "./routes/receiver.routes.js";
 import exportRoutes from "./routes/export.routes.js";
 import hospitalRoutes from "./routes/hospital.routes.js";
 import transitRoutes from "./routes/transit.routes.js";
+import aiRoutes from "./routes/ai.routes.js";
 import { handleWebhook } from "./controllers/paymentController.js";
 import mongoose from "mongoose";
 
@@ -113,6 +114,7 @@ app.use("/api/v1/inventory", inventoryRoutes);
 app.use("/api/v1/export", exportRoutes);
 app.use("/api/v1/hospitals", hospitalRoutes);
 app.use("/api/v1/transits", transitRoutes);
+app.use("/api/v1/ai", aiRoutes);
 
 // Health Check
 app.get("/health", (req, res) => {

@@ -10,6 +10,7 @@ import {
     Sparkles,
     X,
 } from "lucide-react";
+import { askEmergencyAssistant } from "../../services/api";
 
 const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
@@ -40,14 +41,24 @@ export default function SOSAiWidget() {
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState("");
     const [result, setResult] = useState(null);
+    const [analyzing, setAnalyzing] = useState(false);
 
-    const analyzeMessage = () => {
+    const analyzeMessage = async () => {
+        setAnalyzing(true);
         const details = parseEmergencyText(message);
         if (!Object.keys(details).length) {
             setResult({ error: "Try adding a blood group, hospital, units, or urgency." });
+            setAnalyzing(false);
             return;
         }
-        setResult(details);
+        try {
+            const response = await askEmergencyAssistant(message);
+            setResult(response?.success ? { ...response.data, source: "Gemini AI" } : { ...details, source: "Local fallback" });
+        } catch {
+            setResult({ ...details, source: "Local fallback" });
+        } finally {
+            setAnalyzing(false);
+        }
     };
 
     return (
@@ -85,14 +96,14 @@ export default function SOSAiWidget() {
                             placeholder="e.g. 2 units O-negative needed at AIIMS Delhi urgently"
                             className="w-full resize-none rounded-2xl border border-slate-200 bg-slate-50 p-3 text-sm font-medium text-slate-700 outline-none transition focus:border-red-300 focus:ring-2 focus:ring-red-100"
                         />
-                        <button onClick={analyzeMessage} className="flex w-full items-center justify-center gap-2 rounded-2xl bg-red-600 py-3 text-xs font-black text-white transition hover:bg-red-700">
-                            <Sparkles size={15} /> Analyze emergency
+                        <button onClick={analyzeMessage} disabled={analyzing} className="flex w-full items-center justify-center gap-2 rounded-2xl bg-red-600 py-3 text-xs font-black text-white transition hover:bg-red-700 disabled:cursor-wait disabled:opacity-70">
+                            <Sparkles size={15} /> {analyzing ? "Analyzing..." : "Analyze emergency"}
                         </button>
 
                         {result?.error && <p className="text-xs font-bold text-red-600">{result.error}</p>}
                         {result && !result.error && (
                             <div className="rounded-2xl border border-emerald-100 bg-emerald-50 p-3">
-                                <p className="mb-2 text-[10px] font-black uppercase tracking-wider text-emerald-700">Detected details</p>
+                                <p className="mb-2 text-[10px] font-black uppercase tracking-wider text-emerald-700">Detected details · {result.source}</p>
                                 <div className="flex flex-wrap gap-2 text-xs font-black text-emerald-800">
                                     {result.bloodGroup && <span className="rounded-lg bg-white px-2 py-1">{result.bloodGroup}</span>}
                                     {result.units && <span className="rounded-lg bg-white px-2 py-1">{result.units} units</span>}

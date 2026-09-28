@@ -571,6 +571,15 @@ export const broadcastSOS = async ({ bloodGroup, hospital, patientName, message,
     });
 };
 
+/** POST /ai/emergency-assist — Gemini-backed emergency detail extraction */
+export const askEmergencyAssistant = async (message) => {
+    return apiFetch("/ai/emergency-assist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message }),
+    }, false);
+};
+
 /** GET /sos/active — Get active critical requests from last 12 hours */
 export const getActiveSOSAlerts = async () => {
     return apiFetch("/sos/active", { method: "GET", headers: authHeaders() });

@@ -52,6 +52,19 @@ export const globalLimiter = rateLimit({
     legacyHeaders: false,
 });
 
+// ── AI Assistant Rate Limiter ─────────────────────────────────────────
+// Keep public Gemini usage bounded while the assistant supports guests.
+export const aiLimiter = rateLimit({
+    windowMs: 60 * 1000,
+    max: 10,
+    message: {
+        success: false,
+        message: "Too many AI assistant requests. Please wait a moment and try again.",
+    },
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
 // ── Admin Rate Limiter ────────────────────────────────────────────────
 // Max 30 requests per minute per IP — admin routes are sensitive
 export const adminLimiter = rateLimit({
